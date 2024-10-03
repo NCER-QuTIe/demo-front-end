@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<qti-assessment-item xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.imsglobal.org/xsd/imsqtiasi_v3p0" xsi:schemaLocation="http://www.imsglobal.org/xsd/imsqtiasi_v3p0 https://purl.imsglobal.org/spec/qti/v3p0/schema/xsd/imsqti_asiv3p0_v1p0.xsd" identifier="i17213974810722016002743980" title="&#x10e5;&#x10d0;&#x10e0;&#x10d8;&#x10e1; &#x10eb;&#x10d0;&#x10da;&#x10d0; - 4" label="&#x10e5;&#x10d0;&#x10e0;&#x10d8;&#x10e1; &#x10eb;&#x10d0;&#x10da;&#x10d0; - 4" xml:lang="ka-GE" adaptive="false" time-dependent="false" tool-name="TAO" tool-version="2022.11">
+  <qti-response-declaration identifier="RESPONSE_2" cardinality="single" base-type="identifier">
+    <qti-correct-response>
+      <qti-value>choice_5</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-response-declaration identifier="RESPONSE_3" cardinality="single" base-type="identifier">
+    <qti-correct-response>
+      <qti-value>choice_6</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-response-declaration identifier="RESPONSE_4" cardinality="single" base-type="identifier">
+    <qti-correct-response>
+      <qti-value>choice_9</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-response-declaration identifier="RESPONSE" cardinality="single" base-type="string"/>
+  <qti-response-declaration identifier="RESPONSE_1" cardinality="single" base-type="string"/>
+  <qti-response-declaration identifier="RESPONSE_5" cardinality="single" base-type="string">
+    <qti-correct-response>
+      <qti-value>300</qti-value>
+    </qti-correct-response>
+  </qti-response-declaration>
+  <qti-outcome-declaration identifier="MAXSCORE" cardinality="single" base-type="float">
+    <qti-default-value>
+      <qti-value>1</qti-value>
+    </qti-default-value>
+  </qti-outcome-declaration>
+  <qti-outcome-declaration identifier="SCORE" cardinality="single" base-type="float" normal-maximum="1"/>
+  <qti-item-body>
+    <div class="grid-row">
+      <div class="col-12">
+        <p class="txt-ctr">
+          <strong>
+            <span>&#x10e5;&#x10d0;&#x10e0;&#x10d8;&#x10e1; &#x10eb;&#x10d0;&#x10da;&#x10d0;</span>
+          </strong>
+        </p>
+        <p>&#x10d6;&#x10d4;&#x10d3;&#x10e5;&#x10d0;&#x10da;&#x10d0;&#x10e5;&#x10e8;&#x10d8; &#x10d2;&#x10d0;&#x10dc;&#x10d8;&#x10ee;&#x10d8;&#x10da;&#x10d0;&#x10d5;&#x10d4;&#x10dc; &#x10d4;&#x10da;&#x10d4;&#x10e5;&#x10e2;&#x10e0;&#x10dd;&#x10d4;&#x10dc;&#x10d4;&#x10e0;&#x10d2;&#x10d8;&#x10d8;&#x10e1; &#x10e1;&#x10d0;&#x10ec;&#x10d0;&#x10e0;&#x10db;&#x10dd;&#x10d4;&#x10d1;&#x10da;&#x10d0;&#x10d3; &#x10e0;&#x10d0;&#x10db;&#x10d3;&#x10d4;&#x10dc;&#x10d8;&#x10db;&#x10d4; &#x10e5;&#x10d0;&#x10e0;&#x10d8;&#x10e1; &#x10d2;&#x10d4;&#x10dc;&#x10d4;&#x10e0;&#x10d0;&#x10e2;&#x10dd;&#x10e0;&#x10d8;&#x10e1; &#x10d3;&#x10d0;&#x10d3;&#x10d2;&#x10db;&#x10d8;&#x10e1; &#x10e1;&#x10d0;&#x10d9;&#x10d8;&#x10d7;&#x10ee;&#x10e1;.&#xa0;</p>
+        <p>
+          <img src="Windmill.jpg" alt="Windmill" width="30%" border_size="" border_color="" type="image/jpeg" class="rgt"/>
+        </p>
+        <p>&#x10d6;&#x10d4;&#x10d3;&#x10e5;&#x10d0;&#x10da;&#x10d0;&#x10e5;&#x10d8;&#x10e1; &#x10e1;&#x10d0;&#x10d9;&#x10e0;&#x10d4;&#x10d1;&#x10e3;&#x10da;&#x10dd;&#x10db; &#x10e8;&#x10d4;&#x10d0;&#x10d2;&#x10e0;&#x10dd;&#x10d5;&#x10d0; &#x10d8;&#x10dc;&#x10e4;&#x10dd;&#x10e0;&#x10db;&#x10d0;&#x10ea;&#x10d8;&#x10d0; &#x10e8;&#x10d4;&#x10db;&#x10d3;&#x10d4;&#x10d2;&#x10d8; &#x10db;&#x10dd;&#x10d3;&#x10d4;&#x10da;&#x10d8;&#x10e1; &#x10e8;&#x10d4;&#x10e1;&#x10d0;&#x10ee;&#x10d4;&#x10d1;.</p>
+        <table class="qti-table">
+          <tbody>
+            <tr>
+              <td>
+                <span>&#x10db;&#x10dd;&#x10d3;&#x10d4;&#x10da;&#x10d8;:&#xa0;</span>
+              </td>
+              <td>
+                <span>E-82</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span>&#x10d9;&#x10dd;&#x10e8;&#x10d9;&#x10d8;&#x10e1; &#x10e1;&#x10d8;&#x10db;&#x10d0;&#x10e6;&#x10da;&#x10d4;:</span>
+              </td>
+              <td>
+                <span>138 &#x10db;&#x10d4;&#x10e2;&#x10e0;&#x10d8;</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span>&#x10db;&#x10d1;&#x10e0;&#x10e3;&#x10dc;&#x10d0;&#x10d5;&#x10d8; &#x10e4;&#x10e0;&#x10d7;&#x10d4;&#x10d1;&#x10d8;&#x10e1; &#x10e0;&#x10d8;&#x10ea;&#x10ee;&#x10d5;&#x10d8;:</span>
+              </td>
+              <td>
+                <span>3</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span>&#x10d4;&#x10e0;&#x10d7;&#x10d8; &#x10db;&#x10d1;&#x10e0;&#x10e3;&#x10dc;&#x10d0;&#x10d5;&#x10d8; &#x10e4;&#x10e0;&#x10d7;&#x10d8;&#x10e1; &#x10e1;&#x10d8;&#x10d2;&#x10e0;&#x10eb;&#x10d4;:</span>
+              </td>
+              <td>
+                <span>40 &#x10db;&#x10d4;&#x10e2;&#x10e0;&#x10d8;</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span>&#x10d1;&#x10e0;&#x10e3;&#x10dc;&#x10d5;&#x10d8;&#x10e1; &#x10db;&#x10d0;&#x10e5;&#x10e1;&#x10d8;&#x10db;&#x10d0;&#x10da;&#x10e3;&#x10e0;&#x10d8; &#x10e1;&#x10d8;&#x10e9;&#x10e5;&#x10d0;&#x10e0;&#x10d4;:</span>
+              </td>
+              <td>
+                <span>20 &#x10d1;&#x10e0;&#x10e3;&#x10dc;&#x10d8; &#x10ec;&#x10e3;&#x10d7;&#x10e8;&#x10d8;</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span>&#x10d3;&#x10d0;&#x10d3;&#x10d2;&#x10db;&#x10d8;&#x10e1; &#x10e4;&#x10d0;&#x10e1;&#x10d8;:</span>
+              </td>
+              <td>
+                <span>3 200 000 &#x10d6;&#x10d4;&#x10d3;&#x10d8;</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span>&#x10ec;&#x10d0;&#x10e0;&#x10db;&#x10d0;&#x10d3;&#x10dd;&#x10d1;&#x10d0;:</span>
+              </td>
+              <td>
+                <span>0,10 &#x10d6;&#x10d4;&#x10d3;&#x10d8; &#x10d4;&#x10e0;&#x10d7; &#x10d2;&#x10d0;&#x10db;&#x10dd;&#x10db;&#x10e3;&#x10e8;&#x10d0;&#x10d5;&#x10d4;&#x10d1;&#x10e3;&#x10da; &#x10d9;&#x10d5;.&#x10e1;&#x10d7;-&#x10d6;&#x10d4;</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span>&#x10db;&#x10dd;&#x10db;&#x10e1;&#x10d0;&#x10ee;&#x10e3;&#x10e0;&#x10d4;&#x10d1;&#x10d8;&#x10e1; &#x10ee;&#x10d0;&#x10e0;&#x10ef;&#x10d4;&#x10d1;&#x10d8;:</span>
+              </td>
+              <td>
+                <span>0,01 &#x10d6;&#x10d4;&#x10d3;&#x10d8; &#x10d4;&#x10e0;&#x10d7; &#x10d2;&#x10d0;&#x10db;&#x10dd;&#x10db;&#x10e3;&#x10e8;&#x10d0;&#x10d5;&#x10d4;&#x10d1;&#x10e3;&#x10da; &#x10d9;&#x10d5;.&#x10e1;&#x10d7;-&#x10d6;&#x10d4;</span>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <span>&#x10d4;&#x10e4;&#x10d4;&#x10e5;&#x10e2;&#x10e3;&#x10e0;&#x10dd;&#x10d1;&#x10d0;:</span>
+              </td>
+              <td>
+                <span>&#x10db;&#x10e3;&#x10e8;&#x10d0; &#x10db;&#x10d3;&#x10d2;&#x10dd;&#x10db;&#x10d0;&#x10e0;&#x10d4;&#x10dd;&#x10d1;&#x10d0;&#x10e8;&#x10d8;&#x10d0; &#x10ec;&#x10d4;&#x10da;&#x10d8;&#x10ec;&#x10d0;&#x10d3;&#x10d8;&#x10e1; 97%-&#x10d8;&#x10e1; &#x10d2;&#x10d0;&#x10dc;&#x10db;&#x10d0;&#x10d5;&#x10da;&#x10dd;&#x10d1;&#x10d0;&#x10e8;&#x10d8;</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          <span>&#x10e8;&#x10d4;&#x10dc;&#x10d8;&#x10e8;&#x10d5;&#x10dc;&#x10d0;: &#x10d9;&#x10d8;&#x10da;&#x10dd;&#x10d5;&#x10d0;&#x10e2; &#x10e1;&#x10d0;&#x10d0;&#x10d7;&#x10d8; (&#x10d9;&#x10d5;.&#x10e1;&#x10d7;) &#x10d4;&#x10da;&#x10d4;&#x10e5;&#x10e2;&#x10e0;&#x10e3;&#x10da;&#x10d8; &#x10d4;&#x10dc;&#x10d4;&#x10e0;&#x10d2;&#x10d8;&#x10d8;&#x10e1; &#x10e1;&#x10d0;&#x10d6;&#x10dd;&#x10db;&#x10d8;&#x10d0;.</span>
+        </p>
+        <p>&#xa0;</p>
+        <p>
+          <strong>&#x10e8;&#x10d4;&#x10d9;&#x10d8;&#x10d7;&#x10ee;&#x10d5;&#x10d0; 4:</strong>
+        </p>
+        <p>&#x10e0;&#x10d8;&#x10e1;&#x10d8; &#x10e2;&#x10dd;&#x10da;&#x10d8;&#x10d0; &#x10e3;&#x10d3;&#x10d8;&#x10d3;&#x10d4;&#x10e1;&#x10d8; &#x10e1;&#x10d8;&#x10e9;&#x10e5;&#x10d0;&#x10e0;&#x10d4;,&#xa0; &#x10e0;&#x10dd;&#x10db;&#x10da;&#x10d8;&#x10d7;&#x10d0;&#x10ea; &#x10e5;&#x10d0;&#x10e0;&#x10d8;&#x10e1; &#x10d2;&#x10d4;&#x10dc;&#x10d4;&#x10e0;&#x10d0;&#x10e2;&#x10dd;&#x10e0;&#x10d8;&#x10e1; &#x10db;&#x10d1;&#x10e0;&#x10e3;&#x10dc;&#x10d0;&#x10d5;&#x10d8; &#x10e4;&#x10e0;&#x10d7;&#x10d4;&#x10d1;&#x10d8;&#x10e1; &#x10d1;&#x10dd;&#x10da;&#x10dd;&#x10d4;&#x10d1;&#x10d8; &#x10db;&#x10dd;&#x10eb;&#x10e0;&#x10d0;&#x10dd;&#x10d1;&#x10d4;&#x10dc;? &#x10d0;&#x10e6;&#x10ec;&#x10d4;&#x10e0;&#x10d4;&#x10d7; &#x10d7;&#x10e5;&#x10d5;&#x10d4;&#x10dc;&#x10d8; &#x10d0;&#x10db;&#x10dd;&#x10ee;&#x10e1;&#x10dc;&#x10d8;&#x10e1; &#x10d2;&#x10d6;&#x10d0; &#x10d3;&#x10d0; &#x10e8;&#x10d4;&#x10d3;&#x10d4;&#x10d2;&#x10d8; &#x10db;&#x10dd;&#x10d8;&#x10e7;&#x10d5;&#x10d0;&#x10dc;&#x10d4;&#x10d7;<strong> &#x10d9;&#x10d8;&#x10da;&#x10dd;&#x10db;&#x10d4;&#x10e2;&#x10e0;&#x10d4;&#x10d1;&#x10d8;&#x10d7;&#xa0; &#x10e1;&#x10d0;&#x10d0;&#x10d7;&#x10e8;&#x10d8; (&#x10d9;&#x10db;/&#x10e1;&#x10d7;)</strong>. &#x10d8;&#x10e1;&#x10d0;&#x10e0;&#x10d2;&#x10d4;&#x10d1;&#x10da;&#x10d4;&#x10d7; &#x10d7;&#x10d0;&#x10d5;&#x10d8;&#x10d3;&#x10d0;&#x10dc; &#x10db;&#x10dd;&#x10ea;&#x10d4;&#x10db;&#x10e3;&#x10da;&#x10d8; &#x10d8;&#x10dc;&#x10e4;&#x10dd;&#x10e0;&#x10db;&#x10d0;&#x10ea;&#x10d8;&#x10d8;&#x10d7; E-82 &#x10db;&#x10dd;&#x10d3;&#x10d4;&#x10da;&#x10d8;&#x10e1; &#x10e8;&#x10d4;&#x10e1;&#x10d0;&#x10ee;&#x10d4;&#x10d1;.</p>
+        <p><strong>&#x10de;&#x10d0;&#x10e1;&#x10e3;&#x10ee;&#x10d8;:&#xa0;</strong> &#xa0;<qti-text-entry-interaction response-identifier="RESPONSE_5" base="10" placeholder-text="" box-width="" box-height=""/>&#x10d9;&#x10db;/&#x10e1;&#x10d7;</p>
+      </div>
+    </div>
+    <div class="grid-row">
+      <div class="col-12">
+        <qti-extended-text-interaction response-identifier="RESPONSE_1" base="10" min-strings="0" format="plain">
+          <qti-prompt>
+            <strong>&#x10d0;&#x10ee;&#x10e1;&#x10dc;&#x10d0;:</strong>
+          </qti-prompt>
+        </qti-extended-text-interaction>
+      </div>
+    </div>
+  </qti-item-body>
+  <qti-response-processing>
+    <qti-response-condition>
+      <qti-response-if>
+        <qti-match>
+          <qti-variable identifier="RESPONSE_5"/>
+          <qti-correct identifier="RESPONSE_5"/>
+        </qti-match>
+        <qti-set-outcome-value identifier="SCORE">
+          <qti-sum>
+            <qti-variable identifier="SCORE"/>
+            <qti-base-value base-type="integer">1</qti-base-value>
+          </qti-sum>
+        </qti-set-outcome-value>
+      </qti-response-if>
+    </qti-response-condition>
+    <qti-response-condition>
+      <qti-response-if>
+        <qti-match>
+          <qti-variable identifier="RESPONSE_1"/>
+          <qti-correct identifier="RESPONSE_1"/>
+        </qti-match>
+        <qti-set-outcome-value identifier="SCORE">
+          <qti-sum>
+            <qti-variable identifier="SCORE"/>
+            <qti-base-value base-type="integer">1</qti-base-value>
+          </qti-sum>
+        </qti-set-outcome-value>
+      </qti-response-if>
+    </qti-response-condition>
+  </qti-response-processing>
+</qti-assessment-item>
