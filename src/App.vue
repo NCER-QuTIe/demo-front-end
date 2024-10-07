@@ -1,6 +1,11 @@
 <script setup>
 import "qti3-item-player-vue3/dist/qti3Player.css";
 
+import ProgressBar from "./components/ProgressBar.vue";
+import ControlButtons from "./components/ControlButtons.vue";
+
+import { ref, watchEffect } from "vue";
+
 let qti3Player = null;
 let item;
 
@@ -8,21 +13,16 @@ let items = [
     "/wind-qti3/i66cc20026976d353700bd50789a79d0a15c/qti.xml",
     "/4-qti3/i66cc20a40c29a353700f3415bcaeb697a3a/qti.xml",
     "/ლონდონის_თვალი_-_2_1725965625-qti3/i66cc1fe0d77b63537008681fb048efbbf44/qti.xml",
-    "/wind-qti3/i66cc20026976d353700bd50789a79d0a15c/qti.xml",
-    "/4-qti3/i66cc20a40c29a353700f3415bcaeb697a3a/qti.xml",
-    "/ლონდონის_თვალი_-_2_1725965625-qti3/i66cc1fe0d77b63537008681fb048efbbf44/qti.xml",
 ];
 
-async function loadData() {
+watchEffect(async () => {
     for (let i = 0; i < items.length; i++) {
         let response = await fetch(items[i], { mode: "no-cors" });
         let xml = await response.text();
         items[i] = xml;
     }
     getReadyer();
-}
-
-loadData();
+});
 
 let ready = 2;
 function getReadyer() {
@@ -44,8 +44,6 @@ function handleItemReady(_item) {
     );
 }
 
-import { ref } from "vue";
-
 let current_item = ref(-1);
 
 function switchToItem(index) {
@@ -55,7 +53,6 @@ function switchToItem(index) {
     }
     if (index < 0) {
         return;
-        index = items.length - 1;
     }
     if (index != current_item.value) {
         current_item.value = index;
@@ -75,6 +72,16 @@ function switchToItem(index) {
 
 <template>
     <main>
+        <div id="controls">
+            <ProgressBar :length="items.length" :progress="current_item" />
+            <ControlButtons
+                :enablePrevious="current_item > 0"
+                :enableNext="current_item < items.length - 1"
+                @next="switchToItem(current_item + 1)"
+                @previous="switchToItem(current_item - 1)"
+            />
+        </div>
+
         <div id="player-container">
             <Qti3Player
                 ref="qti3player"
@@ -82,21 +89,6 @@ function switchToItem(index) {
                 @notifyQti3PlayerReady="handlePlayerReady"
                 @notifyQti3ItemReady="handleItemReady"
             />
-        </div>
-
-        <div id="buttons">
-            <button
-                @click="switchToItem(current_item - 1)"
-                :disabled="current_item == 0"
-            >
-                წინა
-            </button>
-            <span style="font-size: 1.3em">
-                {{ current_item + 1 }}
-            </span>
-            <button @click="switchToItem(current_item + 1)">
-                {{ current_item < items.length - 1 ? "შემდეგი" : "დასრულება" }}
-            </button>
         </div>
     </main>
 </template>
@@ -107,36 +99,26 @@ main {
     flex-direction: column;
     align-items: center;
     width: 100%;
+    height: 50%;
+    background-color: #6bb1eb;
 }
 
 #player-container {
-    max-height: calc(100vh - 5em);
-    margin-bottom: 0.5em;
+    height: calc(100vh - 50pt);
+    box-sizing: border-box;
+
+    /* margin-bottom: 0.5em; */
     overflow: scroll;
-    border: 1px solid black;
-    border-radius: 4px;
-    padding: 1em;
+    margin: 10pt;
+    padding: 10pt;
+    background-color: white;
 }
 
-#buttons {
+#controls {
     display: flex;
+    justify-content: space-between;
     width: 100%;
-    gap: 1em;
-    align-items: baseline;
-    justify-content: center;
-}
-
-button {
-    padding: 1em 2em;
-    font-size: 1em;
-    background-color: #4a0;
-    color: white;
-    border: 1px solid #4c1;
-    border-radius: 1em;
-}
-
-button:disabled {
-    background-color: #cfb;
-    border-color: #efd;
+    padding: 10pt;
+    background-color: #5289c5;
 }
 </style>
