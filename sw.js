@@ -7,6 +7,14 @@ import {
 } from "@zip.js/zip.js";
 
 let files = {};
+self.addEventListener("install", (event) => {
+  // The promise that skipWaiting() returns can be safely ignored.
+  self.skipWaiting();
+
+  // Perform any other actions required for your
+  // service worker to install, potentially inside
+  // of event.waitUntil();
+});
 
 self.addEventListener("fetch", (event) => {
   const { request } = event;
@@ -26,8 +34,6 @@ self.addEventListener("fetch", (event) => {
 });
 
 async function handleRequest(request, testID, fileName) {
-  let reader;
-
   if (files[testID] == undefined) {
     console.log("fetching dataaa");
     let res = await fetch(`https://eko.dimitri.ge/api/admin/qtitest/${testID}`);
@@ -39,8 +45,9 @@ async function handleRequest(request, testID, fileName) {
     console.log("fetched dataaa!!!");
   }
 
+  let reader;
   try {
-    // console.log("trying to read", { file });
+    console.log("trying to read", files[testID]);
     reader = new ZipReader(new BlobReader(files[testID]));
     const response = await zipreadfile(reader, fileName, request);
 
