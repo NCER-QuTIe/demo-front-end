@@ -5,7 +5,7 @@ import { reactive, watchEffect, ref } from "vue";
 
 let data = reactive([]);
 
-fetch("/api/admin/qtiTests")
+fetch("https://eko.dimitri.ge/api/admin/qtiTests")
     .then((data) => data.json())
     .then((json) => {
         data.push(...json);
