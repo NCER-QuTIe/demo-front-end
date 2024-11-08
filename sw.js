@@ -40,7 +40,7 @@ async function handleRequest(request, testID, fileName) {
   }
 
   try {
-    console.log("trying to read", { file });
+    // console.log("trying to read", { file });
     reader = new ZipReader(new BlobReader(files[testID]));
     const response = await zipreadfile(reader, fileName, request);
 
