@@ -1,5 +1,6 @@
 <script setup>
 defineProps(["enablePrevious", "enableNext"]);
+defineEmits(["previous", "next"]);
 </script>
 
 <template>

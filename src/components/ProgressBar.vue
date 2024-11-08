@@ -1,23 +1,29 @@
 <script setup>
-defineProps(["length", "progress"]);
+let props = defineProps(["length", "progress"]);
+defineEmits(["goto"]);
+import { ref, watchEffect } from "vue";
+
+let visited = ref(0);
+
+watchEffect((p) => {
+    console.log("\n", props.progress, "\n");
+    visited.value = Math.max(visited.value, props.progress + 1);
+});
 </script>
 
 <template>
     <div id="progress-bar">
-        <div
+        <button
             v-for="i in length"
-            :style="{
-                backgroundColor:
-                    i - 1 < progress
-                        ? '#6e893f'
-                        : i - 1 == progress
-                          ? 'white'
-                          : 'transparent',
+            :class="{
+                active: i - 1 == progress,
             }"
+            :disabled="i - 1 >= visited"
+            @click="$emit('goto', i)"
             key="i"
         >
             {{ i }}
-        </div>
+        </button>
     </div>
 </template>
 
@@ -29,7 +35,8 @@ defineProps(["length", "progress"]);
     background-color: #aec584;
     box-sizing: border-box;
 }
-#progress-bar > div {
+
+#progress-bar > button {
     width: 30pt;
     height: 30pt;
     border: 2pt solid #7f9a4f;
@@ -39,5 +46,18 @@ defineProps(["length", "progress"]);
     font-size: 20pt;
     padding: 2pt;
     font-family: monospace;
+    background-color: transparent;
+}
+
+#progress-bar > button:not([disabled]) {
+    background-color: #6e893f;
+}
+
+#progress-bar > button.active {
+    background-color: white;
+}
+
+#progress-bar > button:not([disabled]):hover {
+    border-color: white;
 }
 </style>
