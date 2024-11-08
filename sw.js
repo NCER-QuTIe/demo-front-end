@@ -11,6 +11,8 @@ let files = {};
 self.addEventListener("fetch", (event) => {
   const { request } = event;
 
+  console.log("viable for interception", self.registration.scope + "file/");
+
   if (request.url.startsWith(self.registration.scope + "file/")) {
     const path = request.url.slice(self.registration.scope.length + 5);
     console.log({ path });
