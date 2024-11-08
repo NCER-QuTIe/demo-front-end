@@ -49,6 +49,7 @@ async function handleRequest(request, testID, fileName) {
     // todo status codes
     return new Response("eh " + error.message, {
       headers: { "content-type": "text/plain" },
+      // status: 0,
     });
   } finally {
     // close the ZipReader
