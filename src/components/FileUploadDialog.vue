@@ -39,7 +39,7 @@ const blob2base64 = (blob, mimeType) => {
 async function upload() {
     const myFile = file.value.files[0];
     const b64 = await blob2base64(myFile, myFile.type);
-    await fetch("http://16.170.62.88/api/admin/qtitest", {
+    await fetch("https://eko.dimitri.ge/api/admin/qtitest", {
         method: "post",
         headers: {
             "Content-Type": "application/json",

@@ -30,7 +30,7 @@ async function handleRequest(request, testID, fileName) {
 
   if (files[testID] == undefined) {
     console.log("fetching dataaa");
-    let res = await fetch(`http://16.170.62.88/api/admin/qtitest/${testID}`);
+    let res = await fetch(`https://eko.dimitri.ge/api/admin/qtitest/${testID}`);
     let json = await res.json();
     let b64 = json.packageBase64;
     let file = await fetch(`data:text/plain;base64,${b64}`);

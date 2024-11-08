@@ -5,7 +5,7 @@ import { reactive, watchEffect, ref } from "vue";
 
 let data = reactive([]);
 
-fetch("http://16.170.62.88/api/admin/qtiTests")
+fetch("/api/admin/qtiTests")
     .then((data) => data.json())
     .then((json) => {
         data.push(...json);
@@ -13,7 +13,7 @@ fetch("http://16.170.62.88/api/admin/qtiTests")
 
 async function deleteTest(ind) {
     let res = await fetch(
-        `http://16.170.62.88/api/admin/qtitest/${data[ind].id}`,
+        `https://eko.dimitri.ge/api/admin/qtitest/${data[ind].id}`,
         {
             method: "DELETE",
         },
@@ -26,7 +26,7 @@ async function deleteTest(ind) {
 }
 
 async function toggleStatus(ind) {
-    let res = await fetch("http://16.170.62.88/api/admin/qtitest/status", {
+    let res = await fetch("https://eko.dimitri.ge/api/admin/qtitest/status", {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json",
@@ -47,7 +47,7 @@ async function toggleStatus(ind) {
 let show_upload = ref(false);
 
 async function closeUpload() {
-    let res = await fetch("http://16.170.62.88/api/admin/qtiTests");
+    let res = await fetch("https://eko.dimitri.ge/api/admin/qtiTests");
     let json = await res.json();
 
     data.splice(0);
