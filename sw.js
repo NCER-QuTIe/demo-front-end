@@ -13,7 +13,7 @@ self.addEventListener("fetch", (event) => {
 
   if (request.url.startsWith(self.registration.scope + "file/")) {
     const path = request.url.slice(self.registration.scope.length + 5);
-    // console.log({ path });
+    console.log({ path });
     const s = path.split("/");
 
     const testID = s.shift();
@@ -27,18 +27,18 @@ async function handleRequest(request, testID, fileName) {
   let reader;
 
   if (files[testID] == undefined) {
-    // console.log("fetching dataaa");
+    console.log("fetching dataaa");
     let res = await fetch(`http://16.170.62.88/api/admin/qtitest/${testID}`);
     let json = await res.json();
     let b64 = json.packageBase64;
     let file = await fetch(`data:text/plain;base64,${b64}`);
     let blob = await file.blob();
     files[testID] = blob;
-    // console.log("fetched dataaa!!!");
+    console.log("fetched dataaa!!!");
   }
 
   try {
-    // console.log("trying to read", { file });
+    console.log("trying to read", { file });
     reader = new ZipReader(new BlobReader(files[testID]));
     const response = await zipreadfile(reader, fileName, request);
 
@@ -57,7 +57,7 @@ async function handleRequest(request, testID, fileName) {
 async function zipreadfile(reader, fileName, request) {
   // get all entries from the zip
   const entries = await reader.getEntries();
-  // console.log({ entries });
+  console.log({ entries });
 
   if (!entries) {
     throw new Error("No entries in zip file");
