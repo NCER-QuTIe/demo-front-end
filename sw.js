@@ -14,10 +14,12 @@ self.addEventListener("install", (event) => {
 self.addEventListener("fetch", (event) => {
   const { request } = event;
 
-  console.log("viable for interception", self.registration.scope + "file/");
+  const validPrefix = self.registration.scope + "file/";
+  console.log("viable for interception", validPrefix);
 
-  if (request.url.startsWith(self.registration.scope + "file/")) {
-    const path = request.url.slice(self.registration.scope.length + 5);
+  if (request.url.startsWith(validPrefix)) {
+    console.log("intercepting!", request.url);
+    const path = request.url.slice(validPrefix.length);
     console.log({ path });
     const s = path.split("/");
 

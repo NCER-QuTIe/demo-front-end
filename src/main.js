@@ -1,6 +1,7 @@
 import "./assets/main.css";
 
-import { createApp } from "vue/dist/vue.esm-bundler";
+// import { createApp } from "vue/dist/vue.esm-bundler";
+import { createApp } from "vue";
 import App from "./App.vue";
 import Qti3Player from "qti3-item-player-vue3";
 import PrimeVue from "primevue/config";

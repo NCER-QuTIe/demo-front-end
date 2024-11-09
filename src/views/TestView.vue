@@ -25,8 +25,8 @@ async function loadTestXML() {
 
     let res = await fetch(test_url);
     let xml = await res.text();
-
-    console.log(xml);
+    xml = xml.split("\n").slice(1).join("\n");
+    // console.log(xml);
 
     const configuration = {
         guid: route.params.id,
@@ -212,6 +212,7 @@ async function loadItemXML(url) {
     let res = await fetch(path);
     let xml = await res.text();
     xml = xml.replaceAll('src="', `src=\"${path}/../`);
+    xml = xml.split("\n").slice(1).join("\n");
 
     return xml;
 }
