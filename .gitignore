@@ -25,3 +25,6 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+# Local Netlify folder
+.netlify

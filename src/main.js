@@ -9,18 +9,18 @@ import Qti3Test from "qti3-test-vue3";
 
 let app = createApp(App);
 
-import { createWebHistory, createRouter } from "vue-router";
+import { createWebHashHistory, createRouter } from "vue-router";
 
 import ListView from "./views/ListView.vue";
 import TestView from "./views/TestView.vue";
 import HomeView from "./views/HomeView.vue";
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes: [
     { path: "/list/", component: ListView },
     { path: "/test/:id", component: TestView },
-    { path: "/home/", component: HomeView },
+    { path: "/", component: HomeView },
   ],
 });
 
@@ -29,7 +29,8 @@ app
   .use(Qti3Test)
   .use(router)
   .use(PrimeVue, {
-    unstyled: true,
+    // unstyled: true,
+    preset: Aura,
   })
   .mount("#app");
 

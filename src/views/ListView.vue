@@ -5,7 +5,8 @@ import { reactive, watchEffect, ref } from "vue";
 
 let data = reactive([]);
 
-fetch("https://eko.dimitri.ge/api/admin/qtiTests")
+console.log(`${import.meta.env.VITE_API_ROUTE}/api/admin/qtiTests`);
+fetch(`${import.meta.env.VITE_API_ROUTE}/api/admin/qtiTests`)
     .then((data) => data.json())
     .then((json) => {
         data.push(...json);
@@ -13,7 +14,7 @@ fetch("https://eko.dimitri.ge/api/admin/qtiTests")
 
 async function deleteTest(ind) {
     let res = await fetch(
-        `https://eko.dimitri.ge/api/admin/qtitest/${data[ind].id}`,
+        `${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest/${data[ind].id}`,
         {
             method: "DELETE",
         },
@@ -26,16 +27,19 @@ async function deleteTest(ind) {
 }
 
 async function toggleStatus(ind) {
-    let res = await fetch("https://eko.dimitri.ge/api/admin/qtitest/status", {
-        method: "PATCH",
-        headers: {
-            "Content-Type": "application/json",
+    let res = await fetch(
+        `${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest/status`,
+        {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                id: data[ind].id,
+                status: 1 - data[ind].status,
+            }),
         },
-        body: JSON.stringify({
-            id: data[ind].id,
-            status: 1 - data[ind].status,
-        }),
-    });
+    );
 
     if (res.ok) {
         data[ind].status = 1 - data[ind].status;
@@ -47,7 +51,9 @@ async function toggleStatus(ind) {
 let show_upload = ref(false);
 
 async function closeUpload() {
-    let res = await fetch("https://eko.dimitri.ge/api/admin/qtiTests");
+    let res = await fetch(
+        `${import.meta.env.VITE_API_ROUTE}/api/admin/qtiTests`,
+    );
     let json = await res.json();
 
     data.splice(0);

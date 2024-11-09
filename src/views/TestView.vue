@@ -26,6 +26,8 @@ async function loadTestXML() {
     let res = await fetch(test_url);
     let xml = await res.text();
 
+    console.log(xml);
+
     const configuration = {
         guid: route.params.id,
         pnp: {
@@ -309,7 +311,6 @@ function handleScoreAttemptCompleted(data) {
             @notifyQti3PlayerReady="handlePlayerReady"
             @notifyQti3ItemReady="handleItemReady"
             @notifyQti3ScoreAttemptCompleted="handleScoreAttemptCompleted"
-            @notifyQti3EndAttemptCompleted="handleEndAttemptCompleted"
             @notifyQti3SuspendAttemptCompleted="handleSuspendAttemptCompleted"
         />
         <button @click="grade()">შეფასება</button>
