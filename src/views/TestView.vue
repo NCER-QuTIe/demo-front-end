@@ -54,80 +54,26 @@ function handleTestPlayerReady(_qti3TestPlayer) {
 }
 
 function getItems(test) {
-    let res = {};
     let items = [];
     // Get the Test's Parts
     const parts = test.getTestParts();
     parts.forEach((part) => {
-        let part_data = {
-            title:
-                part.getTitle().length == 0
-                    ? "<No Test Part Title>"
-                    : part.getTitle(),
-            // Part navigation mode
-            navigationMode: part.getNavigationMode(),
-            // Part submission mode
-            submissionMode: part.getSubmissionMode(),
-            // Part qti-item-session-control element or null
-            sessionControl: part.getItemSessionControl(),
-            // Part qti-time-limits element or null
-            timeLimits: part.getTimeLimits(),
-            // Array of Part qti-rubric-blocks
-            rubricBlocks: part.getRubricBlocks(),
-            sections: [],
-        };
-
         // Get the Part's Sections
-        const sections = part.getSections();
-        sections.forEach((section) => {
-            let section_data = {
-                title:
-                    section.getTitle().length == 0
-                        ? "<No Section Title>"
-                        : section.getTitle(),
-                fixed: section.getFixed(),
-                visible: section.getVisible(),
-                required: section.getRequired(),
-                keepTogether: section.getKeepTogether(),
-                // Array of RESOLVED (i.e., ordered and selected) item identifiers
-                sectionItemIdentifiers: section.getSectionItemIdentifiers(),
-                // Map (item identifier is map key) of qti-assessment-item-ref's
-                sectionItemsMap: section.getSectionItemsMap(),
-                // Section qti-item-session-control element or null
-                sessionControl: section.getItemSessionControl(),
-                // Section qti-selection element or null
-                selection: section.getSelection(),
-                // Section qti-ordering element or null
-                ordering: section.getOrdering(),
-                // Section qti-time-limits element or null
-                timeLimits: section.getTimeLimits(),
-                // Array of section qti-rubric-blocks
-                rubricBlocks: section.getRubricBlocks(),
-                items: [],
-            };
-            // Print qti-assessment-section properties
-
+        part.getSections().forEach((section) => {
             // Print all of a Section's RESOLVED Item Ref's - in the proper order
-            const sectionItemIdentifiers = section.getSectionItemIdentifiers();
-            sectionItemIdentifiers.forEach((itemIdentifier) => {
+            section.getSectionItemIdentifiers().forEach((itemIdentifier) => {
                 // Pull the full qti-assessment-item-ref component from the sectionItemsMap
                 const itemRef = section
                     .getSectionItemsMap()
                     .get(itemIdentifier);
-                section_data.items.push({
-                    identifier: itemRef.getIdentifier(),
-                    fixed: itemRef.getFixed(),
-                    required: itemRef.getRequired(),
-                    href: itemRef.getHref(),
-                    // Item Ref 'category' attribute or null
-                    category: itemRef.getCategory(),
-                    // Item Ref qti-item-session-control element or null
-                    sessionControl: itemRef.getItemSessionControl(),
-                    // Item Ref qti-time-limits element or null
-                    timeLimits: itemRef.getTimeLimits(),
-                });
 
                 items.push({
+                    guid:
+                        part.getIdentifier() +
+                        "~" +
+                        section.getIdentifier() +
+                        "~" +
+                        itemRef.getIdentifier(),
                     partIdentifier: part.getIdentifier(),
                     sectionIdentifier: section.getIdentifier(),
                     identifier: itemRef.getIdentifier(),
@@ -142,9 +88,7 @@ function getItems(test) {
                     timeLimits: itemRef.getTimeLimits(),
                 });
             }); // end sectionItemIdentifiers.forEach
-            part_data.sections.push(section_data);
         }); // end section.forEach
-        res[part.getIdentifier()] = part_data;
     });
 
     return items;
@@ -172,21 +116,16 @@ const states = reactive({});
 function handleSuspendAttemptCompleted(data) {
     console.log("suspend completed", data);
 
-    const old_guid =
-        items.value[current_item.value].partIdentifier +
-        items.value[current_item.value].sectionIdentifier +
-        items.value[current_item.value].identifier;
+    const old_guid = items.value[current_item.value].guid;
 
     states[old_guid] = data.state;
     test_player.setTestStateItemState(old_guid, data.state);
+
     if (data.target.navigateItem !== undefined) {
         current_item.value = data.target.navigateItem;
 
         console.log("OIIIIII", current_item.value);
-        const new_guid =
-            items.value[current_item.value].partIdentifier +
-            items.value[current_item.value].sectionIdentifier +
-            items.value[current_item.value].identifier;
+        const new_guid = items.value[current_item.value].guid;
 
         if (states[new_guid] !== undefined) {
             item_player.value.loadItemFromXml(
@@ -204,6 +143,10 @@ function handleSuspendAttemptCompleted(data) {
                 },
             );
         }
+    }
+
+    if (data.target.itemScoreReady) {
+        item_player.value.scoreAttempt();
     }
 }
 async function loadItemXML(url) {
@@ -229,10 +172,7 @@ watch([item_player, items], async (e) => {
             item_xmls.value.push(item_xml);
         }
         item_player.value.loadItemFromXml(item_xmls.value[0], {
-            guid:
-                items.value[0].partIdentifier +
-                items.value[0].sectionIdentifier +
-                items.value[0].identifier,
+            guid: items.value[0].guid,
         });
     }
 });
@@ -259,26 +199,11 @@ function navigateGotoItem(index) {
 /// Grading
 
 function grade() {
-    item_player.value.scoreAttempt({ justGrading: true });
+    item_player.value.suspendAttempt({ itemScoreReady: true });
 }
 
 function handleScoreAttemptCompleted(data) {
-    // // 'data' contains the item state in a 'state' property, including response variable values,
-    // // outcome variable values, template variable values, and context variable values.
-    // // 'data' also has a 'target' property that echos the value (if any) of the target string
-    // // parameter passed into the originaging scoreAttempt call.
-    // // ... do something ...
-    // console.log("SCORE ATTEMPT OUTCOMES", data.state);
-    // const itemState = data.state;
-    // const target = data.target;
-    // // Echo all Outcome variables in the Item State
-    // itemState.outcomeVariables.forEach((outcomeVariable) => {
-    //     console.log(
-    //         `[Outcome][${outcomeVariable.identifier}][Value=${outcomeVariable.value}]`,
-    //     );
-    // });
-
-    console.log("\n\n\n\n", data.state);
+    console.log("\n\n\n\n", data);
     alert(
         `your grade is: ${data.state.outcomeVariables[0].value} / ${data.state.outcomeVariables[1].value} `,
     );

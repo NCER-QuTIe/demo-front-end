@@ -1,4 +1,4 @@
-/* body {
+body {
     margin: 0;
     height: 100vh;
 }
@@ -30,4 +30,12 @@ table {
 
 td {
     border: 1px solid black;
-} */
+}
+
+* {
+    scrollbar-width: none; /* For Firefox */
+}
+
+*::-webkit-scrollbar {
+    display: none; /* For Chrome, Safari, and Opera */
+}

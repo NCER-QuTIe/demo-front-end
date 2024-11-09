@@ -33,9 +33,9 @@ self.addEventListener("fetch", (event) => {
 async function handleRequest(request, testID, fileName) {
   if (files[testID] == undefined) {
     console.log("fetching dataaa");
-    let res = await fetch(
-      `${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest/${testID}`,
-    );
+    const url = `${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest/${testID}`;
+    console.log("fetching", url);
+    let res = await fetch(url);
     let json = await res.json();
     let b64 = json.packageBase64;
     let file = await fetch(`data:text/plain;base64,${b64}`);
