@@ -11,23 +11,26 @@ import Feedback from "../components/Feedback.vue";
 const route = useRoute();
 
 let test_player = null;
+let test_url = null;
 
 async function getTestURL() {
-    try {
-        let manifest_res = await fetch(
-            `/file/${route.params.id}/imsmanifest.xml`,
-        );
-        let mainfest_xml = await manifest_res.text();
+    if (test_url === null) {
+        try {
+            let manifest_res = await fetch(
+                `/file/${route.params.id}/imsmanifest.xml`,
+            );
+            let mainfest_xml = await manifest_res.text();
 
-        let test_url = mainfest_xml.match(/href="(.*?test.*?)"/)[1];
-        return `/file/${route.params.id}/${test_url}`;
-    } catch (error) {
-        // Handle the error here
-        console.error("Error occurred:", error);
-        // You can also throw a custom error or return a default value
-        throw new Error("Failed to get test URL");
-        // return '/default/test/url';
+            test_url = mainfest_xml.match(/href="(.*?test.*?)"/)[1];
+        } catch (error) {
+            // Handle the error here
+            console.error("Error occurred:", error);
+            // You can also throw a custom error or return a default value
+            throw new Error("Failed to get test URL");
+            // return '/default/test/url';
+        }
     }
+    return `/file/${route.params.id}/${test_url}`;
 }
 
 async function loadTestXML() {
@@ -226,6 +229,7 @@ const show_feedback = ref(false);
 function grade() {
     // item_player.value.suspendAttempt({ itemScoreReady: true });
     test_player.endAttempt();
+    ე;
     show_feedback.value = true;
 }
 </script>
