@@ -1,9 +1,19 @@
 <script setup>
-defineProps({
+const props = defineProps({
     show: Boolean,
     results: Array,
+    report: String,
 });
 const emit = defineEmits(["close"]);
+
+function download() {
+    const link = document.createElement("a");
+    const file = new Blob([props.report], { type: "text/plain" });
+    link.href = URL.createObjectURL(file);
+    link.download = "ნაშრომი.csv";
+    link.click();
+    URL.revokeObjectURL(link.href);
+}
 </script>
 
 <template>
@@ -41,6 +51,8 @@ const emit = defineEmits(["close"]);
                             ჯამური: {{ results.reduce((a, b) => a + b, 0) }} /
                             {{ results.length }}
                         </h3>
+
+                        <button @click="download">ნაშრომის გადმოწერა</button>
                     </div>
                     <div>
                         <input

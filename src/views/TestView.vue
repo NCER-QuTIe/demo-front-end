@@ -8,6 +8,8 @@ import { ref, reactive, watch } from "vue";
 import { useRoute } from "vue-router";
 import Feedback from "../components/Feedback.vue";
 
+import { compileGradeReport } from "../scripts/gradeReport";
+
 const route = useRoute();
 
 let test_player = null;
@@ -116,10 +118,20 @@ function handleTestReady(_test) {
     items.value = new_items;
 }
 
+const report = ref({});
+
 function handleEndAttemptCompleted(data) {
     console.log("end attempt completed", data);
 
     if (data.target.grading) {
+        let item_states = [];
+
+        for (let item of items.value) {
+            let guid = item.guid;
+            let state = states[guid];
+            item_states.push({ guid, state });
+        }
+        report.value = compileGradeReport(item_states);
         show_feedback.value = true;
     }
 }
@@ -132,7 +144,7 @@ function handlePlayerReady(qti3ItemPlayer) {
     item_player.value = qti3ItemPlayer;
 }
 
-const states = reactive({});
+const states = {};
 function handleSuspendAttemptCompleted(data) {
     console.log("suspend completed", data);
 
@@ -276,6 +288,7 @@ function grade() {
     <Feedback
         :results="results"
         :show="show_feedback"
+        :report="report"
         @close="show_feedback = false"
     />
 </template>
