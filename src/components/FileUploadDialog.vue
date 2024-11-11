@@ -39,7 +39,7 @@ const blob2base64 = (blob, mimeType) => {
 async function upload() {
     const myFile = file.value.files[0];
     const b64 = await blob2base64(myFile, myFile.type);
-    await fetch(`${VITE_API_ROUTE.VITE_API_ROUTE}/api/admin/qtitest`, {
+    await fetch(`${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest`, {
         method: "post",
         headers: {
             "Content-Type": "application/json",
