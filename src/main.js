@@ -19,9 +19,8 @@ import HomeView from "./views/HomeView.vue";
 const router = createRouter({
   history: createWebHashHistory(),
   routes: [
-    { path: "/list/", component: ListView },
     { path: "/test/:id", component: TestView },
-    { path: "/", component: HomeView },
+    { path: "/", component: ListView },
   ],
 });
 

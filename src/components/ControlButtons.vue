@@ -1,6 +1,6 @@
 <script setup>
 defineProps(["enablePrevious", "enableNext"]);
-defineEmits(["previous", "next"]);
+defineEmits(["previous", "next", "finish"]);
 </script>
 
 <template>
@@ -8,8 +8,17 @@ defineEmits(["previous", "next"]);
         <button @click="$emit('previous')" :disabled="!enablePrevious">
             <img src="/left.svg" />
         </button>
-        <button @click="$emit('next')" :disabled="!enableNext">
-            <img src="/right.svg" />
+        <button
+            @click="
+                if (enableNext) {
+                    $emit('next');
+                } else {
+                    $emit('finish');
+                }
+            "
+        >
+            <img src="/right.svg" v-if="enableNext" />
+            <span v-if="!enableNext"> დასრულება </span>
         </button>
     </div>
 </template>
@@ -23,7 +32,7 @@ defineEmits(["previous", "next"]);
 #control-buttons > button {
     border: none;
     background-color: #aec584;
-    width: 30pt;
+    /* width: 30pt; */
     height: 30pt;
 }
 

@@ -39,3 +39,9 @@ td {
 *::-webkit-scrollbar {
     display: none; /* For Chrome, Safari, and Opera */
 }
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}

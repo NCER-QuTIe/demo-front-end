@@ -54,6 +54,12 @@ async function upload() {
     });
     emit("close");
 }
+
+const fileName = ref("");
+function updateFileName(event) {
+    const fileInput = event.target;
+    fileName.value = fileInput.files[0].name;
+}
 </script>
 
 <template>
@@ -62,16 +68,28 @@ async function upload() {
             <div class="modal-container" @click.stop>
                 <form class="modal-body" @submit.prevent>
                     <div>
-                        <input type="file" name="file" ref="file" />
+                        <label for="file-upload" class="file-upload-label"
+                            >Choose File</label
+                        >
+                        <input
+                            type="file"
+                            name="file"
+                            id="file-upload"
+                            ref="file"
+                            @change="updateFileName"
+                        />
+                        <span class="file-name" v-if="fileName">{{
+                            fileName
+                        }}</span>
                     </div>
                     <div>
                         <input
                             type="text"
-                            placeholder="name"
+                            placeholder="ტესტის სახელი"
                             v-model="testName"
                         />
                     </div>
-                    <div>
+                    <div class="input-container">
                         <select v-model="grade">
                             <option v-for="i in 12">{{ i }}</option>
                         </select>
@@ -90,10 +108,14 @@ async function upload() {
                     <textarea v-model="description" />
 
                     <div>
-                        <input type="submit" value="done" @click="upload()" />
+                        <input
+                            type="submit"
+                            value="ატვირთვა"
+                            @click="upload()"
+                        />
                         <input
                             type="button"
-                            value="cancle"
+                            value="გაუქმება"
                             @click="$emit('close')"
                         />
                     </div>
@@ -159,5 +181,99 @@ async function upload() {
 .modal-leave-to .modal-container {
     -webkit-transform: scale(1.1);
     transform: scale(1.1);
+}
+
+.modal-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-body {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    width: 400px;
+}
+
+.modal-body div {
+    margin-bottom: 10px;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.file-upload-label {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #4caf50;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px; /* Add margin-right to create a gap */
+}
+
+.file-name {
+    /* Existing styles */
+    margin-left: 10px; /* Add margin-left to create a gap */
+}
+.file-upload-label:hover {
+    background-color: #4caf50;
+}
+
+.file-upload-button {
+    display: inline-block;
+    padding: 8px 12px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.file-upload-button:hover {
+    background-color: #4caf50;
+}
+
+input[type="text"],
+select,
+textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+textarea {
+    height: 100px;
+}
+
+.input-container {
+    display: flex;
+    gap: 10px;
+}
+
+input[type="submit"],
+input[type="button"] {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+input[type="submit"]:hover,
+input[type="button"]:hover {
+    background-color: #4caf50;
 }
 </style>

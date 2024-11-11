@@ -1,23 +1,33 @@
 <script setup>
 import "qti3-item-player-vue3/dist/qti3Player.css";
 
-import ItemView from "./ItemView.vue";
 import ProgressBar from "../components/ProgressBar.vue";
 import ControlButtons from "../components/ControlButtons.vue";
 
 import { ref, reactive, watch } from "vue";
 import { useRoute } from "vue-router";
+import Feedback from "../components/Feedback.vue";
 
 const route = useRoute();
 
 let test_player = null;
 
 async function getTestURL() {
-    let manifest_res = await fetch(`/file/${route.params.id}/imsmanifest.xml`);
-    let mainfest_xml = await manifest_res.text();
+    try {
+        let manifest_res = await fetch(
+            `/file/${route.params.id}/imsmanifest.xml`,
+        );
+        let mainfest_xml = await manifest_res.text();
 
-    let test_url = mainfest_xml.match(/href="(.*?test.*?)"/)[1];
-    return `/file/${route.params.id}/${test_url}`;
+        let test_url = mainfest_xml.match(/href="(.*?test.*?)"/)[1];
+        return `/file/${route.params.id}/${test_url}`;
+    } catch (error) {
+        // Handle the error here
+        console.error("Error occurred:", error);
+        // You can also throw a custom error or return a default value
+        throw new Error("Failed to get test URL");
+        // return '/default/test/url';
+    }
 }
 
 async function loadTestXML() {
@@ -26,7 +36,6 @@ async function loadTestXML() {
     let res = await fetch(test_url);
     let xml = await res.text();
     xml = xml.split("\n").slice(1).join("\n");
-    // console.log(xml);
 
     const configuration = {
         guid: route.params.id,
@@ -104,6 +113,10 @@ function handleTestReady(_test) {
     items.value = new_items;
 }
 
+function handleEndAttemptCompleted(data) {
+    console.log("end attempt completed", data);
+}
+
 /// ITEM PLAYER
 
 let item_player = ref(null);
@@ -117,37 +130,17 @@ function handleSuspendAttemptCompleted(data) {
     console.log("suspend completed", data);
 
     const old_guid = items.value[current_item.value].guid;
+    const { partIdentifier, sectionIdentifier, identifier } =
+        items.value[current_item.value];
 
     states[old_guid] = data.state;
-    test_player.setTestStateItemState(old_guid, data.state);
-
-    if (data.target.navigateItem !== undefined) {
-        current_item.value = data.target.navigateItem;
-
-        console.log("OIIIIII", current_item.value);
-        const new_guid = items.value[current_item.value].guid;
-
-        if (states[new_guid] !== undefined) {
-            item_player.value.loadItemFromXml(
-                item_xmls.value[current_item.value],
-                {
-                    guid: new_guid,
-                    state: states[new_guid],
-                },
-            );
-        } else {
-            item_player.value.loadItemFromXml(
-                item_xmls.value[current_item.value],
-                {
-                    guid: new_guid,
-                },
-            );
-        }
-    }
-
-    if (data.target.itemScoreReady) {
-        item_player.value.scoreAttempt();
-    }
+    test_player.setTestStateItemState(
+        partIdentifier,
+        sectionIdentifier,
+        identifier,
+        data.state,
+    );
+    item_player.value.scoreAttempt(data.target);
 }
 async function loadItemXML(url) {
     let test_path = await getTestURL();
@@ -198,15 +191,42 @@ function navigateGotoItem(index) {
 
 /// Grading
 
-function grade() {
-    item_player.value.suspendAttempt({ itemScoreReady: true });
-}
+const results = reactive([]);
 
 function handleScoreAttemptCompleted(data) {
-    console.log("\n\n\n\n", data);
-    alert(
-        `your grade is: ${data.state.outcomeVariables[0].value} / ${data.state.outcomeVariables[1].value} `,
-    );
+    results[current_item.value] = data.state.outcomeVariables[0].value;
+
+    if (data.target.navigateItem !== undefined) {
+        current_item.value = data.target.navigateItem;
+
+        console.log("OIIIIII", current_item.value);
+        const new_guid = items.value[current_item.value].guid;
+
+        if (states[new_guid] !== undefined) {
+            item_player.value.loadItemFromXml(
+                item_xmls.value[current_item.value],
+                {
+                    guid: new_guid,
+                    state: states[new_guid],
+                },
+            );
+        } else {
+            item_player.value.loadItemFromXml(
+                item_xmls.value[current_item.value],
+                {
+                    guid: new_guid,
+                },
+            );
+        }
+    }
+}
+
+const show_feedback = ref(false);
+
+function grade() {
+    // item_player.value.suspendAttempt({ itemScoreReady: true });
+    test_player.endAttempt();
+    show_feedback.value = true;
 }
 </script>
 
@@ -215,6 +235,7 @@ function handleScoreAttemptCompleted(data) {
         ref="qti3TestPlayer"
         @notifyQti3TestPlayerReady="handleTestPlayerReady"
         @notifyQti3TestReady="handleTestReady"
+        @notifyQti3TestEndAttemptCompleted="handleEndAttemptCompleted"
     />
     <div id="controls">
         <ProgressBar
@@ -227,6 +248,7 @@ function handleScoreAttemptCompleted(data) {
             :enableNext="current_item < items.length - 1"
             @next="navigateNextItem()"
             @previous="navigateGotoItem(current_item - 1)"
+            @finish="grade"
         />
     </div>
 
@@ -239,8 +261,13 @@ function handleScoreAttemptCompleted(data) {
             @notifyQti3ScoreAttemptCompleted="handleScoreAttemptCompleted"
             @notifyQti3SuspendAttemptCompleted="handleSuspendAttemptCompleted"
         />
-        <button @click="grade()">შეფასება</button>
     </div>
+
+    <Feedback
+        :results="results"
+        :show="show_feedback"
+        @close="show_feedback = false"
+    />
 </template>
 
 <style scoped>
