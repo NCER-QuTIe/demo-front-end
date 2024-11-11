@@ -1,10 +1,4 @@
-import {
-  ZipReader,
-  HttpReader,
-  BlobWriter,
-  TextReader,
-  BlobReader,
-} from "@zip.js/zip.js";
+import { ZipReader, BlobWriter, BlobReader } from "@zip.js/zip.js";
 
 let files = {};
 self.addEventListener("install", (event) => {
@@ -25,7 +19,7 @@ self.addEventListener("fetch", (event) => {
 
     const testID = s.shift();
     const fileName = s.join("/");
-
+    //
     event.respondWith(handleRequest(request, testID, fileName));
   }
 });

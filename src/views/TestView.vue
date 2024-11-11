@@ -16,11 +16,11 @@ let test_url = null;
 async function getTestURL() {
     if (test_url === null) {
         try {
-            let manifest_res = await fetch(
-                `/file/${route.params.id}/imsmanifest.xml`,
-            );
+            const url = `/file/${route.params.id}/imsmanifest.xml`;
+            let manifest_res = await fetch(url);
             let mainfest_xml = await manifest_res.text();
 
+            console.log(url, mainfest_xml);
             test_url = mainfest_xml.match(/href="(.*?test.*?)"/)[1];
         } catch (error) {
             // Handle the error here
@@ -118,6 +118,10 @@ function handleTestReady(_test) {
 
 function handleEndAttemptCompleted(data) {
     console.log("end attempt completed", data);
+
+    if (data.target.grading) {
+        show_feedback.value = true;
+    }
 }
 
 /// ITEM PLAYER
@@ -145,6 +149,7 @@ function handleSuspendAttemptCompleted(data) {
     );
     item_player.value.scoreAttempt(data.target);
 }
+
 async function loadItemXML(url) {
     let test_path = await getTestURL();
     let path = `${test_path}/../${url}`;
@@ -222,15 +227,16 @@ function handleScoreAttemptCompleted(data) {
             );
         }
     }
+
+    if (data.target.grading) {
+        test_player.endAttempt({ grading: true });
+    }
 }
 
 const show_feedback = ref(false);
 
 function grade() {
-    // item_player.value.suspendAttempt({ itemScoreReady: true });
-    test_player.endAttempt();
-    ე;
-    show_feedback.value = true;
+    item_player.value.suspendAttempt({ grading: true });
 }
 </script>
 
