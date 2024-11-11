@@ -19,7 +19,7 @@ export function compileGradeReport(states) {
   for (let i = 0; i < states.length; i++) {
     for (let elt of states[i].state.responseVariables) {
       header.push(i + 1 + " " + georgianize(elt.identifier));
-      report.push('"' + ("" + elt.value).replace('"', '\\"') + '"');
+      report.push('"' + ("" + elt.value).replaceAll('"', '\\"') + '"');
     }
   }
 
