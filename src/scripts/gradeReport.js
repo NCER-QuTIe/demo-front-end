@@ -1,19 +1,13 @@
 export function compileGradeReport(states) {
   console.log(states);
-  let report = "";
-  let header = "";
+  let report = [];
+  let header = [];
   for (let i = 0; i < states.length; i++) {
-    if (i != 0) {
-      header += ",";
-      report += ",";
-    }
     for (let elt of states[i].state.responseVariables) {
-      header += i + 1 + " " + elt.identifier;
-      report += elt.value;
-      header += ",";
-      report += ",";
+      header.push(i + 1 + " " + elt.identifier);
+      report.push(elt.value);
     }
   }
 
-  return header + "\n" + report;
+  return header.join(",") + "\n" + report.join(",");
 }
