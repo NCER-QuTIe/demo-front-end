@@ -2,7 +2,7 @@
 import FileUploadDialog from "@/components/FileUploadDialog.vue";
 import ListFilters from "@/components/ListFilters.vue";
 import TestList from "@/components/TestList.vue";
-import { reactive, ref } from "vue";
+import { reactive, ref, watchEffect } from "vue";
 
 let data = reactive([]);
 
@@ -62,17 +62,25 @@ async function closeUpload() {
     show_upload.value = !show_upload.value;
 }
 let filter_tags = ref([]);
+
+const tag_options = ref([]);
+watchEffect(() => {
+    tag_options.value = data
+        .map((e) => e.tags)
+        .flat()
+        .map((e) => ({ label: e, value: e }));
+});
 </script>
 
 <template>
     <div class="grid grid-cols-[1fr_2fr_1fr] gap-4 h-full p-4">
-        <ListFilters :data="data" v-model="filter_tags" />
+        <ListFilters :tag_options="tag_options" v-model="filter_tags" />
         <TestList
             :data="
                 data.filter((test) =>
                     filter_tags.length === 0
                         ? true
-                        : filter_tags.some((tag) =>
+                        : filter_tags.every((tag) =>
                               test.tags.includes(tag.value),
                           ),
                 )
@@ -80,6 +88,10 @@ let filter_tags = ref([]);
             @deleteTest="deleteTest"
             @toggleStatus="toggleStatus"
         />
-        <FileUploadDialog :show="show_upload" @close="closeUpload()" />
+        <FileUploadDialog
+            :show="show_upload"
+            :old_tag_options="tag_options"
+            @close="closeUpload()"
+        />
     </div>
 </template>

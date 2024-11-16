@@ -1,20 +1,9 @@
 <script setup>
 import { ref, defineProps, watchEffect } from "vue";
 
-const props = defineProps(["data"]);
-
-const tag_options = ref([]);
+const props = defineProps(["tag_options"]);
 
 const filter_tags = defineModel();
-
-watchEffect(() => {
-    tag_options.value = props.data
-        .map((e) => e.tags)
-        .flat()
-        .map((e) => ({ label: e, value: e }));
-});
-
-console.log(tag_options);
 </script>
 
 <template>
@@ -29,6 +18,7 @@ console.log(tag_options);
                     :options="tag_options"
                     optionLabel="label"
                     filter
+                    display="chip"
                     class="w-full"
                 />
                 <label for="test-tags">თაგები</label>

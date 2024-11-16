@@ -1,73 +1,48 @@
 <script setup>
-defineProps({
-    show: Boolean,
-});
+const props = defineProps(["old_tag_options", "show"]);
 const emit = defineEmits(["close"]);
 
-const subject_topics = {
-    მათემატიკა: "ტრიგონომეტრია ალგებრა კალკულუსი".split(" "),
-    ქართული: "გრამატიკა ლიტერატურა".split(" "),
-    ფიზიკა: "მექანიკა ოპტიკა".split(" "),
-    ქიმია: "საწამლავები".split(" "),
-};
-const tag_options = [
-    ...Object.keys(subject_topics),
-    ...Object.values(subject_topics).flat(),
-].map((e) => {
-    return {
-        label: e,
-        value: e,
-    };
-});
-console.log({ tag_options });
-const subjects = Object.keys(subject_topics);
+import { ref, watchEffect } from "vue";
 
-import { ref, useTemplateRef } from "vue";
-
-let file = useTemplateRef("file");
-let testName = ref("");
+let file = ref();
+let name = ref("");
 let tags = ref([]);
 let description = ref("");
 
-const blob2base64 = (blob, mimeType) => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            const dataUrlPrefix = `data:${mimeType};base64,`;
-            const base64WithDataUrlPrefix = reader.result;
-            const base64 = base64WithDataUrlPrefix.replace(dataUrlPrefix, "");
-            resolve(base64);
-        };
-        reader.onerror = reject;
-        console.log(blob);
-        reader.readAsDataURL(blob);
-    });
-};
+import { blob2base64 } from "@/scripts/blob2base64";
 
 async function upload() {
-    console.log(tags.value);
-    const myFile = file.value.files[0];
+    const myFile = file.value;
     const b64 = await blob2base64(myFile, myFile.type);
+
+    const obj = {
+        name: name.value,
+        description: description.value,
+        packageBase64: b64,
+        tags: tags.value.map((e) => e.value),
+        status: 0,
+    };
+
     await fetch(`${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest`, {
         method: "post",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-            name: testName.value,
-            description: description.value,
-            packageBase64: b64,
-            tags: tags.value.map((e) => e.value),
-            status: 0,
-        }),
+        body: JSON.stringify(obj),
     });
+
     emit("close");
 }
 
-const fileName = ref("");
-function updateFileName(event) {
-    const fileInput = event.target;
-    fileName.value = fileInput.files[0].name;
+const tag_options = ref(props.old_tag_options);
+watchEffect(() => {
+    tag_options.value = props.old_tag_options;
+});
+const op = ref();
+const new_tag = ref();
+function add_new_tag(val) {
+    tag_options.value.push({ label: new_tag.value, value: new_tag.value });
+    op.value.hide();
 }
 </script>
 
@@ -76,27 +51,18 @@ function updateFileName(event) {
         <div
             class="p-4 rounded-border border border-surface flex flex-col gap-4 bg-surface"
         >
-            <div class="flex gap-4 items-baseline">
-                <label
-                    for="file-upload"
-                    class="file-upload-label bg-primary p-2 rounded-border cursor-pointer text-primary-contrast"
-                    >Choose File</label
-                >
-                <input
-                    type="file"
-                    name="file"
-                    id="file-upload"
-                    ref="file"
-                    @change="updateFileName"
-                />
-                <span
-                    class="rounded-border p-2 border border-surface bg-surface-950 flex-grow"
-                    v-if="fileName"
-                    >{{ fileName }}</span
-                >
-            </div>
+            <FileUpload
+                ref="fileupload"
+                mode="basic"
+                name="demo[]"
+                customUpload
+                :maxFileSize="1000000"
+                @select="file = $event.files[0]"
+                chooseLabel="ფაილის არჩევა"
+            />
+
             <FloatLabel variant="on">
-                <InputText id="test-name-input" v-model="testName" />
+                <InputText id="test-name-input" v-model="name" />
                 <label for="test-name-input">ტესტის სახელი</label>
             </FloatLabel>
 
@@ -110,7 +76,20 @@ function updateFileName(event) {
                     filter
                     :maxSelectedLabels="10"
                     class="w-full"
-                />
+                >
+                    <template #footer>
+                        <div class="p-3 flex justify-between">
+                            <Button
+                                label="Add New"
+                                severity="secondary"
+                                text
+                                size="small"
+                                icon="pi pi-plus"
+                                @click="op.toggle"
+                            />
+                        </div>
+                    </template>
+                </MultiSelect>
                 <label for="test-tags">თაგები</label>
             </FloatLabel>
 
@@ -128,6 +107,13 @@ function updateFileName(event) {
             <Button label="ატვირთვა" @click="upload()" />
         </div>
     </Fluid>
+
+    <Popover ref="op">
+        <div class="flex flex-col gap-4">
+            <InputText v-model="new_tag" />
+            <Button label="confirm" @click="add_new_tag" />
+        </div>
+    </Popover>
 </template>
 
 <style scoped>
