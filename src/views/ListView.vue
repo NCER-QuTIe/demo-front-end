@@ -65,7 +65,7 @@ let filter_tags = ref([]);
 </script>
 
 <template>
-    <div class="grid grid-cols-[1fr_60em_1fr] gap-4 h-full p-4">
+    <div class="grid grid-cols-[1fr_2fr_1fr] gap-4 h-full p-4">
         <ListFilters :data="data" v-model="filter_tags" />
         <TestList
             :data="

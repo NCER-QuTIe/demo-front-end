@@ -263,29 +263,50 @@ function grade() {
         @notifyQti3TestEndAttemptCompleted="handleEndAttemptCompleted"
     />
 
-    <div class="p-4 w-[70em] m-auto flex flex-col gap-4">
-        <div class="flex gap-4">
+    <div class="p-4 w-[1024px] m-auto flex flex-col gap-4">
+        <div class="flex gap-4 items-center">
             <Button
                 label="დაბრუნება"
                 outlined
                 severity="secondary"
-                icon="pi pi-angle-left"
+                icon="pi pi-home"
                 @click="$router.push('/')"
             />
             <Stepper
-                value="1"
+                :value="current_item + 1"
                 class="flex-grow"
-                :dt="{ step: { gap: '0.25rem' } }"
+                :dt="{
+                    step: {
+                        gap: '0em',
+                        padding: '0em',
+                        header: { gap: '0em' },
+                    },
+                    separator: { margin: '0em' },
+                }"
                 @update:value="(i) => navigateGotoItem(i - 1)"
             >
                 <StepList>
                     <Step v-for="i in items.length" :key="i" :value="i" />
                 </StepList>
             </Stepper>
+
+            <Button
+                label="შემდეგი"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+                @click="navigateNextItem()"
+                v-if="current_item != items.length - 1"
+            />
+            <Button
+                label="დასრულება"
+                severity="warn"
+                @click="grade()"
+                v-if="current_item == items.length - 1"
+            />
         </div>
 
         <div
-            class="p-4 bg-white h-[50em] overflow-y-scroll border border-surface rounded-border"
+            class="p-4 bg-white h-[766px] overflow-y-scroll border border-surface rounded-border"
         >
             <Qti3Player
                 ref="qti3player"
@@ -296,19 +317,6 @@ function grade() {
                     handleSuspendAttemptCompleted
                 "
             />
-            <Fluid>
-                <Button
-                    label="შემდეგი"
-                    @click="navigateNextItem()"
-                    v-if="current_item != items.length - 1"
-                />
-                <Button
-                    label="დასრულება"
-                    severity="warn"
-                    @click="grade()"
-                    v-if="current_item == items.length - 1"
-                />
-            </Fluid>
         </div>
     </div>
 

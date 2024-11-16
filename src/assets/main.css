@@ -14,6 +14,26 @@ body {
     height: 100vh;
 }
 
+.columns {
+    display: grid;
+    gap: 1px;
+    grid-template-columns: 1fr 1fr;
+    background: gray;
+}
+
+.columns > div {
+    background: white;
+    padding: 1rem;
+}
+
+.columns > div + div {
+    grid-column: 1;
+}
+
+.columns > div + div {
+    grid-column: 2;
+}
+
 /* body {
     margin: 0;
     height: 100vh;
