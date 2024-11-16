@@ -215,9 +215,11 @@ const results = reactive([]);
 const max_scores = reactive([]);
 
 function handleScoreAttemptCompleted(data) {
-    results[current_item.value] = data.state.outcomeVariables[0].value;
-    max_scores[current_item.value] =
-        data.state.outcomeVariables[0].normalMaximum;
+    results[current_item.value] = {
+        score: data.state.outcomeVariables[0].value,
+        max_score: data.state.outcomeVariables[0].normalMaximum,
+        problem: current_item.value,
+    };
 
     if (data.target.navigateItem !== undefined) {
         current_item.value = data.target.navigateItem;
@@ -322,8 +324,7 @@ function grade() {
 
     <Feedback
         :results="results"
-        :maxScores="max_scores"
-        :show="show_feedback"
+        v-model:visible="show_feedback"
         :report="report"
         @close="show_feedback = false"
     />
