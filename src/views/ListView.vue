@@ -1,15 +1,16 @@
 <script setup>
-import ListItem from "../components/ListItem.vue";
 import FileUploadDialog from "@/components/FileUploadDialog.vue";
-import { reactive, watchEffect, ref } from "vue";
+import ListFilters from "@/components/ListFilters.vue";
+import TestList from "@/components/TestList.vue";
+import { reactive, ref } from "vue";
 
 let data = reactive([]);
 
-console.log(`${import.meta.env.VITE_API_ROUTE}/api/admin/qtiTests`);
 fetch(`${import.meta.env.VITE_API_ROUTE}/api/admin/qtiTests`)
     .then((data) => data.json())
     .then((json) => {
         data.push(...json);
+        console.log(data);
     });
 
 async function deleteTest(ind) {
@@ -60,71 +61,25 @@ async function closeUpload() {
     data.push(...json);
     show_upload.value = !show_upload.value;
 }
+let filter_tags = ref([]);
 </script>
 
 <template>
-    <FileUploadDialog :show="show_upload" @close="closeUpload()" />
-    <ul>
-        <li id="list-titles">
-            <span> Name </span>
-
-            <span class="tags"> Tags </span>
-
-            <span class="description">Description</span>
-
-            <span>
-                <template v-if="true"> Actions </template>
-            </span>
-        </li>
-        <ListItem
-            v-for="i in data.length"
-            :id="data[i - 1].id"
-            :name="data[i - 1].name"
-            :description="data[i - 1].description"
-            :tags="data[i - 1].tags"
-            :enable-edit="true"
-            :visible="!data[i - 1].status"
-            @toggleVisibility="toggleStatus(i - 1)"
-            @delete="deleteTest(i - 1)"
+    <div class="grid grid-cols-[1fr_60em_1fr] gap-4 h-full p-4">
+        <ListFilters :data="data" v-model="filter_tags" />
+        <TestList
+            :data="
+                data.filter((test) =>
+                    filter_tags.length === 0
+                        ? true
+                        : filter_tags.some((tag) =>
+                              test.tags.includes(tag.value),
+                          ),
+                )
+            "
+            @deleteTest="deleteTest"
+            @toggleStatus="toggleStatus"
         />
-    </ul>
-    <button id="new-test" @click="show_upload = true">
-        <img src="/add.svg" />
-    </button>
+        <FileUploadDialog :show="show_upload" @close="closeUpload()" />
+    </div>
 </template>
-
-<style scoped>
-ul {
-    list-style: none;
-    padding: 0pt;
-    margin: 0pt;
-    width: min-content;
-    /* margin-left: auto;
-    margin-right: auto; */
-    /* margin-top: 100pt;
-    margin-bottom: 100pt; */
-    background-color: white;
-    padding: 16pt;
-    /* color: white; */
-    display: flex;
-    flex-direction: column;
-    gap: 4pt;
-}
-
-#list-titles {
-    display: grid;
-    padding: 4pt;
-    font-weight: 1000;
-    font-size: 14pt;
-    grid-template-columns: 150pt 250pt 200pt 60pt;
-    column-gap: 10pt;
-    text-align: center;
-    font-family: monospace;
-}
-
-#new-test {
-    position: absolute;
-    right: 30pt;
-    bottom: 30pt;
-}
-</style>

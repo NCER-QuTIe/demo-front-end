@@ -212,9 +212,12 @@ function navigateGotoItem(index) {
 /// Grading
 
 const results = reactive([]);
+const max_scores = reactive([]);
 
 function handleScoreAttemptCompleted(data) {
     results[current_item.value] = data.state.outcomeVariables[0].value;
+    max_scores[current_item.value] =
+        data.state.outcomeVariables[0].normalMaximum;
 
     if (data.target.navigateItem !== undefined) {
         current_item.value = data.target.navigateItem;
@@ -259,56 +262,61 @@ function grade() {
         @notifyQti3TestReady="handleTestReady"
         @notifyQti3TestEndAttemptCompleted="handleEndAttemptCompleted"
     />
-    <div id="controls">
-        <ProgressBar
-            :length="items.length"
-            :progress="current_item"
-            @goto="(i) => navigateGotoItem(i - 1)"
-        />
-        <ControlButtons
-            :enablePrevious="current_item > 0"
-            :enableNext="current_item < items.length - 1"
-            @next="navigateNextItem()"
-            @previous="navigateGotoItem(current_item - 1)"
-            @finish="grade"
-        />
-    </div>
 
-    <div id="player-container">
-        <Qti3Player
-            ref="qti3player"
-            container-class="qti3-player-container"
-            @notifyQti3PlayerReady="handlePlayerReady"
-            @notifyQti3ItemReady="handleItemReady"
-            @notifyQti3ScoreAttemptCompleted="handleScoreAttemptCompleted"
-            @notifyQti3SuspendAttemptCompleted="handleSuspendAttemptCompleted"
-        />
+    <div class="p-4 w-[70em] m-auto flex flex-col gap-4">
+        <div class="flex gap-4">
+            <Button
+                label="დაბრუნება"
+                outlined
+                severity="secondary"
+                icon="pi pi-angle-left"
+                @click="$router.push('/')"
+            />
+            <Stepper
+                value="1"
+                class="flex-grow"
+                :dt="{ step: { gap: '0.25rem' } }"
+                @update:value="(i) => navigateGotoItem(i - 1)"
+            >
+                <StepList>
+                    <Step v-for="i in items.length" :key="i" :value="i" />
+                </StepList>
+            </Stepper>
+        </div>
+
+        <div
+            class="p-4 bg-white h-[50em] overflow-y-scroll border border-surface rounded-border"
+        >
+            <Qti3Player
+                ref="qti3player"
+                @notifyQti3PlayerReady="handlePlayerReady"
+                @notifyQti3ItemReady="handleItemReady"
+                @notifyQti3ScoreAttemptCompleted="handleScoreAttemptCompleted"
+                @notifyQti3SuspendAttemptCompleted="
+                    handleSuspendAttemptCompleted
+                "
+            />
+            <Fluid>
+                <Button
+                    label="შემდეგი"
+                    @click="navigateNextItem()"
+                    v-if="current_item != items.length - 1"
+                />
+                <Button
+                    label="დასრულება"
+                    severity="warn"
+                    @click="grade()"
+                    v-if="current_item == items.length - 1"
+                />
+            </Fluid>
+        </div>
     </div>
 
     <Feedback
         :results="results"
+        :maxScores="max_scores"
         :show="show_feedback"
         :report="report"
         @close="show_feedback = false"
     />
 </template>
-
-<style scoped>
-#player-container {
-    height: calc(100vh - 70pt);
-    box-sizing: border-box;
-
-    overflow: scroll;
-    margin: 10pt;
-    padding: 10pt;
-    background-color: white;
-}
-
-#controls {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    padding: 10pt;
-    background-color: #5289c5;
-}
-</style>

@@ -5,20 +5,28 @@ defineProps({
 const emit = defineEmits(["close"]);
 
 const subject_topics = {
-    Mathematics: "trig algebra calculus".split(" "),
-    Georgian: "grammar semantics".split(" "),
-    Physics: "mechanics optics magnetism".split(" "),
-    Chemistry: "potions".split(" "),
+    მათემატიკა: "ტრიგონომეტრია ალგებრა კალკულუსი".split(" "),
+    ქართული: "გრამატიკა ლიტერატურა".split(" "),
+    ფიზიკა: "მექანიკა ოპტიკა".split(" "),
+    ქიმია: "საწამლავები".split(" "),
 };
+const tag_options = [
+    ...Object.keys(subject_topics),
+    ...Object.values(subject_topics).flat(),
+].map((e) => {
+    return {
+        label: e,
+        value: e,
+    };
+});
+console.log({ tag_options });
 const subjects = Object.keys(subject_topics);
 
 import { ref, useTemplateRef } from "vue";
 
-let subj = ref("");
 let file = useTemplateRef("file");
 let testName = ref("");
-let grade = ref("");
-let topic = ref("");
+let tags = ref([]);
 let description = ref("");
 
 const blob2base64 = (blob, mimeType) => {
@@ -37,6 +45,7 @@ const blob2base64 = (blob, mimeType) => {
 };
 
 async function upload() {
+    console.log(tags.value);
     const myFile = file.value.files[0];
     const b64 = await blob2base64(myFile, myFile.type);
     await fetch(`${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest`, {
@@ -48,7 +57,7 @@ async function upload() {
             name: testName.value,
             description: description.value,
             packageBase64: b64,
-            tags: [grade.value, subj.value, topic.value],
+            tags: tags.value.map((e) => e.value),
             status: 0,
         }),
     });
@@ -63,217 +72,66 @@ function updateFileName(event) {
 </script>
 
 <template>
-    <Transition name="modal">
-        <div v-if="show" class="modal-mask" @click="$emit('close')">
-            <div class="modal-container" @click.stop>
-                <form class="modal-body" @submit.prevent>
-                    <div>
-                        <label for="file-upload" class="file-upload-label"
-                            >Choose File</label
-                        >
-                        <input
-                            type="file"
-                            name="file"
-                            id="file-upload"
-                            ref="file"
-                            @change="updateFileName"
-                        />
-                        <span class="file-name" v-if="fileName">{{
-                            fileName
-                        }}</span>
-                    </div>
-                    <div>
-                        <input
-                            type="text"
-                            placeholder="ტესტის სახელი"
-                            v-model="testName"
-                        />
-                    </div>
-                    <div class="input-container">
-                        <select v-model="grade">
-                            <option v-for="i in 12">{{ i }}</option>
-                        </select>
-                        <select v-model="subj">
-                            <option v-for="subject in subjects">
-                                {{ subject }}
-                            </option>
-                        </select>
-                        <select v-model="topic">
-                            <option v-for="topic in subject_topics[subj]">
-                                {{ topic }}
-                            </option>
-                        </select>
-                    </div>
-
-                    <textarea v-model="description" />
-
-                    <div>
-                        <input
-                            type="submit"
-                            value="ატვირთვა"
-                            @click="upload()"
-                        />
-                        <input
-                            type="button"
-                            value="გაუქმება"
-                            @click="$emit('close')"
-                        />
-                    </div>
-                </form>
+    <Fluid class="w-[20rem]">
+        <div
+            class="p-4 rounded-border border border-surface flex flex-col gap-4 bg-surface"
+        >
+            <div class="flex gap-4 items-baseline">
+                <label
+                    for="file-upload"
+                    class="file-upload-label bg-primary p-2 rounded-border cursor-pointer text-primary-contrast"
+                    >Choose File</label
+                >
+                <input
+                    type="file"
+                    name="file"
+                    id="file-upload"
+                    ref="file"
+                    @change="updateFileName"
+                />
+                <span
+                    class="rounded-border p-2 border border-surface bg-surface-950 flex-grow"
+                    v-if="fileName"
+                    >{{ fileName }}</span
+                >
             </div>
+            <FloatLabel variant="on">
+                <InputText id="test-name-input" v-model="testName" />
+                <label for="test-name-input">ტესტის სახელი</label>
+            </FloatLabel>
+
+            <FloatLabel variant="on">
+                <MultiSelect
+                    v-model="tags"
+                    id="test-tags"
+                    display="chip"
+                    :options="tag_options"
+                    optionLabel="label"
+                    filter
+                    :maxSelectedLabels="10"
+                    class="w-full"
+                />
+                <label for="test-tags">თაგები</label>
+            </FloatLabel>
+
+            <FloatLabel variant="on">
+                <Textarea
+                    id="test-description-textarea"
+                    v-model="description"
+                    autoResize
+                    rows="5"
+                    cols="30"
+                />
+                <label for="test-description-textarea">აღწერა</label>
+            </FloatLabel>
+
+            <Button label="ატვირთვა" @click="upload()" />
         </div>
-    </Transition>
+    </Fluid>
 </template>
 
 <style scoped>
-.modal-mask {
-    position: fixed;
-    z-index: 9998;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    transition: opacity 0.3s ease;
-}
-.modal-container {
-    /* width: 300px; */
-    margin: auto;
-    padding: 10pt;
-    background-color: #fff;
-    border-radius: 2px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-    transition: all 0.3s ease;
-}
-.modal-header h3 {
-    margin-top: 0;
-    color: #42b983;
-}
-.modal-body {
-    margin: 20px 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1em;
-}
-.modal-body > {
-    width: 100%;
-}
-.modal-default-button {
-    float: right;
-}
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
-.modal-enter-from {
-    opacity: 0;
-}
-.modal-leave-to {
-    opacity: 0;
-}
-.modal-enter-from .modal-container,
-.modal-leave-to .modal-container {
-    -webkit-transform: scale(1.1);
-    transform: scale(1.1);
-}
-
-.modal-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
-.modal-body {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    width: 400px;
-}
-
-.modal-body div {
-    margin-bottom: 10px;
-}
-
 input[type="file"] {
     display: none;
-}
-
-.file-upload-label {
-    display: inline-block;
-    padding: 8px 12px;
-    background-color: #4caf50;
-    color: #fff;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-right: 10px; /* Add margin-right to create a gap */
-}
-
-.file-name {
-    /* Existing styles */
-    margin-left: 10px; /* Add margin-left to create a gap */
-}
-.file-upload-label:hover {
-    background-color: #4caf50;
-}
-
-.file-upload-button {
-    display: inline-block;
-    padding: 8px 12px;
-    background-color: #4caf50;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.file-upload-button:hover {
-    background-color: #4caf50;
-}
-
-input[type="text"],
-select,
-textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-textarea {
-    height: 100px;
-}
-
-.input-container {
-    display: flex;
-    gap: 10px;
-}
-
-input[type="submit"],
-input[type="button"] {
-    background-color: #4caf50;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-right: 10px;
-}
-
-input[type="submit"]:hover,
-input[type="button"]:hover {
-    background-color: #4caf50;
 }
 </style>

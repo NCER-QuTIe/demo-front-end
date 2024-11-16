@@ -2,6 +2,7 @@
 const props = defineProps({
     show: Boolean,
     results: Array,
+    maxScores: Array,
     report: String,
 });
 const emit = defineEmits(["close"]);
@@ -38,18 +39,18 @@ function download() {
                             <tbody>
                                 <tr>
                                     <td
-                                        v-for="val in results"
-                                        :key="val"
+                                        v-for="(val, i) in results"
+                                        :key="i"
                                         :class="{ 'highlight-cell': val !== 0 }"
                                     >
-                                        {{ val }}
+                                        {{ val }} / {{ maxScores[i] }}
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                         <h3 class="feedback-total">
                             ჯამური: {{ results.reduce((a, b) => a + b, 0) }} /
-                            {{ results.length }}
+                            {{ maxScores.reduce((a, b) => a + b, 0) }}
                         </h3>
 
                         <button @click="download">ნაშრომის გადმოწერა</button>

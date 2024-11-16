@@ -4,13 +4,13 @@ import NavBar from "./components/NavBar.vue";
 
 <template>
     <!-- <NavBar /> -->
-    <main>
+    <main class="h-full">
         <RouterView />
     </main>
 </template>
 
 <style scoped>
-main {
+/* main {
     height: calc(100vh - 25pt);
     display: flex;
     flex-direction: column;
@@ -18,5 +18,5 @@ main {
     width: 100%;
     background-color: #6bb1eb;
     padding: 40pt;
-}
+} */
 </style>
