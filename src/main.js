@@ -1,4 +1,3 @@
-import "./assets/main.css";
 import "primeicons/primeicons.css";
 
 // import { createApp } from "vue/dist/vue.esm-bundler";
@@ -73,3 +72,4 @@ import { serviceWorkerFile } from "virtual:vite-plugin-service-worker";
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register(serviceWorkerFile, { type: "module" });
 }
+import "./assets/main.css";

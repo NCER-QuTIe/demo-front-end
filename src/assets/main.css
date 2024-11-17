@@ -16,14 +16,17 @@ body {
 
 .columns {
     display: grid;
-    gap: 1px;
+    gap: 0.5rem;
     grid-template-columns: 1fr 1fr;
-    background: gray;
+    /* padding: 0.5rem; */
 }
 
 .columns > div {
-    background: white;
+    /* background: white; */
     padding: 1rem;
+    border-radius: var(--p-border-radius-md);
+    border: 1px solid var(--p-surface-100);
+    background-color: white;
 }
 
 .columns > div + div {
@@ -32,6 +35,21 @@ body {
 
 .columns > div + div {
     grid-column: 2;
+}
+
+.qti-color-class {
+    background-color: transparent;
+}
+
+table {
+    border: 1px solid black;
+}
+
+td,
+th {
+    border: 1px solid black;
+    padding-left: 6px;
+    padding-right: 6px;
 }
 
 /* body {
@@ -60,13 +78,6 @@ button:not([disabled]):hover {
     background-color: #7f9a4f;
 }
 
-table {
-    border: 1px solid black;
-}
-
-td {
-    border: 1px solid black;
-}
 
 * {
     scrollbar-width: none;
