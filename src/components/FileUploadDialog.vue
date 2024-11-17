@@ -51,6 +51,7 @@ function add_new_tag(val) {
         <div
             class="p-4 rounded-border border border-surface flex flex-col gap-4 bg-surface"
         >
+            <h1 class="text-lg font-bold text-center">ტესტის ატვირთვა</h1>
             <FileUpload
                 ref="fileupload"
                 mode="basic"
@@ -66,32 +67,29 @@ function add_new_tag(val) {
                 <label for="test-name-input">ტესტის სახელი</label>
             </FloatLabel>
 
-            <FloatLabel variant="on">
-                <MultiSelect
-                    v-model="tags"
-                    id="test-tags"
-                    display="chip"
-                    :options="tag_options"
-                    optionLabel="label"
-                    filter
-                    :maxSelectedLabels="10"
-                    class="w-full"
-                >
-                    <template #footer>
-                        <div class="p-3 flex justify-between">
-                            <Button
-                                label="Add New"
-                                severity="secondary"
-                                text
-                                size="small"
-                                icon="pi pi-plus"
-                                @click="op.toggle"
-                            />
-                        </div>
-                    </template>
-                </MultiSelect>
-                <label for="test-tags">თაგები</label>
-            </FloatLabel>
+            <MultiSelect
+                v-model="tags"
+                display="chip"
+                placeholder="თაგები"
+                :options="tag_options"
+                optionLabel="label"
+                filter
+                :maxSelectedLabels="10"
+                class="w-full"
+            >
+                <template #footer>
+                    <div class="p-3 flex justify-between">
+                        <Button
+                            label="Add New"
+                            severity="secondary"
+                            text
+                            size="small"
+                            icon="pi pi-plus"
+                            @click="op.toggle"
+                        />
+                    </div>
+                </template>
+            </MultiSelect>
 
             <FloatLabel variant="on">
                 <Textarea

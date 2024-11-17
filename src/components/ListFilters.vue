@@ -8,22 +8,23 @@ const filter_tags = defineModel();
 
 <template>
     <Fluid class="w-[20rem] justify-self-end">
-        <div
+        <Fieldset
+            legend="ფილტრი"
+            toggleable
+            collapsed
             class="p-4 rounded-border border border-surface flex flex-col gap-4"
         >
-            <FloatLabel variant="on">
-                <MultiSelect
-                    v-model="filter_tags"
-                    id="test-tags"
-                    :options="tag_options"
-                    optionLabel="label"
-                    filter
-                    display="chip"
-                    class="w-full"
-                />
-                <label for="test-tags">თაგები</label>
-            </FloatLabel>
-        </div>
+            <MultiSelect
+                v-model="filter_tags"
+                id="test-tags"
+                :options="tag_options"
+                optionLabel="label"
+                placeholder="თაგები"
+                filter
+                display="chip"
+                class="w-full"
+            />
+        </Fieldset>
     </Fluid>
 </template>
 

@@ -40,7 +40,7 @@ const rows = ref(10);
             <AccordionPanel
                 v-for="(d, ind) in data.slice(first, first + rows)"
                 :key="d.name + ind"
-                :value="d"
+                :value="ind"
                 class="border-none"
             >
                 <AccordionHeader>

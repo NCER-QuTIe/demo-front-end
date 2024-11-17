@@ -265,9 +265,7 @@ function grade() {
         @notifyQti3TestEndAttemptCompleted="handleEndAttemptCompleted"
     />
 
-    <div
-        class="p-4 max-w-[1366px] min-w-[1024px] w-5/6 m-auto flex flex-col gap-4 items-center"
-    >
+    <div class="py-4 w-[1024px] m-auto flex flex-col gap-4 items-center">
         <div class="w-[1024px] flex gap-4 items-center">
             <Button
                 label="დაბრუნება"
@@ -309,7 +307,9 @@ function grade() {
             />
         </div>
 
-        <div class="h-[766px] overflow-y-scroll">
+        <div
+            class="h-[766px] overflow-y-scroll p-1 pb-2 border border-surface rounded-border"
+        >
             <Qti3Player
                 ref="qti3player"
                 colorClass="bg-transparent"
