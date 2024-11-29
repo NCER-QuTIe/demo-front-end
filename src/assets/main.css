@@ -39,7 +39,7 @@ body {
 
 .columns > div + div {
     grid-column: 1;
-    border-left: 1px solid black;
+    border-left: 1px solid var(--p-surface-200);
 }
 
 .columns > div + div {
