@@ -311,7 +311,7 @@ function grade() {
         </div>
 
         <div
-            class="box-border h-full w-[1024px] min-w-[1024px] overflow-y-scroll p-1 pb-2 border bg-white border-surface rounded-border"
+            class="box-border h-full w-[1024px] min-w-[1024px] overflow-y-scroll p-1 pb-1 border bg-white border-surface rounded-border"
         >
             <div class="w-full h-full" v-if="items.length == 0">
                 <Skeleton width="1014px" height="100%"></Skeleton>

@@ -19,19 +19,27 @@ body {
     gap: 0.3rem;
     grid-template-columns: 1fr 1fr;
     /* padding: 0.5rem; */
+    height: 100%;
 }
+/*
+.qti3-player-container-fluid,
+.qti3-player-container-fluid div {
+    height: 100%;
+} */
 
 .columns > div {
     /* background: white; */
+    min-height: 666px;
     padding: 1rem;
-    border-radius: var(--p-border-radius-md);
-    border: 1px solid var(--p-surface-100);
+    /* border-radius: var(--p-border-radius-md); */
+    /* border: 1px solid var(--p-surface-100); */
     background-color: white;
-    box-shadow: 0 2px 3px 1px var(--p-surface-100);
+    /* box-shadow: 0 2px 3px 1px var(--p-surface-100); */
 }
 
 .columns > div + div {
     grid-column: 1;
+    border-left: 1px solid black;
 }
 
 .columns > div + div {
