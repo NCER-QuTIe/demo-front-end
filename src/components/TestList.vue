@@ -34,9 +34,9 @@ const rows = ref(10);
 
 <template>
     <div
-        class="flex flex-col gap-4 border p-4 border-surface justify-between rounded-border"
+        class="flex flex-col gap-4 border p-4 max-w-[60em] border-surface justify-between rounded-border"
     >
-        <Accordion class="mx-auto max-w-[60em] w-full h-min">
+        <Accordion class="mx-auto w-full h-min">
             <AccordionPanel
                 v-for="(d, ind) in data.slice(first, first + rows)"
                 :key="d.name + ind"

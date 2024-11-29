@@ -19,6 +19,7 @@ async function getTestURL() {
     if (test_url === null) {
         try {
             const url = `/file/${route.params.id}/imsmanifest.xml`;
+            await navigator.serviceWorker.ready;
             let manifest_res = await fetch(url);
             let mainfest_xml = await manifest_res.text();
 
@@ -310,8 +311,11 @@ function grade() {
         </div>
 
         <div
-            class="box-border h-full w-[1014] overflow-y-scroll p-1 pb-2 border border-surface rounded-border"
+            class="box-border h-full w-[1024px] min-w-[1024px] overflow-y-scroll p-1 pb-2 border bg-white border-surface rounded-border"
         >
+            <div class="w-full h-full" v-if="items.length == 0">
+                <Skeleton width="1014px" height="100%"></Skeleton>
+            </div>
             <Qti3Player
                 ref="qti3player"
                 colorClass="bg-transparent"

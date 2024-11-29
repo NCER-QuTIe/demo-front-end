@@ -1,3 +1,5 @@
+"use strict";
+
 import { ZipReader, BlobWriter, BlobReader } from "@zip.js/zip.js";
 
 let files = {};
