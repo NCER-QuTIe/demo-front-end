@@ -3,6 +3,7 @@ import "qti3-item-player-vue3/dist/qti3Player.css";
 
 import ProgressBar from "../components/ProgressBar.vue";
 import ControlButtons from "../components/ControlButtons.vue";
+import Calculator from "../components/Calculator.vue";
 
 import { ref, reactive, watch } from "vue";
 import { useRoute } from "vue-router";
@@ -256,6 +257,13 @@ const show_feedback = ref(false);
 function grade() {
     item_player.value.suspendAttempt({ grading: true });
 }
+
+// CALCULATOR
+
+const calculatorRef = ref();
+function toggleCalculator(event) {
+    calculatorRef.value.toggle(event);
+}
 </script>
 
 <template>
@@ -296,6 +304,13 @@ function grade() {
             </Stepper>
 
             <Button
+                icon="pi pi-calculator"
+                iconPos="right"
+                @click="toggleCalculator"
+                severity="secondary"
+            />
+
+            <Button
                 label="შემდეგი"
                 icon="pi pi-arrow-right"
                 iconPos="right"
@@ -309,6 +324,10 @@ function grade() {
                 v-if="current_item == items.length - 1"
             />
         </div>
+
+        <Popover ref="calculatorRef">
+            <Calculator />
+        </Popover>
 
         <div
             class="box-border h-full w-[1024px] min-w-[1024px] overflow-y-scroll p-1 pb-1 border bg-white border-surface rounded-border"
