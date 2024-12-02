@@ -63,7 +63,7 @@ function rotateEnd(event) {
 <template>
     <div class="absolute">
         <div
-            class="z-50 absolute text-xs bg-emphasis h-24 pb-8 px-2 text-color text-center border-surface border rounded-border select-none"
+            class="z-50 opacity-90 absolute text-xs bg-emphasis h-24 pb-8 px-2 text-color text-center border-surface border rounded-border select-none"
             :style="styleObeject"
             @mousedown="dragStart"
             @mouseout=""
