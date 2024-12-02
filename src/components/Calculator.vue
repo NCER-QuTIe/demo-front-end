@@ -241,6 +241,13 @@ let board = [
     </table>
 </template>
 
+<style>
+sup {
+    left: -7px;
+    margin-right: -7px;
+}
+</style>
+
 <style scoped>
 table {
     border: none;

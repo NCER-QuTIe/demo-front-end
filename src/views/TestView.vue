@@ -4,12 +4,13 @@ import "qti3-item-player-vue3/dist/qti3Player.css";
 import ProgressBar from "../components/ProgressBar.vue";
 import ControlButtons from "../components/ControlButtons.vue";
 import Calculator from "../components/Calculator.vue";
+import Ruler from "../components/Ruler.vue";
 
 import { ref, reactive, watch } from "vue";
 import { useRoute } from "vue-router";
 import Feedback from "../components/Feedback.vue";
 
-import { compileGradeReport } from "../scripts/gradeReport";
+import { compileGradeReport } from "../scripts/gradeReport.ts";
 
 const route = useRoute();
 
@@ -131,7 +132,15 @@ function handleEndAttemptCompleted(data) {
         for (let item of items.value) {
             let guid = item.guid;
             let state = states[guid];
-            item_states.push({ guid, state });
+            console.log(state.responseVariables.slice(2));
+            item_states.push({
+                attempts: state.responseVariables[0].value,
+                duration: state.responseVariables[1].value,
+                responses: state.responseVariables.slice(2).map((v) => ({
+                    identifier: v.identifier,
+                    response: v.value,
+                })),
+            });
         }
         report.value = compileGradeReport(item_states);
         show_feedback.value = true;
@@ -264,6 +273,13 @@ const calculatorRef = ref();
 function toggleCalculator(event) {
     calculatorRef.value.toggle(event);
 }
+
+// RULER
+
+const rulerRef = ref(false);
+function toggleRuler(event) {
+    rulerRef.value = !rulerRef.value;
+}
 </script>
 
 <template>
@@ -273,9 +289,10 @@ function toggleCalculator(event) {
         @notifyQti3TestReady="handleTestReady"
         @notifyQti3TestEndAttemptCompleted="handleEndAttemptCompleted"
     />
+    <Ruler v-if="rulerRef" />
 
     <div
-        class="box-border py-4 w-[1024px] h-[766px] m-auto flex flex-col gap-4 items-center"
+        class="box-border py-4 w-[1024px] h-[766px] m-auto flex flex-col gap-4 items-center relative"
     >
         <div class="w-full flex gap-4 items-center">
             <Button
@@ -307,6 +324,12 @@ function toggleCalculator(event) {
                 icon="pi pi-calculator"
                 iconPos="right"
                 @click="toggleCalculator"
+                severity="secondary"
+            />
+
+            <Button
+                label="სახაზავი"
+                @click="toggleRuler"
                 severity="secondary"
             />
 
