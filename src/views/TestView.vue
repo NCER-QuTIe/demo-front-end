@@ -292,7 +292,7 @@ function toggleRuler(event) {
     <Ruler v-if="rulerRef" />
 
     <div
-        class="box-border py-4 w-[1024px] h-[766px] m-auto flex flex-col gap-4 items-center relative"
+        class="box-border py-4 w-[1024px] h-[766px] m-auto flex flex-col gap-4 items-center relative text-sm"
     >
         <div class="w-full flex gap-4 items-center">
             <Button

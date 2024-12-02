@@ -59,6 +59,7 @@ app
         prefix: "p",
         darkModeSelector: "system",
         cssLayer: false,
+        darkModeSelector: false,
       },
     },
   })
