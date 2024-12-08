@@ -1,25 +1,37 @@
 @tailwind base;
-@tailwind components;
+/* @tailwind components; */
 @tailwind utilities;
 
+@layer base {
+  h1 {
+    @apply text-6xl;
+  }
+  h2 {
+    @apply text-4xl;
+  }
+  h3 {
+    @apply text-3xl;
+  }
+}
+
 html {
-    height: 100vh;
+  height: 100vh;
 }
 
 body {
-    height: 100vh;
+  height: 100vh;
 }
 
 #app {
-    height: 100vh;
+  height: 100vh;
 }
 
 .columns {
-    display: grid;
-    /* gap: 0.3rem; */
-    grid-template-columns: 1fr 1fr;
-    /* padding: 0.5rem; */
-    height: 100%;
+  display: grid;
+  /* gap: 0.3rem; */
+  grid-template-columns: 1fr 1fr;
+  /* padding: 0.5rem; */
+  height: 100%;
 }
 /*
 .qti3-player-container-fluid,
@@ -28,37 +40,37 @@ body {
 } */
 
 .columns > div {
-    /* background: white; */
-    min-height: 666px;
-    padding: 1rem;
-    /* border-radius: var(--p-border-radius-md); */
-    /* border: 1px solid var(--p-surface-100); */
-    background-color: white;
-    /* box-shadow: 0 2px 3px 1px var(--p-surface-100); */
+  /* background: white; */
+  min-height: 666px;
+  padding: 1rem;
+  /* border-radius: var(--p-border-radius-md); */
+  /* border: 1px solid var(--p-surface-100); */
+  background-color: white;
+  /* box-shadow: 0 2px 3px 1px var(--p-surface-100); */
 }
 
 .columns > div + div {
-    grid-column: 1;
-    border-left: 3px solid var(--p-surface-200);
+  grid-column: 1;
+  border-left: 3px solid var(--p-surface-200);
 }
 
 .columns > div + div {
-    grid-column: 2;
+  grid-column: 2;
 }
 
 .qti-color-class {
-    background-color: transparent;
+  background-color: transparent;
 }
 
 table {
-    border: 1px solid black;
+  border: 1px solid black;
 }
 
 td,
 th {
-    border: 1px solid black;
-    padding-left: 6px;
-    padding-right: 6px;
+  border: 1px solid black;
+  padding-left: 6px;
+  padding-right: 6px;
 }
 
 /* body {
