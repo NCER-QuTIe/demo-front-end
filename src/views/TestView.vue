@@ -1,8 +1,6 @@
 <script setup>
-// import "qti3-item-player-vue3/dist/qti3Player.css";
+import "qti3-item-player-vue3/dist/qti3Player.css";
 
-import ProgressBar from "../components/ProgressBar.vue";
-import ControlButtons from "../components/ControlButtons.vue";
 import Calculator from "../components/Calculator.vue";
 import Ruler from "../components/Ruler.vue";
 
@@ -341,7 +339,7 @@ function toggleRuler(event) {
     </Popover>
 
     <div
-      class="box-border h-full w-[1024px] min-w-[1024px] overflow-y-scroll p-1 pb-1 border bg-white border-surface rounded-border qti-item"
+      class="box-border h-full w-[1024px] min-w-[1024px] overflow-y-scroll qti-labels-none p-4 pb-1 border bg-white border-surface rounded-border qti-item"
     >
       <div class="w-full h-full" v-if="items.length == 0">
         <Skeleton width="1014px" height="100%"></Skeleton>

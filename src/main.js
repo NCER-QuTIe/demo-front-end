@@ -1,4 +1,4 @@
-import "./assets/qti-runner.css";
+// import "./assets/qti-runner.css";
 import "primeicons/primeicons.css";
 
 // import { createApp } from "vue/dist/vue.esm-bundler";
