@@ -175,6 +175,10 @@ async function loadItemXML(url) {
   let res = await fetch(path);
   let xml = await res.text();
   xml = xml.replaceAll('src="', `src=\"${path}/../`);
+  xml = xml.replaceAll(
+    "qti-inline-choice-interaction",
+    `qti-inline-choice-interaction dataPrompt="არჩევა..."`,
+  );
   xml = xml.split("\n").slice(1).join("\n");
 
   return xml;
