@@ -64,6 +64,10 @@ th {
     padding-right: 6px;
 }
 
+img {
+    display: inline;
+}
+
 /* ============= */
 
 .qti-choice-label {
@@ -453,6 +457,10 @@ th {
 }
 .qti-item .lft,
 .qti-item .wrap-left {
+    display: inline;
+    /* float: left; */
+}
+.qti-item .wrap-left > img {
     display: inline;
     float: left;
 }
