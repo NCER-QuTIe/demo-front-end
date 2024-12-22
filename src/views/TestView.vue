@@ -229,7 +229,7 @@ function handleScoreAttemptCompleted(data) {
   results[current_item.value] = {
     score: data.state.outcomeVariables[0].value,
     max_score: data.state.outcomeVariables[0].normalMaximum,
-    problem: current_item.value,
+    problem: current_item.value + 1,
   };
 
   if (data.target.navigateItem !== undefined) {
