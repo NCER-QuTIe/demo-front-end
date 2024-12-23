@@ -35,13 +35,12 @@ body {
     /* border: 1px solid var(--p-surface-100); */
     background-color: white;
     /* box-shadow: 0 2px 3px 1px var(--p-surface-100); */
-    padding-right: 1rem;
+    padding: 1rem;
 }
 
 .columns > div + div {
     grid-column: 1;
     border-left: 3px solid var(--p-surface-200);
-    padding: 1rem;
     padding-right: 0;
 }
 
