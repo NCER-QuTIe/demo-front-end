@@ -1,27 +1,47 @@
 <script setup>
-const props = defineProps(["old_tag_options", "show"]);
+const { old_tag_options } = defineProps(["old_tag_options"]);
 const emit = defineEmits(["close"]);
 
-import { ref, watchEffect } from "vue";
+import { ref, watchEffect, reactive, defineModel } from "vue";
 
-let file = ref();
-let name = ref("");
-let tags = ref([]);
-let description = ref("");
+const file = defineModel("file");
+const name = defineModel("name");
+const tags = defineModel("tags");
+const description = defineModel("description");
+const editting = defineModel("editting");
+
+import UploadTagSelection from "./UploadTagSelection.vue";
 
 import { blob2base64 } from "@/scripts/blob2base64";
 
 async function upload() {
   const myFile = file.value;
+  console.log(myFile);
   const b64 = await blob2base64(myFile, myFile.type);
 
   const obj = {
     name: name.value,
     description: description.value,
     packageBase64: b64,
-    tags: tags.value.map((e) => e.value),
+    tags: [
+      ...tags.value.subjects.map((e) => e.value),
+      ...tags.value.grades.map((e) => e.value),
+      ...tags.value.cognitives.map((e) => e.value),
+      ...tags.value.content.map((e) => e.value),
+      ...tags.value.tags.map((e) => e.value),
+    ],
     status: 0,
   };
+
+  if (editting.value != null) {
+    let res = await fetch(
+      `${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest/${editting.value}`,
+      {
+        method: "DELETE",
+      },
+    );
+    editting.value = null;
+  }
 
   await fetch(`${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest`, {
     method: "post",
@@ -34,19 +54,27 @@ async function upload() {
   emit("close");
 }
 
-const tag_options = ref(props.old_tag_options);
+const tag_options = ref(old_tag_options);
 watchEffect(() => {
-  tag_options.value = props.old_tag_options;
+  tag_options.value = old_tag_options;
 });
 const op = ref();
 const new_tag = ref();
+const new_tag_prefix = ref("");
 function add_new_tag(val) {
-  let x = { label: new_tag.value, value: new_tag.value };
+  let x = {
+    label: new_tag_prefix.value + new_tag.value,
+    value: new_tag_prefix.value + new_tag.value,
+  };
   if (!tag_options.value.includes(x)) {
     tag_options.value.push(x);
   }
   op.value.hide();
 }
+
+// ====
+
+const editing = ref(false);
 </script>
 
 <template>
@@ -70,29 +98,81 @@ function add_new_tag(val) {
         <label for="test-name-input">ტესტის სახელი</label>
       </FloatLabel>
 
-      <MultiSelect
-        v-model="tags"
-        display="chip"
-        placeholder="თაგები"
-        :options="tag_options"
-        optionLabel="label"
-        filter
-        :maxSelectedLabels="10"
-        class="w-full"
-      >
-        <template #footer>
-          <div class="p-3 flex justify-between">
-            <Button
-              label="Add New"
-              severity="secondary"
-              text
-              size="small"
-              icon="pi pi-plus"
-              @click="op.toggle"
-            />
-          </div>
-        </template>
-      </MultiSelect>
+      <div class="flex flex-col gap-4 p-4 border-surface rounded border">
+        <UploadTagSelection
+          v-model="tags.cognitives"
+          placeholder="კოგნიტური სფერო"
+          :options="
+            tag_options
+              .filter((e) => e.label.startsWith('cognitive-'))
+              .map((e) => ({ ...e, label: e.label.slice(10) }))
+          "
+          @new-tag="
+            new_tag_prefix = 'cognitive-';
+            op.toggle($event);
+          "
+        />
+
+        <UploadTagSelection
+          v-model="tags.subjects"
+          placeholder="საგანი"
+          :options="
+            tag_options
+              .filter((e) => e.label.startsWith('subject-'))
+              .map((e) => ({ ...e, label: e.label.slice(8) }))
+          "
+          @new-tag="
+            new_tag_prefix = 'subject-';
+            op.toggle($event);
+          "
+        />
+
+        <UploadTagSelection
+          v-model="tags.grade"
+          placeholder="კლასი"
+          :options="
+            tag_options
+              .filter((e) => e.label.startsWith('grade-'))
+              .map((e) => ({ ...e, label: e.label.slice(6) }))
+          "
+          @new-tag="
+            new_tag_prefix = 'grade-';
+            op.toggle($event);
+          "
+        />
+
+        <UploadTagSelection
+          v-model="tags.content"
+          placeholder="შინაარსობრივი სფერო"
+          :options="
+            tag_options
+              .filter((e) => e.label.startsWith('content-'))
+              .map((e) => ({ ...e, label: e.label.slice(8) }))
+          "
+          @new-tag="
+            new_tag_prefix = 'content-';
+            op.toggle($event);
+          "
+        />
+
+        <UploadTagSelection
+          v-model="tags.tags"
+          placeholder="თაგი"
+          :options="
+            tag_options.filter(
+              (e) =>
+                !e.label.startsWith('cognitive-') &&
+                !e.label.startsWith('content-') &&
+                !e.label.startsWith('grade-') &&
+                !e.label.startsWith('subject-'),
+            )
+          "
+          @new-tag="
+            new_tag_prefix = 'tag-';
+            op.toggle($event);
+          "
+        />
+      </div>
 
       <FloatLabel variant="on">
         <Textarea

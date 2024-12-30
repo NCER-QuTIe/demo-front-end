@@ -1,133 +1,141 @@
 <script setup>
-defineProps({
-    data: {
-        type: Array,
-        required: true,
-    },
+const props = defineProps({
+  data: {
+    type: Array,
+    required: true,
+  },
 });
 
-const emit = defineEmits(["deleteTest", "toggleStatus"]);
+const emit = defineEmits(["deleteTest", "toggleStatus", "editTest"]);
 
 import { ref } from "vue";
 import { useConfirm } from "primevue/useconfirm";
 const confirm = useConfirm();
 const isVisible = ref(false);
 const openPopup = (event, ind) => {
-    confirm.require({
-        target: event.currentTarget,
-        message: "დარწმუნებული ხარ?",
-        onShow: () => {
-            isVisible.value = true;
-        },
-        onHide: () => {
-            isVisible.value = false;
-        },
-        accept: () => {
-            emit("deleteTest", ind);
-        },
-    });
+  confirm.require({
+    target: event.currentTarget,
+    message: "დარწმუნებული ხარ?",
+    onShow: () => {
+      isVisible.value = true;
+    },
+    onHide: () => {
+      isVisible.value = false;
+    },
+    accept: () => {
+      emit("deleteTest", ind);
+    },
+  });
+};
+
+const edit = (event, data) => {
+  emit("editTest", data);
 };
 
 const first = ref(0);
 const rows = ref(10);
+
+const openTab = ref(-1);
 </script>
 
 <template>
-    <div
-        class="flex flex-col gap-4 border p-4 max-w-[60em] border-surface justify-between rounded-border"
+  <div
+    class="flex flex-col gap-4 border w-full p-4 max-w-[180em] mx-auto border-surface justify-between rounded-border"
+  >
+    <Accordion
+      class="mx-auto w-full h-min"
+      @tab-close="() => (openTab = -1)"
+      @tab-open="({ index }) => (openTab = index)"
     >
-        <Accordion class="mx-auto w-full h-min">
-            <AccordionPanel
-                v-for="(d, ind) in data.slice(first, first + rows)"
-                :key="d.name + ind"
-                :value="ind"
-                class="border-none"
-            >
-                <AccordionHeader>
-                    <div class="flex justify-between flex-grow gap-2 pr-2">
-                        {{ d.name }}
+      <AccordionPanel
+        v-for="(d, ind) in data.slice(first, first + rows)"
+        :key="d.name + ind"
+        :value="ind"
+        class="border-none"
+      >
+        <AccordionHeader>
+          <div class="flex justify-between flex-grow gap-2 pr-2">
+            {{ d.name }}
+          </div>
+        </AccordionHeader>
 
-                        <span class="tags flex gap-2">
-                            <Tag
-                                v-for="(tag, i) in d.tags"
-                                class="tag"
-                                rounded
-                                :value="tag"
-                                severity="secondary"
-                            />
-                        </span>
-                    </div>
-                </AccordionHeader>
+        <AccordionContent pt:content:class="flex flex-col gap-4">
+          <span class="tags flex gap-2">
+            <template v-for="(tag, i) in d.tags">
+              <Tag class="tag" rounded :value="tag" severity="secondary" />
+            </template>
+          </span>
 
-                <AccordionContent pt:content:class="flex flex-col gap-4">
-                    <Panel header="აღწერა">
-                        {{ d.description }}
-                    </Panel>
+          <Panel header="აღწერა">
+            {{ d.description }}
+          </Panel>
 
-                    <span class="actions flex gap-4 justify-between">
-                        <ConfirmPopup>
-                            <template
-                                #container="{
-                                    message,
-                                    acceptCallback,
-                                    rejectCallback,
-                                }"
-                            >
-                                <div class="rounded p-4">
-                                    <span>{{ message.message }}</span>
-                                    <div class="flex items-center gap-2 mt-4">
-                                        <Button
-                                            label="დადასტურება"
-                                            @click="acceptCallback"
-                                            severity="danger"
-                                            size="small"
-                                        ></Button>
-                                        <Button
-                                            label="გაუქმება"
-                                            outlined
-                                            @click="rejectCallback"
-                                            severity="secondary"
-                                            size="small"
-                                            text
-                                        ></Button>
-                                    </div>
-                                </div> </template
-                        ></ConfirmPopup>
+          <span class="actions flex gap-4 justify-between">
+            <ConfirmPopup>
+              <template
+                #container="{ message, acceptCallback, rejectCallback }"
+              >
+                <div class="rounded p-4">
+                  <span>{{ message.message }}</span>
+                  <div class="flex items-center gap-2 mt-4">
+                    <Button
+                      label="დადასტურება"
+                      @click="acceptCallback"
+                      severity="danger"
+                      size="small"
+                    ></Button>
+                    <Button
+                      label="გაუქმება"
+                      outlined
+                      @click="rejectCallback"
+                      severity="secondary"
+                      size="small"
+                      text
+                    ></Button>
+                  </div>
+                </div> </template
+            ></ConfirmPopup>
 
-                        <Button
-                            @click="openPopup($event, ind)"
-                            icon="pi pi-trash"
-                            label="წაშლა"
-                            severity="danger"
-                            aria-label="Visible"
-                        />
+            <span class="flex gap-4 align-baseline">
+              <Button
+                @click="openPopup($event, ind)"
+                icon="pi pi-trash"
+                label="წაშლა"
+                severity="danger"
+                aria-label="Visible"
+              />
+              <Button
+                @click="edit($event, d)"
+                icon="pi pi-pencil"
+                label="რედაქტირება"
+                severity="warn"
+                aria-label="Visible"
+              />
+              <!-- <Button
+                @click="$emit('toggleStatus', ind)"
+                :icon="'pi ' + (!d.status ? 'pi-eye' : 'pi-eye-slash')"
+                aria-label="Visible"
+                :label="!d.status ? 'დამალვა' : 'გამოჩენა'"
+              /> -->
+            </span>
 
-                        <span class="flex gap-4 align-baseline">
-                            <Button
-                                @click="$emit('toggleStatus', ind)"
-                                :icon="
-                                    'pi ' +
-                                    (!d.status ? 'pi-eye' : 'pi-eye-slash')
-                                "
-                                aria-label="Visible"
-                                :label="!d.status ? 'დამალვა' : 'გამოჩენა'"
-                            />
-                            <Button
-                                @click="$router.push('/test/' + d.id)"
-                                aria-label="Begin"
-                                icon="pi pi-play"
-                                label="დაწყება"
-                            />
-                        </span>
-                    </span>
-                </AccordionContent>
-            </AccordionPanel>
-        </Accordion>
-        <Paginator
-            v-model:first="first"
-            v-model:rows="rows"
-            :totalRecords="data.length"
-            :rowsPerPageOptions="[10, 20, 30]"
-        ></Paginator>
-    </div>
+            <span class="flex gap-4 align-baseline">
+              <Button
+                @click="$router.push('/test/' + d.id)"
+                aria-label="Begin"
+                icon="pi pi-play"
+                label="დაწყება"
+              />
+            </span>
+          </span>
+        </AccordionContent>
+      </AccordionPanel>
+    </Accordion>
+    <Paginator
+      v-model:first="first"
+      v-model:rows="rows"
+      :totalRecords="data.length"
+      :rowsPerPageOptions="[10, 20, 30]"
+    ></Paginator>
+  </div>
 </template>

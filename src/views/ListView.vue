@@ -27,6 +27,48 @@ async function deleteTest(ind) {
   }
 }
 
+let file = ref();
+let name = ref("");
+let tags = reactive({
+  subjects: [],
+  grades: [],
+  cognitives: [],
+  content: [],
+  tags: [],
+});
+let description = ref("");
+let editting = ref(null);
+async function editTest(test) {
+  const url = `${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest/${test.id}`;
+  let res = await fetch(url);
+  let json = await res.json();
+  let b64 = json.packageBase64;
+  let raw_file = await fetch(`data:text/plain;base64,${b64}`);
+  let blob = await raw_file.blob();
+  blob = new Blob([blob], { type: "application/zip" });
+  console.log(blob);
+  file.value = blob;
+  console.log("fetched dataaa!!!");
+  name.value = test.name;
+  description.value = test.description;
+  const tag_objects = test.tags.map((e) => ({
+    label: e,
+    value: e,
+  }));
+  tags.subjects = tag_objects.filter((e) => e.label.startsWith("subject-"));
+  tags.grades = tag_objects.filter((e) => e.label.startsWith("grade-"));
+  tags.cognitives = tag_objects.filter((e) => e.label.startsWith("cognitive-"));
+  tags.content = tag_objects.filter((e) => e.label.startsWith("content-"));
+  tags.tags = tag_objects.filter(
+    (e) =>
+      !e.label.startsWith("cognitive-") &&
+      !e.label.startsWith("content-") &&
+      !e.label.startsWith("grade-") &&
+      !e.label.startsWith("subject-"),
+  );
+  editting.value = test.id;
+}
+
 async function toggleStatus(ind) {
   let res = await fetch(
     `${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest/status`,
@@ -49,7 +91,7 @@ async function toggleStatus(ind) {
   }
 }
 
-let show_upload = ref(false);
+let show_upload = ref(true);
 
 async function closeUpload() {
   let res = await fetch(`${import.meta.env.VITE_API_ROUTE}/api/admin/qtiTests`);
@@ -57,7 +99,7 @@ async function closeUpload() {
 
   data.splice(0);
   data.push(...json);
-  show_upload.value = !show_upload.value;
+  // show_upload.value = !show_upload.value;
 }
 let filter_tags = ref([]);
 
@@ -77,8 +119,8 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div class="grid grid-cols-[1fr_2fr_1fr] gap-4 h-full p-4">
-    <ListFilters :tag_options="tag_options" v-model="filter_tags" />
+  <div class="grid grid-cols-[1fr_2.5fr_1fr] gap-4 h-full p-4">
+    <ListFilters :tag_options="tag_options" v-model:tags="filter_tags" />
     <TestList
       :data="
         data.filter((test) =>
@@ -89,10 +131,16 @@ watchEffect(() => {
       "
       @deleteTest="deleteTest"
       @toggleStatus="toggleStatus"
+      @editTest="editTest"
     />
     <FileUploadDialog
-      :show="show_upload"
+      v-if="show_upload"
       :old_tag_options="tag_options"
+      v-model:file="file"
+      v-model:name="name"
+      v-model:tags="tags"
+      v-model:description="description"
+      v-model:editting="editting"
       @close="closeUpload()"
     />
   </div>
