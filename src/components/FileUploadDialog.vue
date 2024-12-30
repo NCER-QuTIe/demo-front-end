@@ -10,6 +10,18 @@ const tags = defineModel("tags");
 const description = defineModel("description");
 const editting = defineModel("editting");
 
+function stopEditting() {
+  file.value = undefined;
+  name.value = "";
+  tags.value.subjects = [];
+  tags.value.grades = [];
+  tags.value.cognitives = [];
+  tags.value.content = [];
+  tags.value.tags = [];
+  description.value = "";
+  editting.value = null;
+}
+
 import UploadTagSelection from "./UploadTagSelection.vue";
 
 import { blob2base64 } from "@/scripts/blob2base64";
@@ -34,7 +46,7 @@ async function upload() {
   };
 
   if (editting.value != null) {
-    let res = await fetch(
+    await fetch(
       `${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest/${editting.value}`,
       {
         method: "DELETE",
@@ -81,6 +93,9 @@ const editing = ref(false);
   <Fluid class="w-[20rem]">
     <div
       class="p-4 rounded-border border border-surface flex flex-col gap-4 bg-surface"
+      :style="{
+        backgroundColor: editting ? '#fa02' : 'transparent',
+      }"
     >
       <h1 class="text-lg font-bold text-center">ტესტის ატვირთვა</h1>
       <FileUpload
@@ -88,7 +103,7 @@ const editing = ref(false);
         mode="basic"
         name="demo[]"
         customUpload
-        :maxFileSize="1000000"
+        :maxFileSize="2000000"
         @select="file = $event.files[0]"
         chooseLabel="ფაილის არჩევა"
       />
@@ -98,7 +113,9 @@ const editing = ref(false);
         <label for="test-name-input">ტესტის სახელი</label>
       </FloatLabel>
 
-      <div class="flex flex-col gap-4 p-4 border-surface rounded border">
+      <div
+        class="flex flex-col gap-4 p-4 border-surface rounded border bg-white"
+      >
         <UploadTagSelection
           v-model="tags.cognitives"
           placeholder="კოგნიტური სფერო"
@@ -185,7 +202,15 @@ const editing = ref(false);
         <label for="test-description-textarea">აღწერა</label>
       </FloatLabel>
 
-      <Button label="ატვირთვა" @click="upload()" />
+      <div class="flex gap-4">
+        <Button
+          label="გაუქმება"
+          severity="warn"
+          @click="stopEditting()"
+          v-if="editting !== null"
+        />
+        <Button label="ატვირთვა" @click="upload()" />
+      </div>
     </div>
   </Fluid>
 
