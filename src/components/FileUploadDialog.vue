@@ -45,18 +45,16 @@ async function upload() {
     status: 0,
   };
 
-  if (editting.value != null) {
-    await fetch(
-      `${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest/${editting.value}`,
-      {
-        method: "DELETE",
-      },
-    );
+  if (editting.value !== null) {
+    const url = `${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest/${editting.value}`;
+    await fetch(url, {
+      method: "DELETE",
+    });
     editting.value = null;
   }
 
   await fetch(`${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest`, {
-    method: "post",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
