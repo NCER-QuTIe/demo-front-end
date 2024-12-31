@@ -66,7 +66,6 @@ app
   })
   .use(ConfirmationService)
   .mount("#app");
-console.log($dt("accordion.header.border.color"));
 
 import { serviceWorkerFile } from "virtual:vite-plugin-service-worker";
 

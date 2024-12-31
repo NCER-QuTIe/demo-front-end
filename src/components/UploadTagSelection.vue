@@ -18,7 +18,8 @@ watchEffect(() => {
     display="chip"
     :placeholder="props.placeholder"
     :options="options"
-    optionLabel="label"
+    option-label="label"
+    option-value="value"
     filter
     :maxSelectedLabels="10"
     class="w-full"

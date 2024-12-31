@@ -2,7 +2,13 @@
 const { old_tag_options } = defineProps(["old_tag_options"]);
 const emit = defineEmits(["close"]);
 
-import { ref, watchEffect, reactive, defineModel } from "vue";
+import { ref, watchEffect, defineModel } from "vue";
+import {
+  emptyTagsObject,
+  tagsObjectToList,
+  tagCategories,
+  tagLabels,
+} from "@/scripts/tags";
 
 const file = defineModel("file");
 const name = defineModel("name");
@@ -13,11 +19,7 @@ const editting = defineModel("editting");
 function stopEditting() {
   file.value = undefined;
   name.value = "";
-  tags.value.subjects = [];
-  tags.value.grades = [];
-  tags.value.cognitives = [];
-  tags.value.content = [];
-  tags.value.tags = [];
+  tags.value = empty;
   description.value = "";
   editting.value = null;
 }
@@ -35,31 +37,40 @@ async function upload() {
     name: name.value,
     description: description.value,
     packageBase64: b64,
-    tags: [
-      ...tags.value.subjects.map((e) => e.value),
-      ...tags.value.grades.map((e) => e.value),
-      ...tags.value.cognitives.map((e) => e.value),
-      ...tags.value.content.map((e) => e.value),
-      ...tags.value.tags.map((e) => e.value),
-    ],
+    tags: tagsObjectToList(tags.value),
     status: 0,
   };
 
   if (editting.value !== null) {
+    console.log("editting... first deleting the old version");
     const url = `${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest/${editting.value}`;
-    await fetch(url, {
+    const res = await fetch(url, {
       method: "DELETE",
     });
+    if (res.ok) {
+      console.log("done");
+    } else {
+      console.log("failed");
+    }
     editting.value = null;
   }
 
-  await fetch(`${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  console.log("uploading the files");
+  const res = await fetch(
+    `${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(obj),
     },
-    body: JSON.stringify(obj),
-  });
+  );
+  if (res.ok) {
+    console.log("done");
+  } else {
+    console.log("failed");
+  }
 
   emit("close");
 }
@@ -70,21 +81,13 @@ watchEffect(() => {
 });
 const op = ref();
 const new_tag = ref();
-const new_tag_prefix = ref("");
+const new_tag_category = ref("");
 function add_new_tag(val) {
-  let x = {
-    label: new_tag_prefix.value + new_tag.value,
-    value: new_tag_prefix.value + new_tag.value,
-  };
-  if (!tag_options.value.includes(x)) {
-    tag_options.value.push(x);
+  if (!tag_options.value[new_tag_category.value].includes(new_tag.value)) {
+    tag_options.value[new_tag_category.value].push(new_tag.value);
   }
   op.value.hide();
 }
-
-// ====
-
-const editing = ref(false);
 </script>
 
 <template>
@@ -96,6 +99,7 @@ const editing = ref(false);
       }"
     >
       <h1 class="text-lg font-bold text-center">ტესტის ატვირთვა</h1>
+
       <FileUpload
         ref="fileupload"
         mode="basic"
@@ -114,79 +118,19 @@ const editing = ref(false);
       <div
         class="flex flex-col gap-4 p-4 border-surface rounded border bg-white"
       >
-        <UploadTagSelection
-          v-model="tags.cognitives"
-          placeholder="კოგნიტური სფერო"
-          :options="
-            tag_options
-              .filter((e) => e.label.startsWith('cognitive-'))
-              .map((e) => ({ ...e, label: e.label.slice(10) }))
-          "
-          @new-tag="
-            new_tag_prefix = 'cognitive-';
-            op.toggle($event);
-          "
-        />
-
-        <UploadTagSelection
-          v-model="tags.subjects"
-          placeholder="საგანი"
-          :options="
-            tag_options
-              .filter((e) => e.label.startsWith('subject-'))
-              .map((e) => ({ ...e, label: e.label.slice(8) }))
-          "
-          @new-tag="
-            new_tag_prefix = 'subject-';
-            op.toggle($event);
-          "
-        />
-
-        <UploadTagSelection
-          v-model="tags.grade"
-          placeholder="კლასი"
-          :options="
-            tag_options
-              .filter((e) => e.label.startsWith('grade-'))
-              .map((e) => ({ ...e, label: e.label.slice(6) }))
-          "
-          @new-tag="
-            new_tag_prefix = 'grade-';
-            op.toggle($event);
-          "
-        />
-
-        <UploadTagSelection
-          v-model="tags.content"
-          placeholder="შინაარსობრივი სფერო"
-          :options="
-            tag_options
-              .filter((e) => e.label.startsWith('content-'))
-              .map((e) => ({ ...e, label: e.label.slice(8) }))
-          "
-          @new-tag="
-            new_tag_prefix = 'content-';
-            op.toggle($event);
-          "
-        />
-
-        <UploadTagSelection
-          v-model="tags.tags"
-          placeholder="თაგი"
-          :options="
-            tag_options.filter(
-              (e) =>
-                !e.label.startsWith('cognitive-') &&
-                !e.label.startsWith('content-') &&
-                !e.label.startsWith('grade-') &&
-                !e.label.startsWith('subject-'),
-            )
-          "
-          @new-tag="
-            new_tag_prefix = 'tag-';
-            op.toggle($event);
-          "
-        />
+        <template v-for="(category, index) in tagCategories" :key="index">
+          <UploadTagSelection
+            v-model="tags[category]"
+            :placeholder="tagLabels[category]"
+            :options="
+              tag_options[category].map((e) => ({ label: e, value: e }))
+            "
+            @new-tag="
+              new_tag_category = category;
+              op.toggle($event);
+            "
+          />
+        </template>
       </div>
 
       <FloatLabel variant="on">

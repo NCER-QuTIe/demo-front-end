@@ -634,7 +634,7 @@ img {
 }
 .qti-item [class^="list-style-"] > p::before,
 .qti-item [class^="list-style-"] > div::before,
-.qti-item [class^="list-style-"] > li::before,
+/* .qti-item [class^="list-style-"] > li::before, */
 .qti-item [class*=" list-style-"] > p::before,
 .qti-item [class*=" list-style-"] > div::before,
 .qti-item [class*=" list-style-"] > li::before {

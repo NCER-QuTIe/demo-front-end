@@ -1,4 +1,6 @@
 <script setup>
+import { tagCategories } from "@/scripts/tags";
+
 const props = defineProps({
   data: {
     type: Array,
@@ -61,8 +63,10 @@ const openTab = ref(-1);
 
         <AccordionContent pt:content:class="flex flex-col gap-4">
           <span class="tags flex gap-2">
-            <template v-for="(tag, i) in d.tags">
-              <Tag class="tag" rounded :value="tag" severity="secondary" />
+            <template v-for="category in tagCategories">
+              <template v-for="(tag, i) in d.tags[category]">
+                <Tag class="tag" rounded :value="tag" severity="secondary" />
+              </template>
             </template>
           </span>
 
