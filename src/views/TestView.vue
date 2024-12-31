@@ -1,6 +1,4 @@
 <script setup>
-import "qti3-item-player-vue3/dist/qti3Player.css";
-
 import Calculator from "../components/Calculator.vue";
 import Ruler from "../components/Ruler.vue";
 
@@ -366,3 +364,7 @@ function toggleRuler(event) {
     @close="show_feedback = false"
   />
 </template>
+
+<style scoped>
+@import "qti3-item-player-vue3/dist/qti3Player.css";
+</style>
