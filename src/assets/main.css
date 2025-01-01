@@ -73,6 +73,10 @@ img {
     display: none;
 }
 
+[role="option"][aria-selected="true"]:before {
+    content: none;
+}
+
 /* ============= */
 
 .qti-item *,

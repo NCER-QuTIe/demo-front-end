@@ -1,4 +1,5 @@
 // import "./assets/qti-runner.css";
+import "qti3-item-player-vue3/dist/qti3Player.css";
 import "primeicons/primeicons.css";
 
 // import { createApp } from "vue/dist/vue.esm-bundler";
