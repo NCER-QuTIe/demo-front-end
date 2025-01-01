@@ -6,7 +6,6 @@ import {
   tagsListToObject,
   emptyTagsObject,
   tagCategories,
-  tagsObjectToList,
 } from "@/scripts/tags.ts";
 import { reactive, ref, watchEffect } from "vue";
 
@@ -21,15 +20,19 @@ fetch(`${import.meta.env.VITE_API_ROUTE}/api/admin/qtiTests`)
     }
   });
 
-async function deleteTest(ind) {
+async function deleteTest(id) {
   let res = await fetch(
-    `${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest/${data[ind].id}`,
+    `${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest/${id}`,
     {
       method: "DELETE",
     },
   );
   if (res.ok) {
-    data.splice(ind, 1);
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].id == id) {
+        data.splice(i, 1);
+      }
+    }
   } else {
     console.log(res);
   }
@@ -97,8 +100,9 @@ const tag_options = ref(emptyTagsObject());
 watchEffect(() => {
   let res = emptyTagsObject();
   for (let category of tagCategories) {
-    for (let tags of data.map((e) => e.tags)) {
-      for (let tag of tags[category]) {
+    for (let testTags of data.map((e) => e.tags)) {
+      console.log(testTags);
+      for (let tag of testTags[category]) {
         if (!res[category].includes(tag)) {
           res[category].push(tag);
         }

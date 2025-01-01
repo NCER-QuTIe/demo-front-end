@@ -19,7 +19,7 @@ const editting = defineModel("editting");
 function stopEditting() {
   file.value = undefined;
   name.value = "";
-  tags.value = empty;
+  tags.value = emptyTagsObject();
   description.value = "";
   editting.value = null;
 }

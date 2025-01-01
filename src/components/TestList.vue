@@ -14,7 +14,7 @@ import { ref } from "vue";
 import { useConfirm } from "primevue/useconfirm";
 const confirm = useConfirm();
 const isVisible = ref(false);
-const openPopup = (event, ind) => {
+const openPopup = (event, id) => {
   confirm.require({
     target: event.currentTarget,
     message: "დარწმუნებული ხარ?",
@@ -25,7 +25,7 @@ const openPopup = (event, ind) => {
       isVisible.value = false;
     },
     accept: () => {
-      emit("deleteTest", ind);
+      emit("deleteTest", id);
     },
   });
 };
@@ -102,7 +102,7 @@ const openTab = ref(-1);
 
             <span class="flex gap-4 align-baseline">
               <Button
-                @click="openPopup($event, ind)"
+                @click="openPopup($event, d.id)"
                 icon="pi pi-trash"
                 label="წაშლა"
                 severity="danger"
@@ -115,12 +115,6 @@ const openTab = ref(-1);
                 severity="warn"
                 aria-label="Visible"
               />
-              <!-- <Button
-                @click="$emit('toggleStatus', ind)"
-                :icon="'pi ' + (!d.status ? 'pi-eye' : 'pi-eye-slash')"
-                aria-label="Visible"
-                :label="!d.status ? 'დამალვა' : 'გამოჩენა'"
-              /> -->
             </span>
 
             <span class="flex gap-4 align-baseline">
