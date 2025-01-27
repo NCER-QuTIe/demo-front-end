@@ -379,13 +379,20 @@ function toggleRuler(event) {
   border: solid 1px var(--p-surface-200);
   border-radius: 1rem;
 }
-.test-view-area::-webkit-scrollbar {
-  display: none;
+
+.test-view-area::-webkit-scrollbar-track
+{
+	border-radius: 10px;
 }
 
-/* Hide scrollbar for IE, Edge and Firefox */
-.test-view-area {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+.test-view-area::-webkit-scrollbar
+{
+	width: 12px;
+}
+
+.test-view-area::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	background-color: var(--p-surface-200);
 }
 </style>
