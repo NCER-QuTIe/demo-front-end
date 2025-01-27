@@ -57,6 +57,7 @@ async function loadTestXML() {
     },
   };
 
+  console.log(xml);
   test_player.loadTestFromXml(xml, configuration);
 }
 
@@ -168,6 +169,7 @@ function handleSuspendAttemptCompleted(data) {
 }
 
 async function loadItemXML(url) {
+  console.log("loading item xml");
   let test_path = await getTestURL();
   let path = `${test_path}/../${url}`;
   let res = await fetch(path);
@@ -341,7 +343,7 @@ function toggleRuler(event) {
     </Popover>
 
     <div
-      class="box-border h-full w-[1024px] min-w-[1024px] overflow-y-scroll qti-labels-none p-4 pb-1 border bg-white border-surface rounded-border qti-item"
+      class="test-view-area qti-labels-none qti-item"
     >
       <div class="w-full h-full" v-if="items.length == 0">
         <Skeleton width="1014px" height="100%"></Skeleton>
@@ -364,3 +366,26 @@ function toggleRuler(event) {
     @close="show_feedback = false"
   />
 </template>
+
+
+<style scoped>
+.test-view-area {
+  display: border-box;
+  height: 100%;
+  width: 1024px;
+  overflow-y: scroll;
+  padding: 1rem;
+  padding-bottom: 0.25rem;
+  border: solid 1px var(--p-surface-200);
+  border-radius: 1rem;
+}
+.test-view-area::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.test-view-area {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+</style>
