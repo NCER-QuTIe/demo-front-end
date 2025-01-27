@@ -345,8 +345,8 @@ function toggleRuler(event) {
     <div
       class="test-view-area qti-labels-none qti-item"
     >
-      <div class="w-full h-full" v-if="items.length == 0">
-        <Skeleton width="1014px" height="100%"></Skeleton>
+      <div class="w-full h-full overflow-x-hidden" v-if="items.length == 0">
+        <Skeleton width="100%" height="100%"></Skeleton>
       </div>
       <Qti3Player
         ref="qti3player"
