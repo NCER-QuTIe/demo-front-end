@@ -123,7 +123,7 @@ function add_new_tag(val) {
             v-model="tags[category]"
             :placeholder="tagLabels[category]"
             :options="
-              tag_options[category].map((e) => ({ label: e, value: e }))
+              tag_options[category]
             "
             @new-tag="
               new_tag_category = category;

@@ -7,7 +7,8 @@ import {
   emptyTagsObject,
   tagCategories,
 } from "@/scripts/tags.ts";
-import { reactive, ref, watchEffect } from "vue";
+import { reactive, ref, watchEffect, onMounted } from "vue";
+import { useRoute } from "vue-router";
 
 let data = reactive([]);
 
@@ -57,7 +58,6 @@ async function editTest(test) {
   description.value = test.description;
 
   tags.value = test.tags;
-  console.log(tags.value);
 
   editting.value = test.id;
 }
@@ -96,12 +96,20 @@ async function closeUpload() {
 
 const filters = ref(emptyTagsObject());
 
+const route = useRoute();
+onMounted(() => {
+  if (route.query.research) {
+    let new_tags = emptyTagsObject();
+    new_tags.tag.push(route.query.research);
+    filters.value = new_tags;
+  }
+})
+
 const tag_options = ref(emptyTagsObject());
 watchEffect(() => {
   let res = emptyTagsObject();
   for (let category of tagCategories) {
     for (let testTags of data.map((e) => e.tags)) {
-      console.log(testTags);
       for (let tag of testTags[category]) {
         if (!res[category].includes(tag)) {
           res[category].push(tag);

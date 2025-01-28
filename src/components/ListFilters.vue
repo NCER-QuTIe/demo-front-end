@@ -15,18 +15,12 @@ const filters = defineModel();
       pt:content:class="flex flex-col gap-4"
     >
       <template v-for="category in tagCategories">
-        <MultiSelect
+        <UploadTagSelection
           v-model="filters[category]"
-          id="test-tags"
-          :options="tag_options[category].map((e) => ({ label: e, value: e }))"
-          :maxSelectedLabels="1"
-          selectedItemsLabel="არჩეულია {} თაგი"
-          option-label="label"
-          option-value="value"
           :placeholder="tagLabels[category]"
-          filter
-          display="chip"
-          class="w-full"
+          :options="
+            tag_options[category]
+          "
         />
       </template>
     </Panel>

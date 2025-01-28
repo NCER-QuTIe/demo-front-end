@@ -296,7 +296,7 @@ import ProgressBar from "../components/ProgressBar/Bar.vue";
         outlined
         severity="secondary"
         icon="pi pi-home"
-        @click="$router.push('/')"
+        @click="$router.back()"
       />
       <ProgressBar 
         class="flex-grow"

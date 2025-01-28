@@ -28,7 +28,8 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes: [
     { path: "/test/:id", component: TestView },
-    { path: "/", component: ListView },
+    { path: "/list", component: ListView },
+    { path: "/", component: HomeView },
   ],
 });
 

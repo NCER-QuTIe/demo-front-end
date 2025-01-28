@@ -11,7 +11,7 @@ export const tagLabels = {
   cognitive: "კოგნიტური სფერო",
   grade: "კლასი",
   subject: "საგანი",
-  tag: "თაგი",
+  tag: "კვლევა",
 };
 
 type Tags = {
