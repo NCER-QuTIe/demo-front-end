@@ -274,6 +274,8 @@ const rulerRef = ref(false);
 function toggleRuler(event) {
   rulerRef.value = !rulerRef.value;
 }
+
+import ProgressBar from "../components/ProgressBar/Bar.vue";
 </script>
 
 <template>
@@ -296,23 +298,11 @@ function toggleRuler(event) {
         icon="pi pi-home"
         @click="$router.push('/')"
       />
-      <Stepper
-        :value="current_item + 1"
+      <ProgressBar 
         class="flex-grow"
-        :dt="{
-          step: {
-            gap: '0em',
-            padding: '0em',
-            header: { gap: '0em' },
-          },
-          separator: { margin: '0em' },
-        }"
-        @update:value="(i) => navigateGotoItem(i - 1)"
-      >
-        <StepList>
-          <Step v-for="i in items.length" :key="i" :value="i" />
-        </StepList>
-      </Stepper>
+        v-model="current_item"
+        @click="(i) => navigateGotoItem(i)"
+        :list="items.map((e, i) => i + 1)" />
 
       <Button
         icon="pi pi-calculator"
@@ -329,12 +319,14 @@ function toggleRuler(event) {
         iconPos="right"
         @click="navigateNextItem()"
         v-if="current_item != items.length - 1"
+        class="w-36"
       />
       <Button
         label="დასრულება"
         severity="warn"
         @click="grade()"
         v-if="current_item == items.length - 1"
+        class="w-36"
       />
     </div>
 
