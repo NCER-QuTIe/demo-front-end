@@ -56,8 +56,18 @@ const openTab = ref(-1);
         class="border-none"
       >
         <AccordionHeader>
-          <div class="flex justify-between flex-grow gap-2 pr-2">
-            {{ d.name }}
+          <div class="test-listing flex justify-between items-baseline flex-grow gap-2 pr-4">
+            <span>
+              {{ d.name }}
+            </span>
+            <Button
+              :outlined="openTab != ind"
+              @click="$router.push('/test/' + d.id)"
+              aria-label="Begin"
+              icon="pi pi-play"
+              label="დაწყება"
+              class="start-button"
+            />
           </div>
         </AccordionHeader>
 
@@ -97,8 +107,9 @@ const openTab = ref(-1);
                       text
                     ></Button>
                   </div>
-                </div> </template
-            ></ConfirmPopup>
+                </div>
+              </template>
+            </ConfirmPopup>
 
             <span class="flex gap-4 align-baseline">
               <Button
@@ -116,15 +127,6 @@ const openTab = ref(-1);
                 aria-label="Visible"
               />
             </span>
-
-            <span class="flex gap-4 align-baseline">
-              <Button
-                @click="$router.push('/test/' + d.id)"
-                aria-label="Begin"
-                icon="pi pi-play"
-                label="დაწყება"
-              />
-            </span>
           </span>
         </AccordionContent>
       </AccordionPanel>
@@ -137,3 +139,14 @@ const openTab = ref(-1);
     ></Paginator>
   </div>
 </template>
+
+<style scoped>
+.start-button {
+  opacity: 0;
+}
+
+.p-accordionpanel[data-p-active="true"] .start-button,
+.p-accordionpanel:hover .start-button {
+  opacity: 1;
+}
+</style>
