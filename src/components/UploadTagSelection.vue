@@ -18,8 +18,8 @@ const model = defineModel();
         </div>
       </template>
       <template #option="slotProps">
-        <div class="flex items-center">
-          <div class="color-marker" :style="{ backgroundColor: tagColors[slotProps.option] }"></div>
+        <div class="flex items-center gap-1">
+          <div class="color-marker" :style="{ backgroundColor: colors[slotProps.option] }"></div>
           <div>{{ slotProps.option }}</div>
         </div>
       </template>
@@ -33,5 +33,6 @@ const model = defineModel();
   height: 1rem;
   content: " ";
   display: block;
+  border-radius: 1rem;
 }
 </style>

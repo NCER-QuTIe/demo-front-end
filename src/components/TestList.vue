@@ -12,7 +12,7 @@ import { ref } from "vue";
 
 
 const first = ref(0);
-const rows = ref(10);
+const rows = ref(12);
 
 const openTab = ref(-1);
 
@@ -46,8 +46,8 @@ import TestCard from '@/components/TestList/TestCard.vue';
       </template>
     </div>
 
-    <Paginator v-if="data.length > 10" v-model:first="first" v-model:rows="rows" :totalRecords="data.length"
-      :rowsPerPageOptions="[10, 20, 30]">
+    <Paginator v-if="data.length > 12" v-model:first="first" v-model:rows="rows" :totalRecords="data.length"
+      :rowsPerPageOptions="[12, 24, 36]">
     </Paginator>
   </div>
 </template>

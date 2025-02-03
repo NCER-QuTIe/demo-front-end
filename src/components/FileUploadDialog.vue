@@ -9,12 +9,15 @@ import {
   tagsObjectToList,
   tagCategories,
   tagLabels,
+  tagColors,
   type Tags,
 } from "@/scripts/tags";
 import {
   deleteTestWithID,
+  patchTestWithID,
   putTestWithPackage,
   Test,
+  TestPatch,
   TestWithPackage,
 } from "@/scripts/api";
 
@@ -41,27 +44,40 @@ import UploadTagSelection from "./UploadTagSelection.vue";
 
 import { blob2base64 } from "@/scripts/blob2base64";
 
+async function edit() {
+  if (!editingID.value) {
+    throw new Error("invalid state, trying to edit a test while editingID is empty");
+  }
+
+  const obj: TestPatch = {
+    name: name.value,
+    description: description.value,
+    tags: tags.value,
+  };
+
+  const res = await patchTestWithID(editingID.value, obj);
+
+  if (res.ok) {
+    visible.value = false;
+    emit("close");
+  } else {
+    console.log("failed.");
+    toast.add({
+      severity: "error",
+      summary: "შეცდომა",
+      detail: "ტესტის ატვირთვა ვერ მოხერხდა",
+      life: 3000,
+    });
+  }
+}
+
 async function upload() {
   const myFile = file.value;
   console.log(myFile);
   const packageBase64 = await blob2base64(myFile, myFile.type);
 
   if (editingID.value !== null) {
-    console.log("attempting old test delete...");
-    const res = await deleteTestWithID(editingID.value);
-    if (res.ok) {
-      console.log("done.");
-      editingID.value = null;
-    } else {
-      console.log("failed.");
-      toast.add({
-        severity: "error",
-        summary: "შეცდომა",
-        detail: "ტესტის რედაქტირება ვერ მოხერხდა",
-        life: 3000,
-      });
-      return false;
-    }
+    throw new Error("invalid state. Trying to upload a test while editingID is not empty");
   }
 
   console.log("attempting test upload...");
@@ -113,7 +129,7 @@ function add_new_tag(val) {
 
 <template>
   <Dialog class="w-[48em]" v-model:visible="visible" modal maximizable
-    :header="editingID ? 'რედაქტურება' : 'ახალი ტესტის ატვირთვა'" @hide="stopeditingID()">
+    :header="editingID ? 'რედაქტირება' : 'ახალი ტესტის ატვირთვა'" @hide="stopeditingID()">
     <Fluid class="flex flex-col gap-4 bg-surface">
       <h1 class="text-lg font-bold text-center">ტესტის ატვირთვა</h1>
 
@@ -128,7 +144,7 @@ function add_new_tag(val) {
       <div class="flex flex-col gap-4 p-4 border-surface rounded border bg-white">
         <template v-for="(category, index) in tagCategories" :key="index">
           <UploadTagSelection v-model="tags[category]" :placeholder="tagLabels[category]"
-            :options="tag_options[category]" @new-tag="
+            :options="tag_options[category]" :colors="tagColors[category]" @new-tag="
               new_tag_category = category;
             op.toggle($event);
             " />
@@ -142,7 +158,9 @@ function add_new_tag(val) {
 
       <div class="flex gap-4">
         <Button label="გაუქმება" severity="warn" @click="stopeditingID()" v-if="editingID !== null" />
-        <Button :label="editingID ? 'შენახვა' : 'ატვირთვა'" @click="upload()" />
+
+        <Button v-if="editingID" label="შენახვა" @click="edit()" />
+        <Button v-else label="ატვირთვა" @click="upload()" />
       </div>
     </Fluid>
   </Dialog>

@@ -272,6 +272,56 @@ export async function putTestWithPackage(
   return res;
 }
 
+export type TestPatch = {
+  name?: string;
+  description?: string;
+  tags?: Tags;
+  status?: boolean; // visibility status
+};
+export async function patchTestWithID(
+  id: string,
+  test_patch: TestPatch,
+): Promise<Response> {
+  const auth = getAuth();
+
+  if (!auth) {
+    throw new Error("Can't patch a test if the user is not authenticated.");
+  }
+
+  const obj: any = {};
+
+  if (test_patch.name) {
+    obj.name = test_patch.name;
+  }
+
+  if (test_patch.description) {
+    obj.description = test_patch.description;
+  }
+
+  if (test_patch.tags) {
+    obj.tags = tagsObjectToList(test_patch.tags);
+  }
+
+  if (test_patch.status) {
+    obj.status = Number(!test_patch.status);
+  }
+
+  console.log(obj);
+  const res = await fetch(
+    `${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest/${id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Authorization": `Basic ${auth}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(obj),
+    },
+  );
+
+  return res;
+}
+
 export async function deleteTestWithID(id: string): Promise<Response> {
   const auth = getAuth();
 
