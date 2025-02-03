@@ -60,7 +60,7 @@ const openPopup = (event) => {
           <Button v-if="isAuthed" @click.stop.prevent="$emit('updateStatus')"
             :icon="['pi', visibility ? 'pi-eye' : 'pi-eye-slash'].join(' ')"
             :severity="visibility ? 'secondary' : 'warn'" aria-label="Visible" text />
-          <h2>
+          <h2 :class="{ 'pl-4': !isAuthed }">
             {{ name }}
           </h2>
         </span>
