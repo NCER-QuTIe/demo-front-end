@@ -8,4 +8,3 @@ const { url, imgSrc = "" } = defineProps(["url", "name", "imgSrc", "disabled"]);
     <img :src="imgSrc" :alt="name" />
   </RouterLink>
 </template>
-

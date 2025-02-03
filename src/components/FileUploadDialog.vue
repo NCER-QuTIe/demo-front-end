@@ -1,27 +1,40 @@
-<script setup>
+<script setup lang="ts">
 const { old_tag_options } = defineProps(["old_tag_options"]);
 const emit = defineEmits(["close"]);
 
 import { ref, watchEffect, defineModel } from "vue";
+import { useToast } from "primevue/usetoast";
 import {
   emptyTagsObject,
   tagsObjectToList,
   tagCategories,
   tagLabels,
+  type Tags,
 } from "@/scripts/tags";
+import {
+  deleteTestWithID,
+  putTestWithPackage,
+  Test,
+  TestWithPackage,
+} from "@/scripts/api";
 
-const file = defineModel("file");
-const name = defineModel("name");
-const tags = defineModel("tags");
-const description = defineModel("description");
-const editting = defineModel("editting");
+const toast = useToast();
 
-function stopEditting() {
+const file = defineModel<any>("file");
+const name = defineModel<string>("name");
+const tags = defineModel<Tags>("tags");
+const description = defineModel<string>("description");
+const editingID = defineModel<string | null>("editingID");
+const visible = defineModel<boolean>("visible");
+
+function stopeditingID() {
   file.value = undefined;
   name.value = "";
   tags.value = emptyTagsObject();
   description.value = "";
-  editting.value = null;
+  editingID.value = null;
+
+  visible.value = false;
 }
 
 import UploadTagSelection from "./UploadTagSelection.vue";
@@ -31,48 +44,56 @@ import { blob2base64 } from "@/scripts/blob2base64";
 async function upload() {
   const myFile = file.value;
   console.log(myFile);
-  const b64 = await blob2base64(myFile, myFile.type);
+  const packageBase64 = await blob2base64(myFile, myFile.type);
 
-  const obj = {
-    name: name.value,
-    description: description.value,
-    packageBase64: b64,
-    tags: tagsObjectToList(tags.value),
-    status: 0,
-  };
-
-  if (editting.value !== null) {
-    console.log("editting... first deleting the old version");
-    const url = `${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest/${editting.value}`;
-    const res = await fetch(url, {
-      method: "DELETE",
-    });
+  if (editingID.value !== null) {
+    console.log("attempting old test delete...");
+    const res = await deleteTestWithID(editingID.value);
     if (res.ok) {
-      console.log("done");
+      console.log("done.");
+      editingID.value = null;
     } else {
-      console.log("failed");
+      console.log("failed.");
+      toast.add({
+        severity: "error",
+        summary: "შეცდომა",
+        detail: "ტესტის რედაქტირება ვერ მოხერხდა",
+        life: 3000,
+      });
+      return false;
     }
-    editting.value = null;
   }
 
-  console.log("uploading the files");
-  const res = await fetch(
-    `${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(obj),
-    },
-  );
+  console.log("attempting test upload...");
+
+  const test: Test = {
+    name: name.value,
+    description: description.value,
+    status: true,
+    tags: tags.value,
+  };
+  const testWithPackage: TestWithPackage = {
+    test,
+    packageBase64,
+  };
+  console.log(testWithPackage);
+  const res = await putTestWithPackage(testWithPackage);
+
   if (res.ok) {
-    console.log("done");
+    console.log("done.");
   } else {
-    console.log("failed");
+    console.log("failed.");
+    toast.add({
+      severity: "error",
+      summary: "შეცდომა",
+      detail: "ტესტის ატვირთვა ვერ მოხერხდა",
+      life: 3000,
+    });
+    return false;
   }
 
   emit("close");
+  return true;
 }
 
 const tag_options = ref(old_tag_options);
@@ -91,70 +112,40 @@ function add_new_tag(val) {
 </script>
 
 <template>
-  <Fluid class="w-[20rem]">
-    <div
-      class="p-4 rounded-border border border-surface flex flex-col gap-4 bg-surface"
-      :style="{
-        backgroundColor: editting ? '#fa02' : 'transparent',
-      }"
-    >
+  <Dialog class="w-[48em]" v-model:visible="visible" modal maximizable
+    :header="editingID ? 'რედაქტურება' : 'ახალი ტესტის ატვირთვა'" @hide="stopeditingID()">
+    <Fluid class="flex flex-col gap-4 bg-surface">
       <h1 class="text-lg font-bold text-center">ტესტის ატვირთვა</h1>
 
-      <FileUpload
-        ref="fileupload"
-        mode="basic"
-        name="demo[]"
-        customUpload
-        :maxFileSize="2000000"
-        @select="file = $event.files[0]"
-        chooseLabel="ფაილის არჩევა"
-      />
+      <FileUpload v-if="!editingID" ref="fileupload" mode="basic" name="demo[]" customUpload :maxFileSize="2000000"
+        @select="file = $event.files[0]" chooseLabel="ფაილის არჩევა" />
 
       <FloatLabel variant="on">
         <InputText id="test-name-input" v-model="name" />
         <label for="test-name-input">ტესტის სახელი</label>
       </FloatLabel>
 
-      <div
-        class="flex flex-col gap-4 p-4 border-surface rounded border bg-white"
-      >
+      <div class="flex flex-col gap-4 p-4 border-surface rounded border bg-white">
         <template v-for="(category, index) in tagCategories" :key="index">
-          <UploadTagSelection
-            v-model="tags[category]"
-            :placeholder="tagLabels[category]"
-            :options="
-              tag_options[category]
-            "
-            @new-tag="
+          <UploadTagSelection v-model="tags[category]" :placeholder="tagLabels[category]"
+            :options="tag_options[category]" @new-tag="
               new_tag_category = category;
-              op.toggle($event);
-            "
-          />
+            op.toggle($event);
+            " />
         </template>
       </div>
 
       <FloatLabel variant="on">
-        <Textarea
-          id="test-description-textarea"
-          v-model="description"
-          autoResize
-          rows="5"
-          cols="30"
-        />
+        <Textarea id="test-description-textarea" v-model="description" autoResize rows="5" cols="60" />
         <label for="test-description-textarea">აღწერა</label>
       </FloatLabel>
 
       <div class="flex gap-4">
-        <Button
-          label="გაუქმება"
-          severity="warn"
-          @click="stopEditting()"
-          v-if="editting !== null"
-        />
-        <Button label="ატვირთვა" @click="upload()" />
+        <Button label="გაუქმება" severity="warn" @click="stopeditingID()" v-if="editingID !== null" />
+        <Button :label="editingID ? 'შენახვა' : 'ატვირთვა'" @click="upload()" />
       </div>
-    </div>
-  </Fluid>
+    </Fluid>
+  </Dialog>
 
   <Popover ref="op">
     <div class="flex flex-col gap-4">

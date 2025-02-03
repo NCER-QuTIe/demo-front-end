@@ -1,43 +1,47 @@
 "use strict";
 
-import { ZipReader, BlobWriter, BlobReader } from "@zip.js/zip.js";
+import { BlobReader, BlobWriter, ZipReader } from "@zip.js/zip.js";
+import { getTestWithPackageWithID } from "./src/scripts/api.ts";
 
-let files = {};
 self.addEventListener("install", (event) => {
   self.skipWaiting();
 });
+
+const files = {};
+let auth = null;
 
 self.addEventListener("fetch", (event) => {
   const { request } = event;
 
   const validPrefix = self.registration.scope + "file/";
-  console.log("viable for interception", validPrefix);
 
   if (request.url.startsWith(validPrefix)) {
-    console.log("intercepting!", request.url);
+    // console.log("intercepting!", request.url);
     const path = request.url.slice(validPrefix.length);
-    console.log({ path });
     const s = path.split("/");
 
     const testID = s.shift();
     const fileName = s.join("/");
-    //
+
     event.respondWith(handleRequest(request, testID, fileName));
   }
 });
 
+self.addEventListener("message", (event) => {
+  auth = event.data;
+  console.log(auth);
+});
+
 async function handleRequest(request, testID, fileName) {
   if (files[testID] == undefined) {
-    console.log("fetching dataaa");
-    const url = `${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest/${testID}`;
-    console.log("fetching", url);
-    let res = await fetch(url);
-    let json = await res.json();
-    let b64 = json.packageBase64;
-    let file = await fetch(`data:text/plain;base64,${b64}`);
-    let blob = await file.blob();
+    const testPackage = await getTestWithPackageWithID(testID, auth);
+
+    const file = await fetch(
+      `data:text/plain;base64,${testPackage.packageBase64}`,
+    );
+    const blob = await file.blob();
     files[testID] = blob;
-    console.log("fetched dataaa!!!");
+    console.log(`loaded the test with id: ${testID}`);
   }
 
   let reader;

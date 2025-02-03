@@ -201,7 +201,7 @@ watch([item_player, items], async (e) => {
   }
 });
 
-function handleItemReady(_item) {}
+function handleItemReady(_item) { }
 
 function navigateNextItem() {
   if (current_item.value >= items.value.length) {
@@ -279,84 +279,40 @@ import ProgressBar from "../components/ProgressBar/Bar.vue";
 </script>
 
 <template>
-  <Qti3Test
-    ref="qti3TestPlayer"
-    @notifyQti3TestPlayerReady="handleTestPlayerReady"
-    @notifyQti3TestReady="handleTestReady"
-    @notifyQti3TestEndAttemptCompleted="handleEndAttemptCompleted"
-  />
+  <Qti3Test ref="qti3TestPlayer" @notifyQti3TestPlayerReady="handleTestPlayerReady"
+    @notifyQti3TestReady="handleTestReady" @notifyQti3TestEndAttemptCompleted="handleEndAttemptCompleted" />
   <Ruler v-if="rulerRef" />
 
-  <div
-    class="box-border py-4 w-[1024px] h-[766px] m-auto flex flex-col gap-4 items-center relative text-sm"
-  >
+  <div class="box-border py-4 w-[1024px] h-[766px] m-auto flex flex-col gap-4 items-center relative text-sm">
     <div class="w-full flex gap-4 items-center">
-      <Button
-        label="დაბრუნება"
-        outlined
-        severity="secondary"
-        icon="pi pi-home"
-        @click="$router.back()"
-      />
-      <ProgressBar 
-        class="flex-grow"
-        v-model="current_item"
-        @click="(i) => navigateGotoItem(i)"
+      <Button label="დაბრუნება" outlined severity="secondary" icon="pi pi-home" @click="$router.back()" />
+      <ProgressBar class="flex-grow" v-model="current_item" @click="(i) => navigateGotoItem(i)"
         :list="items.map((e, i) => i + 1)" />
 
-      <Button
-        icon="pi pi-calculator"
-        iconPos="right"
-        @click="toggleCalculator"
-        severity="secondary"
-      />
+      <Button icon="pi pi-calculator" iconPos="right" @click="toggleCalculator" severity="secondary" />
 
       <Button label="სახაზავი" @click="toggleRuler" severity="secondary" />
 
-      <Button
-        label="შემდეგი"
-        icon="pi pi-arrow-right"
-        iconPos="right"
-        @click="navigateNextItem()"
-        v-if="current_item != items.length - 1"
-        class="w-36"
-      />
-      <Button
-        label="დასრულება"
-        severity="warn"
-        @click="grade()"
-        v-if="current_item == items.length - 1"
-        class="w-36"
-      />
+      <Button label="შემდეგი" icon="pi pi-arrow-right" iconPos="right" @click="navigateNextItem()"
+        v-if="current_item != items.length - 1" class="w-36" />
+      <Button label="დასრულება" severity="warn" @click="grade()" v-if="current_item == items.length - 1" class="w-36" />
     </div>
 
     <Popover ref="calculatorRef">
       <Calculator />
     </Popover>
 
-    <div
-      class="test-view-area qti-labels-none qti-item"
-    >
+    <div class="test-view-area qti-labels-none qti-item">
       <div class="w-full h-full overflow-x-hidden" v-if="items.length == 0">
         <Skeleton width="100%" height="100%"></Skeleton>
       </div>
-      <Qti3Player
-        ref="qti3player"
-        colorClass="bg-transparent"
-        @notifyQti3PlayerReady="handlePlayerReady"
-        @notifyQti3ItemReady="handleItemReady"
-        @notifyQti3ScoreAttemptCompleted="handleScoreAttemptCompleted"
-        @notifyQti3SuspendAttemptCompleted="handleSuspendAttemptCompleted"
-      />
+      <Qti3Player ref="qti3player" colorClass="bg-transparent" @notifyQti3PlayerReady="handlePlayerReady"
+        @notifyQti3ItemReady="handleItemReady" @notifyQti3ScoreAttemptCompleted="handleScoreAttemptCompleted"
+        @notifyQti3SuspendAttemptCompleted="handleSuspendAttemptCompleted" />
     </div>
   </div>
 
-  <Feedback
-    :results="results"
-    v-model:visible="show_feedback"
-    :report="report"
-    @close="show_feedback = false"
-  />
+  <Feedback :results="results" v-model:visible="show_feedback" :report="report" @close="show_feedback = false" />
 </template>
 
 
@@ -372,19 +328,16 @@ import ProgressBar from "../components/ProgressBar/Bar.vue";
   border-radius: 1rem;
 }
 
-.test-view-area::-webkit-scrollbar-track
-{
-	border-radius: 10px;
+.test-view-area::-webkit-scrollbar-track {
+  border-radius: 10px;
 }
 
-.test-view-area::-webkit-scrollbar
-{
-	width: 12px;
+.test-view-area::-webkit-scrollbar {
+  width: 12px;
 }
 
-.test-view-area::-webkit-scrollbar-thumb
-{
-	border-radius: 10px;
-	background-color: var(--p-surface-200);
+.test-view-area::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: var(--p-surface-200);
 }
 </style>

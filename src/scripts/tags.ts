@@ -4,7 +4,7 @@ export const tagCategories = [
   "cognitive",
   "content",
   "tag",
-];
+] as const;
 
 export const tagLabels = {
   content: "შინაარსობრივი სფერო",
@@ -14,7 +14,18 @@ export const tagLabels = {
   tag: "კვლევა",
 };
 
-type Tags = {
+export const tagColors = {
+  subject: {
+    "მათემატიკა": "#117983",
+    "ბუნებისმეტყველება": "#F9B621",
+  },
+  content: {},
+  cognitive: {},
+  grade: {},
+  tag: {},
+};
+
+export type Tags = {
   content: string[];
   cognitive: string[];
   grade: string[];
@@ -33,9 +44,9 @@ export function emptyTagsObject(): Tags {
 }
 
 export function tagsListToObject(tags: string[]): Tags {
-  let res = {};
+  const res: Tags = emptyTagsObject();
 
-  for (let category of tagCategories) {
+  for (const category of tagCategories) {
     res[category] = tags
       .filter((e) => e.startsWith(category + "-"))
       .map((e) => e.slice(category.length + 1));
@@ -45,10 +56,10 @@ export function tagsListToObject(tags: string[]): Tags {
 }
 
 export function tagsObjectToList(tags: Tags): string[] {
-  let res = [];
+  const res = [];
 
-  for (let category of tagCategories) {
-    for (let tag of tags[category]) {
+  for (const category of tagCategories) {
+    for (const tag of tags[category]) {
       res.push(category + "-" + tag);
     }
   }

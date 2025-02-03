@@ -8,20 +8,11 @@ const filters = defineModel();
 </script>
 
 <template>
-  <Fluid class="w-[20rem] justify-self-end">
-    <Panel
-      header="ძებნა"
-      class="rounded-border border border-surface"
-      pt:content:class="flex flex-col gap-4"
-    >
+  <Fluid>
+    <Panel header="ძებნა" class="rounded-border border border-surface" pt:content:class="flex flex-col gap-4">
       <template v-for="category in tagCategories">
-        <UploadTagSelection
-          v-model="filters[category]"
-          :placeholder="tagLabels[category]"
-          :options="
-            tag_options[category]
-          "
-        />
+        <UploadTagSelection v-model="filters[category]" :placeholder="tagLabels[category]" :options="tag_options[category]
+          " />
       </template>
     </Panel>
   </Fluid>

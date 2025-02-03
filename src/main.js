@@ -13,22 +13,27 @@ import PrimeVue from "primevue/config";
 import { $dt } from "@primevue/themes";
 import { definePreset } from "@primevue/themes";
 import Aura from "@primevue/themes/aura";
+import ToastService from "primevue/toastservice";
 
 import ConfirmationService from "primevue/confirmationservice";
 
-let app = createApp(App);
+const app = createApp(App);
 
-import { createWebHashHistory, createRouter } from "vue-router";
+import { createRouter, createWebHashHistory } from "vue-router";
 
 import ListView from "./views/ListView.vue";
+import FeedbackView from "./views/FeedbackView.vue";
 import TestView from "./views/TestView.vue";
 import HomeView from "./views/HomeView.vue";
+import LoginView from "./views/LoginView.vue";
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes: [
     { path: "/test/:id", component: TestView },
     { path: "/list", component: ListView },
+    { path: "/feedback", component: FeedbackView },
+    { path: "/login", component: LoginView },
     { path: "/", component: HomeView },
   ],
 });
@@ -67,12 +72,20 @@ app
     },
   })
   .use(ConfirmationService)
+  .use(ToastService)
   .mount("#app");
 
 import { serviceWorkerFile } from "virtual:vite-plugin-service-worker";
 
-// console.log(serviceWorkerFile);
+import { getAuth } from "./scripts/api.ts";
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register(serviceWorkerFile, { type: "module" });
+
+  const auth = getAuth();
+  if (auth) {
+    navigator.serviceWorker.ready.then((registration) => {
+      registration.active.postMessage(auth);
+    });
+  }
 }
 import "./assets/main.css";
