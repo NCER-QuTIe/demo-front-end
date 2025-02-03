@@ -78,6 +78,7 @@ async function updateStatus(id, new_status) {
 
 
 const filters = ref(emptyTagsObject());
+const searchTerm = ref("");
 
 const route = useRoute();
 onMounted(() => {
@@ -107,7 +108,7 @@ watchEffect(() => {
 <template>
   <div class="grid grid-cols-[20rem_1fr] gap-4 h-full p-4">
     <Fluid class="w-[20rem] justify-self-end flex flex-col gap-4">
-      <ListFilters :tag_options="tag_options" v-model="filters" />
+      <ListFilters :tag_options="tag_options" v-model:filters="filters" v-model:search-term="searchTerm" />
       <FeedbackForm />
       <Button v-if="isAuthed" severity="secondary" label="ახალი ტესტის ატვირთვა"
         @click="if (isAuthed) showUpload = true;" />
@@ -120,7 +121,7 @@ watchEffect(() => {
           filters[category].some((tag) =>
             test.tags[category].includes(tag),
           ),
-      ),
+      ) && test.name.startsWith(searchTerm)
     )
       " @deleteTest="deleteTest" @updateStatus="updateStatus" @edit="editTest" />
   </div>
