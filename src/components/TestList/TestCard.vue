@@ -64,13 +64,13 @@ const openPopup = (event) => {
             {{ name }}
           </h2>
         </span>
-        <span class="controls flex ">
+        <span class="controls flex p-1">
           <Button v-if="isAuthed" @click.stop.prevent="openPopup($event)" icon="pi pi-trash" severity="danger"
             aria-label="Visible" text />
           <Button v-if="isAuthed" @click.stop.prevent="$emit('edit')" icon="pi pi-pencil" severity="secondary"
             aria-label="Visible" text />
           <Button @click.stop.prevent="$router.push('/test/' + id)" aria-label="Begin" icon="pi pi-play" label="დაწყება"
-            class="start-button" />
+            class="start-button" size="small" />
         </span>
       </div>
       <hr v-if="isExpanded" class="w-full h-px bg-gray-200 border-0" />
