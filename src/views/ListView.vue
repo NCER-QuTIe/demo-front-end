@@ -105,7 +105,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <div class="grid grid-cols-[1fr_3fr] gap-4 h-full p-4">
+  <div class="grid grid-cols-[20rem_1fr] gap-4 h-full p-4">
     <Fluid class="w-[20rem] justify-self-end flex flex-col gap-4">
       <ListFilters :tag_options="tag_options" v-model="filters" />
       <FeedbackForm />

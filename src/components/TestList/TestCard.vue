@@ -54,27 +54,27 @@ const openPopup = (event) => {
     class="test-card bg-surface-50 hover:bg-surface-100 hover:cursor-pointer rounded select-none overflow-hidden flex align-center stretch"
     :class="{ active: isExpanded }" @click="handleClick">
     <span class="color-indicator" :style="{ backgroundColor: tagColors.subject[tags.subject[0]] }" />
-    <div class="w-full p-4">
+    <div class="w-full">
       <div class="flex justify-between items-center flex-grow gap-2">
-        <span class="flex items-center gap-4 ">
+        <span class="flex items-center">
           <Button v-if="isAuthed" @click.stop.prevent="$emit('updateStatus')"
             :icon="['pi', visibility ? 'pi-eye' : 'pi-eye-slash'].join(' ')"
-            :severity="visibility ? 'secondary' : 'warn'" aria-label="Visible" outlined />
-          <h2 class="text-lg font-bold">
+            :severity="visibility ? 'secondary' : 'warn'" aria-label="Visible" text />
+          <h2>
             {{ name }}
           </h2>
         </span>
-        <span class="controls flex gap-4">
+        <span class="controls flex ">
           <Button v-if="isAuthed" @click.stop.prevent="openPopup($event)" icon="pi pi-trash" severity="danger"
-            aria-label="Visible" outlined />
+            aria-label="Visible" text />
           <Button v-if="isAuthed" @click.stop.prevent="$emit('edit')" icon="pi pi-pencil" severity="secondary"
-            aria-label="Visible" outlined />
+            aria-label="Visible" text />
           <Button @click.stop.prevent="$router.push('/test/' + id)" aria-label="Begin" icon="pi pi-play" label="დაწყება"
             class="start-button" />
         </span>
       </div>
-      <hr v-if="isExpanded" class="w-full my-4 h-px bg-gray-200 border-0" />
-      <div v-if="isExpanded">
+      <hr v-if="isExpanded" class="w-full h-px bg-gray-200 border-0" />
+      <div v-if="isExpanded" class="p-4">
         <div class="tags">
           <!-- TAGS GO HERE -->
           <span class="category" v-for="category in tagCategories.filter((c) => tags[c].length > 0)" :key="category"

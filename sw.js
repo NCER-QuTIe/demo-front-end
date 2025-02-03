@@ -29,7 +29,6 @@ self.addEventListener("fetch", (event) => {
 
 self.addEventListener("message", (event) => {
   auth = event.data;
-  console.log(auth);
 });
 
 async function handleRequest(request, testID, fileName) {
@@ -46,7 +45,7 @@ async function handleRequest(request, testID, fileName) {
 
   let reader;
   try {
-    console.log("trying to read", files[testID]);
+    console.log("trying to read test with id: ", testID);
     reader = new ZipReader(new BlobReader(files[testID]));
     const response = await zipreadfile(reader, fileName, request);
 

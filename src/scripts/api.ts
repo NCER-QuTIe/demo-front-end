@@ -65,7 +65,6 @@ export async function login(
 }
 
 export function getAuth(): string | null {
-  console.log("ACCESSING LOCAL STORAGE");
   if (window) {
     return window.localStorage.getItem("credidentials");
   }
@@ -153,8 +152,6 @@ export async function getTestList(): Promise<Test[]> {
     });
   }
 
-  console.log(data);
-
   return data;
 }
 
@@ -227,8 +224,6 @@ export async function patchTestVisibilityStatusWithID(
     status: visibilityStatus ? 0 : 1,
   };
 
-  console.log(JSON.stringify(obj));
-
   const res = await fetch(
     `${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest/${id}`,
     {
@@ -261,8 +256,6 @@ export async function putTestWithPackage(
     status: Number(!test.test.status),
     packageBase64: test.packageBase64,
   };
-
-  console.log(obj);
 
   const res = await fetch(
     `${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest`,

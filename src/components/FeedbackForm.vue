@@ -36,21 +36,23 @@ import { Form } from '@primevue/forms';
 
 <template>
   <Fluid>
-    <Form class="p-4 rounded-border border border-surface flex flex-col gap-4 bg-surface" :initialValues
-      :resolver="resolver" @submit="onFormSubmit" v-slot="$form">
-      <h1 class="text-lg font-bold text-center">უკუკავშირი</h1>
+    <Panel header="უკუკავშირი" class="rounded-border border border-surface bg-surface" pt:content:class="flex flex-col gap-4">
+      <Form :initialValues
+        class="flex flex-col gap-4"
+        :resolver="resolver" @submit="onFormSubmit" v-slot="$form">
 
-      <InputText name="email" type="email" placeholder="ელ. ფოსტა" />
-      <Message v-if="$form.email?.invalid" severity="error">{{ $form.email.error?.message }}</Message>
+        <InputText name="email" type="email" placeholder="ელ. ფოსტა" />
+        <Message v-if="$form.email?.invalid" severity="error">{{ $form.email.error?.message }}</Message>
 
-      <Textarea name="feedback" placeholder="არაფერი არ მუშაობს..." />
-      <Message v-if="$form.feedback?.invalid" severity="error">{{ $form.feedback.error?.message }}</Message>
+        <Textarea name="feedback" placeholder="არაფერი არ მუშაობს..." />
+        <Message v-if="$form.feedback?.invalid" severity="error">{{ $form.feedback.error?.message }}</Message>
 
-      <Button type="submit" severity="secondary" label="გაგზავნა" />
+        <Button type="submit" severity="secondary" label="გაგზავნა" />
 
-      <span v-if="isAuthed" class="text-center">
-        <RouterLink to="/feedback/" class="text-blue-500 underline">უკუკავშირების სია</RouterLink>
-      </span>
-    </Form>
+        <span v-if="isAuthed" class="text-center">
+          <RouterLink to="/feedback/" class="text-blue-500 underline">უკუკავშირების სია</RouterLink>
+        </span>
+      </Form>
+    </Panel>
   </Fluid>
 </template>
