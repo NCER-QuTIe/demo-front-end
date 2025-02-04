@@ -1,9 +1,9 @@
 export const tagCategories = [
   "subject",
   "grade",
-  "cognitive",
-  "content",
   "tag",
+  "content",
+  "cognitive",
 ] as const;
 
 export const tagLabels = {
