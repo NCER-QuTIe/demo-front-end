@@ -10,7 +10,7 @@ export const tagLabels = {
   content: "შინაარსობრივი სფერო",
   cognitive: "კოგნიტური სფერო",
   grade: "კლასი",
-  subject: "საგანი",
+  subject: "სფერო",
   tag: "კვლევა",
 };
 
