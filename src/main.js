@@ -10,7 +10,6 @@ import Qti3Player from "qti3-item-player-vue3";
 import Qti3Test from "qti3-test-vue3";
 
 import PrimeVue from "primevue/config";
-import { $dt } from "@primevue/themes";
 import { definePreset } from "@primevue/themes";
 import Aura from "@primevue/themes/aura";
 import ToastService from "primevue/toastservice";
