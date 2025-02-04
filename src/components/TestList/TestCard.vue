@@ -47,6 +47,8 @@ const openPopup = (event) => {
     },
   });
 };
+
+const shrunkenButtonDT = ref({ smPaddingX: '0.25rem', smPaddingY: '0.25rem', iconOnlyWidth: '2rem' });
 </script>
 
 <template>
@@ -59,18 +61,19 @@ const openPopup = (event) => {
         <span class="flex items-center">
           <Button v-if="isAuthed" @click.stop.prevent="$emit('updateStatus')"
             :icon="['pi', visibility ? 'pi-eye' : 'pi-eye-slash'].join(' ')"
-            :severity="visibility ? 'secondary' : 'warn'" aria-label="Visible" text />
+            :severity="visibility ? 'secondary' : 'warn'" aria-label="Visible" :dt="shrunkenButtonDT" text
+            size="small" />
           <h2 :class="{ 'pl-4': !isAuthed }">
             {{ name }}
           </h2>
         </span>
         <span class="controls flex p-1">
           <Button v-if="isAuthed" @click.stop.prevent="openPopup($event)" icon="pi pi-trash" severity="danger"
-            aria-label="Visible" text />
+            aria-label="Visible" :dt="shrunkenButtonDT" text size="small" />
           <Button v-if="isAuthed" @click.stop.prevent="$emit('edit')" icon="pi pi-pencil" severity="secondary"
-            aria-label="Visible" text />
+            aria-label="Visible" :dt="shrunkenButtonDT" text size="small" />
           <Button @click.stop.prevent="$router.push('/test/' + id)" aria-label="Begin" icon="pi pi-play" label="დაწყება"
-            class="start-button" size="small" />
+            class="start-button" :dt="shrunkenButtonDT" size="small" />
         </span>
       </div>
       <hr v-if="isExpanded" class="w-full h-px bg-gray-200 border-0" />
