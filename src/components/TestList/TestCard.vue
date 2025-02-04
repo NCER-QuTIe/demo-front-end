@@ -11,6 +11,7 @@ onMounted(() => {
 })
 
 const { name, description, tags, id } = defineProps<{
+  index: number;
   name: string;
   description: string;
   tags: Tags;
@@ -63,6 +64,7 @@ const shrunkenButtonDT = ref({ smPaddingX: '0.25rem', smPaddingY: '0.25rem', ico
             :icon="['pi', visibility ? 'pi-eye' : 'pi-eye-slash'].join(' ')"
             :severity="visibility ? 'secondary' : 'warn'" aria-label="Visible" :dt="shrunkenButtonDT" text
             size="small" />
+          <span class="text-gray-300 mr-2">({{ index + 1 }})</span>
           <h2 :class="{ 'pl-4': !isAuthed }">
             {{ name }}
           </h2>
