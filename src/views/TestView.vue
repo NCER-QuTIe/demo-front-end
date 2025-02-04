@@ -285,7 +285,7 @@ import ProgressBar from "../components/ProgressBar/Bar.vue";
     @notifyQti3TestReady="handleTestReady" @notifyQti3TestEndAttemptCompleted="handleEndAttemptCompleted" />
   <Ruler v-if="rulerRef" />
 
-  <div class="box-border py-4 w-[1024px] h-[766px] m-auto flex flex-col gap-4 items-center relative text-sm">
+  <div class="box-border py-4 w-[1280px] h-[800px] m-auto flex flex-col gap-4 items-center relative text-sm">
     <div class="w-full flex gap-4 items-center">
       <Button label="დაბრუნება" outlined severity="secondary" icon="pi pi-home" @click="$router.back()" />
       <ProgressBar class="flex-grow" v-model="current_item" @click="(i) => navigateGotoItem(i)"
@@ -323,7 +323,7 @@ import ProgressBar from "../components/ProgressBar/Bar.vue";
 .test-view-area {
   display: border-box;
   height: 100%;
-  width: 1024px;
+  width: 1280px;
   overflow-y: scroll;
   padding: 1rem;
   padding-bottom: 0.25rem;
