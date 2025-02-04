@@ -116,7 +116,8 @@ function handleTestReady(_test) {
   items.value = new_items;
 }
 
-const report = ref({});
+// const report = ref({});
+const itemStatesForReport = ref([]);
 
 function handleEndAttemptCompleted(data) {
   console.log("end attempt completed", data);
@@ -137,7 +138,8 @@ function handleEndAttemptCompleted(data) {
         })),
       });
     }
-    report.value = compileGradeReport(item_states);
+    itemStatesForReport.value = item_states;
+    // report.value = compileGradeReport(item_states);
     show_feedback.value = true;
   }
 }
@@ -312,7 +314,8 @@ import ProgressBar from "../components/ProgressBar/Bar.vue";
     </div>
   </div>
 
-  <Feedback :results="results" v-model:visible="show_feedback" :report="report" @close="show_feedback = false" />
+  <Feedback :results="results" v-model:visible="show_feedback" :itemStates="itemStatesForReport"
+    @close="show_feedback = false" />
 </template>
 
 

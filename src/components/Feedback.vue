@@ -1,19 +1,18 @@
-<script setup>
-const props = defineProps({
+<script setup lang="ts">
+import { defineProps, defineEmits, defineModel } from 'vue';
+import { compileGradeReport } from '@/scripts/gradeReport.ts';
+
+const { results, itemStates } = defineProps({
   results: Array,
-  report: String,
+  itemStates: Array,
 });
 const emit = defineEmits(["close"]);
 
 const visible = defineModel('visible', { required: true });
 
-function download() {
-  const link = document.createElement("a");
-  const file = new Blob([props.report], { type: "text/plain" });
-  link.href = URL.createObjectURL(file);
-  link.download = "ნაშრომი.csv";
-  link.click();
-  URL.revokeObjectURL(link.href);
+async function download() {
+  console.log(results);
+  await compileGradeReport(itemStates, results);
 }
 </script>
 
