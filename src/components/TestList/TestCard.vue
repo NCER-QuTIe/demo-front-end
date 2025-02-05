@@ -64,8 +64,9 @@ const shrunkenButtonDT = ref({ smPaddingX: '0.25rem', smPaddingY: '0.25rem', ico
             :icon="['pi', visibility ? 'pi-eye' : 'pi-eye-slash'].join(' ')"
             :severity="visibility ? 'secondary' : 'warn'" aria-label="Visible" :dt="shrunkenButtonDT" text
             size="small" />
-          <span class="text-gray-300 mr-2">({{ index + 1 }})</span>
-          <h2 :class="{ 'pl-4': !isAuthed }">
+          <span :class="{ 'pl-4': !isAuthed }" class="text-gray-300 mr-2 font-mono">P{{ (index +
+            1).toString().padStart(3, '0') }}</span>
+          <h2>
             {{ name }}
           </h2>
         </span>
