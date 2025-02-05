@@ -2,6 +2,7 @@
 import { defineProps, defineEmits, ref, onMounted } from 'vue';
 
 import { type Tags, tagCategories, tagLabels, tagColors } from '@/scripts/tags';
+import TestTitle from "@/components/TestTitle.vue";
 
 import { getAuth } from '@/scripts/api';
 const isAuthed = ref<boolean>(false);
@@ -62,20 +63,15 @@ const shrunkenButtonDT = ref({ smPaddingX: '0.25rem', smPaddingY: '0.25rem', ico
         <span class="flex items-center">
           <Button v-if="isAuthed" @click.stop.prevent="$emit('updateStatus')"
             :icon="['pi', visibility ? 'pi-eye' : 'pi-eye-slash'].join(' ')"
-            :severity="visibility ? 'secondary' : 'warn'" aria-label="Visible" :dt="shrunkenButtonDT" text
-            size="small" />
-          <span :class="{ 'pl-4': !isAuthed }" class="text-gray-300 mr-2 font-mono">P{{ (index +
-            1).toString().padStart(3, '0') }}</span>
-          <h2>
-            {{ name }}
-          </h2>
+            :severity="visibility ? 'secondary' : 'warn'" :dt="shrunkenButtonDT" text size="small" />
+          <TestTitle :class="{ 'pl-4': !isAuthed }" :name="name" :id="'P' + id.substring(id.length - 6)" />
         </span>
         <span class="controls flex p-1">
           <Button v-if="isAuthed" @click.stop.prevent="openPopup($event)" icon="pi pi-trash" severity="danger"
-            aria-label="Visible" :dt="shrunkenButtonDT" text size="small" />
+            :dt="shrunkenButtonDT" text size="small" />
           <Button v-if="isAuthed" @click.stop.prevent="$emit('edit')" icon="pi pi-pencil" severity="secondary"
-            aria-label="Visible" :dt="shrunkenButtonDT" text size="small" />
-          <Button @click.stop.prevent="$router.push('/test/' + id)" aria-label="Begin" icon="pi pi-play" label="დაწყება"
+            :dt="shrunkenButtonDT" text size="small" />
+          <Button @click.stop.prevent="$router.push('/test/' + id)" icon="pi pi-play" label="დაწყება"
             class="start-button" :dt="shrunkenButtonDT" size="small" />
         </span>
       </div>
