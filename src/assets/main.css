@@ -82,6 +82,7 @@ img {
   background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5'%3E%3Cpath fill='%23212529' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E") no-repeat right .4rem center/8px 10px;
 }
 
+
 /* ============= */
 
 .qti-item *,
@@ -860,4 +861,23 @@ img {
 }
 .qti-item .qti-uploadInteraction:after {
     clear: both;
+}
+
+
+ul.inline-choice-select-listbox {
+  max-height:10em;
+  overflow-y:auto;
+  position:absolute;
+  margin:0 2px;
+  padding:0;
+  background:var(--background);
+  border:2px solid var(--foreground);
+  border-radius:.25em;
+  z-index:9;
+}
+
+.qti-item [role=option][aria-selected=true]:before {
+  content: "✓";
+  position: absolute;
+  left: 0.5em;
 }
