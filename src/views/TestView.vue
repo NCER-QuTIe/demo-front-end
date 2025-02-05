@@ -286,18 +286,21 @@ import ProgressBar from "../components/ProgressBar/Bar.vue";
   <Ruler v-if="rulerRef" />
 
   <div class="box-border py-4 w-[1280px] h-[800px] m-auto flex flex-col gap-4 items-center relative text-sm">
-    <div class="w-full flex gap-4 items-center">
-      <Button label="დაბრუნება" outlined severity="secondary" icon="pi pi-home" @click="$router.back()" />
-      <ProgressBar class="flex-grow" v-model="current_item" @click="(i) => navigateGotoItem(i)"
-        :list="items.map((e, i) => i + 1)" />
+    <div class="w-full flex gap-4 justify-between">
+      <span class="flex gap-4 items-center">
+        <Button label="დაბრუნება" outlined severity="secondary" icon="pi pi-home" @click="$router.back()" />
+        <ProgressBar v-model="current_item" @click="(i) => navigateGotoItem(i)" :list="items.map((e, i) => i + 1)" />
+      </span>
+      <span class="flex gap-4 items-center">
+        <Button icon="pi pi-calculator" iconPos="right" @click="toggleCalculator" severity="secondary" />
 
-      <Button icon="pi pi-calculator" iconPos="right" @click="toggleCalculator" severity="secondary" />
+        <Button label="სახაზავი" @click="toggleRuler" severity="secondary" />
 
-      <Button label="სახაზავი" @click="toggleRuler" severity="secondary" />
-
-      <Button label="შემდეგი" icon="pi pi-arrow-right" iconPos="right" @click="navigateNextItem()"
-        v-if="current_item != items.length - 1" class="w-36" />
-      <Button label="დასრულება" severity="warn" @click="grade()" v-if="current_item == items.length - 1" class="w-36" />
+        <Button label="შემდეგი" icon="pi pi-arrow-right" iconPos="right" @click="navigateNextItem()"
+          v-if="current_item != items.length - 1" class="w-36" />
+        <Button label="დასრულება" severity="warn" @click="grade()" v-if="current_item == items.length - 1"
+          class="w-36" />
+      </span>
     </div>
 
     <Popover ref="calculatorRef">
