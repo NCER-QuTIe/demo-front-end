@@ -36,15 +36,14 @@ import { Form } from '@primevue/forms';
 
 <template>
   <Fluid>
-    <Panel header="უკუკავშირი" class="rounded-border border border-surface bg-surface" pt:content:class="flex flex-col gap-4">
-      <Form :initialValues
-        class="flex flex-col gap-4"
-        :resolver="resolver" @submit="onFormSubmit" v-slot="$form">
+    <Panel header="უკუკავშირი" class="rounded-border border border-surface bg-surface"
+      pt:content:class="flex flex-col gap-4">
+      <Form :initialValues class="flex flex-col gap-4" :resolver="resolver" @submit="onFormSubmit" v-slot="$form">
 
-        <InputText name="email" type="email" placeholder="ელ. ფოსტა" />
+        <InputText name="email" type="email" placeholder="თქვენი ელ. ფოსტა" />
         <Message v-if="$form.email?.invalid" severity="error">{{ $form.email.error?.message }}</Message>
 
-        <Textarea name="feedback" placeholder="არაფერი არ მუშაობს..." />
+        <Textarea name="feedback" placeholder="ჩაწერეთ პრობლემა" />
         <Message v-if="$form.feedback?.invalid" severity="error">{{ $form.feedback.error?.message }}</Message>
 
         <Button type="submit" severity="secondary" label="გაგზავნა" />
