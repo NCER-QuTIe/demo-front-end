@@ -1,17 +1,23 @@
 export const tagCategories = [
   "subject",
-  "grade",
-  "tag",
+  // "grade",
+  "research",
   "content",
   "cognitive",
 ] as const;
+
+export type TagCategories = typeof tagCategories[number];
+
+export type Tags = {
+  [key in TagCategories]: string[];
+};
 
 export const tagLabels = {
   content: "შინაარსობრივი სფერო",
   cognitive: "კოგნიტური სფერო",
   grade: "კლასი",
-  subject: "სფერო",
-  tag: "კვლევა",
+  subject: "საგანი/სფერო",
+  research: "კვლევა",
 };
 
 export const tagColors = {
@@ -22,25 +28,15 @@ export const tagColors = {
   content: {},
   cognitive: {},
   grade: {},
-  tag: {},
-};
-
-export type Tags = {
-  content: string[];
-  cognitive: string[];
-  grade: string[];
-  subject: string[];
-  tag: string[];
+  research: {},
 };
 
 export function emptyTagsObject(): Tags {
-  return {
-    content: [],
-    cognitive: [],
-    grade: [],
-    subject: [],
-    tag: [],
-  };
+  const res: any = {};
+  for (const category of tagCategories) {
+    res[category] = [];
+  }
+  return res as Tags;
 }
 
 export function tagsListToObject(tags: string[]): Tags {

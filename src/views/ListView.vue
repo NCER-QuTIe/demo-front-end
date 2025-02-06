@@ -82,11 +82,14 @@ const searchTerm = ref("");
 
 const route = useRoute();
 onMounted(() => {
-  if (route.query.research) {
-    let new_tags = emptyTagsObject();
-    new_tags.tag.push(route.query.research);
-    filters.value = new_tags;
+  let new_tags = emptyTagsObject();
+  for (const category of tagCategories) {
+    if (route.query[category]) {
+      new_tags[category].push(route.query[category]);
+    }
   }
+  filters.value = new_tags;
+  console.log(filters.value);
 })
 
 const tag_options = ref(emptyTagsObject());

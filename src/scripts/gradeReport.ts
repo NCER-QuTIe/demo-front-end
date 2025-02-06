@@ -1,20 +1,9 @@
-export type ItemScore = {
-  attempts: number;
-  duration: number;
-  responses: { identifier: string; response: string }[];
-};
-
-export type Result = {
-  score: number;
-  max_score: number;
-  problem: number;
-};
+import { TestResponse } from "./types.d.ts";
 
 import writeXlsxFile, { type SheetData } from "write-excel-file";
 
 export async function compileGradeReport(
-  states: ItemScore[],
-  results: Result[],
+  testResponse: TestResponse,
 ) {
   const data: SheetData = [];
 

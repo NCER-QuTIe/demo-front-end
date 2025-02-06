@@ -6,19 +6,25 @@ const props = defineProps(["tag_options"]);
 
 const filters = defineModel("filters");
 const searchTerm = defineModel("searchTerm");
+
+const tagFilterCategories = ref([
+  "subject",
+  "content",
+  "cognitive"
+]);
 </script>
 
 <template>
   <Fluid>
     <Panel header="ძებნა" class="rounded-border border border-surface" pt:content:class="flex flex-col gap-4">
-      <template v-for="category in tagCategories">
+      <template v-for="category in tagFilterCategories">
         <UploadTagSelection v-model="filters[category]" :colors="tagColors[category]" :placeholder="tagLabels[category]"
           :options="tag_options[category]
             " />
       </template>
 
       <FloatLabel variant="on">
-        <label for="seach-keyowrd">დასახელება</label>
+        <label for="seach-keyowrd">დავალების სახელი</label>
         <InputText id="seach-keyowrd" type="text" v-model="searchTerm" />
       </FloatLabel>
     </Panel>
