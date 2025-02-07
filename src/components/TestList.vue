@@ -37,7 +37,7 @@ import TestCard from '@/components/TestList/TestCard.vue';
       </div>
     </template>
   </ConfirmPopup>
-  <div class="overflow-scroll min-w-[45rem]">
+  <div class="overflow-y-auto overflow-x-hidden min-w-[45rem]">
     <div class="flex flex-col gap-4 w-full max-w-[180em] mx-auto justify-between">
       <template v-for="(d, ind) in data.slice(first, first + rows)" :key="d.name + ind">
         <TestCard :index="ind" :name="d.name" :description="d.description" :tags="d.tags" :id="d.id"
