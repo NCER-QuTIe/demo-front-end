@@ -1,7 +1,13 @@
-<script setup>
-import { defineModel, defineProps, defineEmits, ref, watchEffect } from "vue";
+<script setup lang="ts">
+import { defineModel, defineProps, defineEmits } from "vue";
 
-const { options, placeholder, colors } = defineProps(["options", "placeholder", "colors"]);
+const { options, placeholder, colors, extendible = false } = defineProps<{
+  options: string[];
+  placeholder: string[];
+  colors: { [key: string]: string };
+  extendible: boolean;
+}>();
+
 const emit = defineEmits(["new-tag"]);
 
 const model = defineModel();
@@ -11,7 +17,7 @@ const model = defineModel();
   <Fluid>
     <MultiSelect v-model="model" display="chip" :placeholder="placeholder" :options="options" filter
       :maxSelectedLabels="10">
-      <template #footer>
+      <template #footer v-if="extendible">
         <div class="p-3 flex justify-between">
           <Button label="დამატება" severity="secondary" text size="small" icon="pi pi-plus"
             @click="$emit('new-tag', $event)" />

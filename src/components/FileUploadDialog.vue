@@ -147,7 +147,7 @@ function add_new_tag(val) {
             :options="tag_options[category]" :colors="tagColors[category]" @new-tag="
               new_tag_category = category;
             op.toggle($event);
-            " />
+            " :extendible="true" />
         </template>
       </div>
 
