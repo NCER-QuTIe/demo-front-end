@@ -4,7 +4,7 @@ import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { z } from 'zod';
 import { useToast } from 'primevue/usetoast';
 import { useRouter } from "vue-router";
-import { login } from "@/scripts/api";
+import { login } from "@/scripts/api.ts";
 
 const toast = useToast();
 const router = useRouter();

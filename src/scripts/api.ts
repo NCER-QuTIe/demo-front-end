@@ -1,8 +1,6 @@
 // @ts-types="npm:vite/types/importMeta.d.ts";
-import { tagsObjectToList } from "./tags.ts";
-import { type Tags, tagsListToObject } from "./tags.ts";
-
-import { Test, TestWithPackage } from "./types.d.ts";
+import { tagsListToObject, tagsObjectToList } from "./tags.ts";
+import { Tags, Test, TestWithPackage } from "./types.d.ts";
 
 export async function login(
   username: string,
