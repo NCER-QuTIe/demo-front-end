@@ -1,12 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import Calculator from "../components/Calculator.vue";
 import Ruler from "../components/Ruler.vue";
 
-import { ref, reactive, watch } from "vue";
+import { ref, reactive, watch, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import Feedback from "../components/Feedback.vue";
-
-import { compileGradeReport } from "../scripts/gradeReport.ts";
 
 const route = useRoute();
 
@@ -116,31 +114,60 @@ function handleTestReady(_test) {
   items.value = new_items;
 }
 
-// const report = ref({});
-const itemStatesForReport = ref([]);
 
-function handleEndAttemptCompleted(data) {
-  console.log("end attempt completed", data);
+let testStartTime = 0;
 
+onMounted(() => testStartTime = new Date(Date.now()).getTime())
+
+const testResponse = ref([]);
+
+async function handleEndAttemptCompleted(data) {
   if (data.target.grading) {
-    let item_states = [];
+    let itemResponses = [];
 
-    for (let item of items.value) {
+    for (let i = 0; i < items.value.length; i++) {
+      const item = items.value[i];
+
       let guid = item.guid;
       let state = states[guid];
-      console.log(state.responseVariables.slice(2));
-      item_states.push({
-        attempts: state.responseVariables[0].value,
-        duration: state.responseVariables[1].value,
-        responses: state.responseVariables.slice(2).map((v) => ({
-          identifier: v.identifier,
-          response: v.value,
-        })),
-      });
+
+      const interactionResponses = {};
+
+      for (const e of state.responseVariables.slice(2)) {
+        interactionResponses[e.identifier] = e.value;
+      }
+
+      const obj: ItemResponses = {
+        durationSeconds: state.responseVariables[1].value,
+        interactionResponses,
+        itemNumber: i,
+        points: {
+          received: results[i].score,
+          maximal: results[i].max_score,
+        },
+      };
+
+      itemResponses.push(obj);
     }
-    itemStatesForReport.value = item_states;
-    // report.value = compileGradeReport(item_states);
+
+    const currentTime = new Date(Date.now()).getTime();
+
+    const testNameRes = await fetch(`/file/${route.params["id"]}/testName`);
+    const testName = await testNameRes.text();
+
+    console.log({ testName })
+
+    const obj: TestResponse = {
+      testID: route.params["id"],
+      startTime: testStartTime,
+      endTime: currentTime,
+      testName,
+      itemResponses,
+    };
+
+    testResponse.value = obj;
     show_feedback.value = true;
+    console.log(obj);
   }
 }
 
@@ -317,8 +344,7 @@ import ProgressBar from "../components/ProgressBar/Bar.vue";
     </div>
   </div>
 
-  <Feedback :results="results" v-model:visible="show_feedback" :itemStates="itemStatesForReport"
-    @close="show_feedback = false" />
+  <Feedback :testResponse v-model:visible="show_feedback" @close="show_feedback = false" />
 </template>
 
 

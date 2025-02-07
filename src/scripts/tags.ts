@@ -1,3 +1,5 @@
+import { Tags } from "./types.d.ts";
+
 export const tagCategories = [
   "subject",
   // "grade",
@@ -5,12 +7,6 @@ export const tagCategories = [
   "content",
   "cognitive",
 ] as const;
-
-export type TagCategories = typeof tagCategories[number];
-
-export type Tags = {
-  [key in TagCategories]: string[];
-};
 
 export const tagLabels = {
   content: "შინაარსობრივი სფერო",

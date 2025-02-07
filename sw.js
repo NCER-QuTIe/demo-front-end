@@ -8,6 +8,7 @@ self.addEventListener("install", (event) => {
 });
 
 const files = {};
+const tests = {};
 let auth = null;
 
 self.addEventListener("fetch", (event) => {
@@ -40,7 +41,15 @@ async function handleRequest(request, testID, fileName) {
     );
     const blob = await file.blob();
     files[testID] = blob;
+    tests[testID] = testPackage.test;
+    console.log(testPackage.test);
     console.log(`loaded the test with id: ${testID}`);
+  }
+
+  if (fileName == "testName") {
+    return new Response(tests[testID].name, {
+      headers: { "content-type": "text/plain" },
+    });
   }
 
   let reader;

@@ -1,3 +1,7 @@
+export type Tags = {
+  [category: string]: string[];
+};
+
 // The attributes come from QTI, I don't know which
 // are necessary and which not.
 export type Item = {
@@ -34,7 +38,7 @@ export type TestWithItems = {
 
 export type ItemResponse = {
   itemNumber?: number;
-  itemResponses: { [key: string]: string };
+  interactionResponses: { [key: string]: string };
   durationSeconds: number;
   points: {
     received: number;
@@ -44,9 +48,10 @@ export type ItemResponse = {
 
 export type TestResponse = {
   testID: string;
+  testName: string;
   startTimeEpoch: number;
   endTimeEpoch: number;
-  itemResponses: ItemResponse[];
+  itemResponses?: ItemResponse[];
 };
 
 export type TestResponseBundle = {

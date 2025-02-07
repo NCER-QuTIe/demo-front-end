@@ -3,6 +3,7 @@ import FileUploadDialog from "@/components/FileUploadDialog.vue";
 import FeedbackForm from "@/components/FeedbackForm.vue";
 import ListFilters from "@/components/ListFilters.vue";
 import TestList from "@/components/TestList.vue";
+import ResultSubmission from "@/components/ResultSubmission/Form.vue";
 import {
   tagsListToObject,
   emptyTagsObject,
@@ -111,8 +112,12 @@ watchEffect(() => {
 <template>
   <div class="grid grid-cols-[20rem_1fr] gap-4 h-full p-4">
     <Fluid class="w-[20rem] justify-self-end flex flex-col gap-4">
+      <ResultSubmission />
+
       <ListFilters :tag_options="tag_options" v-model:filters="filters" v-model:search-term="searchTerm" />
+
       <FeedbackForm />
+
       <Button v-if="isAuthed" severity="secondary" label="ახალი ტესტის ატვირთვა"
         @click="if (isAuthed) showUpload = true;" />
     </Fluid>
