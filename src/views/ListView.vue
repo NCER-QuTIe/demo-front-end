@@ -3,7 +3,7 @@ import FileUploadDialog from "@/components/FileUploadDialog.vue";
 import FeedbackForm from "@/components/FeedbackForm.vue";
 import ListFilters from "@/components/ListFilters.vue";
 import TestList from "@/components/TestList.vue";
-import ResultSubmission from "@/components/ResultSubmission/Form.vue";
+import ResultSubmission from "@/components/ResultSubmission/ResultSubmissionForm.vue";
 import {
   tagsListToObject,
   emptyTagsObject,
