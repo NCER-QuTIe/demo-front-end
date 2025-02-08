@@ -3,10 +3,11 @@ import Calculator from "../components/Calculator.vue";
 import Ruler from "../components/Ruler.vue";
 
 import { ref, reactive, watch, onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import Feedback from "../components/Feedback.vue";
 
 const route = useRoute();
+const router = useRouter();
 
 let test_player = null;
 let test_url = null;
@@ -304,6 +305,13 @@ function toggleRuler(event) {
   rulerRef.value = !rulerRef.value;
 }
 
+// FEEDBACK
+
+function closeFeedback() {
+  show_feedback.value = false;
+  router.back();
+}
+
 import ProgressBar from "../components/ProgressBar/Bar.vue";
 </script>
 
@@ -315,7 +323,7 @@ import ProgressBar from "../components/ProgressBar/Bar.vue";
   <div class="box-border py-4 w-[1280px] h-[800px] m-auto flex flex-col gap-4 items-center relative text-sm">
     <div class="w-full flex gap-4 justify-between">
       <span class="flex gap-4 items-center">
-        <Button label="დაბრუნება" outlined severity="secondary" icon="pi pi-home" @click="$router.back()" />
+        <Button label="მთავარი გვერდი" outlined severity="secondary" icon="pi pi-home" @click="$router.back()" />
         <ProgressBar v-model="current_item" @click="(i) => navigateGotoItem(i)" :list="items.map((e, i) => i + 1)" />
       </span>
       <span class="flex gap-4 items-center">
@@ -344,7 +352,7 @@ import ProgressBar from "../components/ProgressBar/Bar.vue";
     </div>
   </div>
 
-  <Feedback :testResponse v-model:visible="show_feedback" @close="show_feedback = false" />
+  <Feedback :testResponse v-model:visible="show_feedback" @close="closeFeedback" />
 </template>
 
 
