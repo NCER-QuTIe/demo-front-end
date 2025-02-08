@@ -9,8 +9,6 @@ const searchTerm = defineModel("searchTerm");
 
 const tagFilterCategories = ref([
   "subject",
-  "content",
-  "cognitive"
 ]);
 </script>
 

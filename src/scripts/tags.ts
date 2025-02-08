@@ -2,10 +2,11 @@ import { Tags } from "./types.d.ts";
 
 export const tagCategories = [
   "subject",
-  // "grade",
+  "grade",
   "research",
   "content",
   "cognitive",
+  "language",
 ] as const;
 
 export const tagLabels = {
@@ -14,6 +15,7 @@ export const tagLabels = {
   grade: "კლასი",
   subject: "საგანი/სფერო",
   research: "კვლევა",
+  language: "ენა",
 };
 
 export const tagColors = {
@@ -25,6 +27,7 @@ export const tagColors = {
   cognitive: {},
   grade: {},
   research: {},
+  language: {},
 };
 
 export function emptyTagsObject(): Tags {
