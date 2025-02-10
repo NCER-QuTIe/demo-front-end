@@ -26,6 +26,11 @@ export type Test = {
   id?: string;
 };
 
+export type TestWithURL = {
+  test: Test;
+  url: string;
+};
+
 export type TestWithPackage = {
   test: Test;
   packageBase64: string;
@@ -38,6 +43,7 @@ export type TestWithItems = {
 
 export type ItemResponse = {
   itemNumber?: number;
+  itemIdentifier: string;
   interactionResponses: { [key: string]: string };
   durationSeconds: number;
   points: {

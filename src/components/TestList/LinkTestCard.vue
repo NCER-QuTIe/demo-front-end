@@ -11,12 +11,13 @@ onMounted(() => {
   isAuthed.value = !!auth;
 })
 
-const { name, description, tags, id } = defineProps<{
+const { name, description, tags, id, url } = defineProps<{
   index: number;
   name: string;
   description: string;
   tags: Tags;
   id: string;
+  url: string;
   visibility: boolean;
 }>();
 
@@ -27,6 +28,10 @@ const isExpanded = ref(false);
 function handleClick(event) {
   console.log(isExpanded.value)
   isExpanded.value = !isExpanded.value;
+}
+
+function handleStart(event) {
+  window.open(url, '_blank')
 }
 
 import { useConfirm } from "primevue/useconfirm";
@@ -57,13 +62,14 @@ const shrunkenButtonDT = ref({ smPaddingX: '0.25rem', smPaddingY: '0.25rem', ico
   <div
     class="test-card bg-surface-50 hover:bg-surface-100 hover:cursor-pointer rounded select-none overflow-hidden flex align-center stretch"
     :class="{ active: isExpanded }" @click="handleClick">
-    <div class="w-full">
+    <div class="w-full" :style="{ borderColor: tagColors.subject[tags.subject[0]] }" k>
       <div class="flex justify-between items-center flex-grow gap-2">
-        <span class="flex items-center">
+        <span class="flex items-center gap-2">
           <span class="color-indicator" :style="{ backgroundColor: tagColors.subject[tags.subject[0]] }" />
           <Button v-if="isAuthed" @click.stop.prevent="$emit('updateStatus')"
             :icon="['pi', visibility ? 'pi-eye' : 'pi-eye-slash'].join(' ')"
             :severity="visibility ? 'secondary' : 'warn'" :dt="shrunkenButtonDT" text size="small" />
+          <img src="/PISA.svg" width="36px" />
           <TestTitle :class="{ 'pl-4': !isAuthed }" :name="name" :id="'P' + id.substring(id.length - 6)" />
         </span>
         <span class="controls flex p-1">
@@ -71,8 +77,8 @@ const shrunkenButtonDT = ref({ smPaddingX: '0.25rem', smPaddingY: '0.25rem', ico
             :dt="shrunkenButtonDT" text size="small" />
           <Button v-if="isAuthed" @click.stop.prevent="$emit('edit')" icon="pi pi-pencil" severity="secondary"
             :dt="shrunkenButtonDT" text size="small" />
-          <Button @click.stop.prevent="$router.push('/test/' + id)" icon="pi pi-play" label="დაწყება"
-            class="start-button" :dt="shrunkenButtonDT" size="small" />
+          <Button @click.stop.prevent="handleStart" icon="pi pi-link" label="გადასვლა" class="start-button"
+            :dt="shrunkenButtonDT" size="small" />
         </span>
       </div>
       <hr v-if="isExpanded" class="w-full h-px bg-gray-200 border-0" />

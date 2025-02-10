@@ -19,11 +19,9 @@ async function download() {
 
 <template>
   <Dialog v-model:visible="visible" modal header="დასასრული">
-    <div class="w-[24rem] flex flex-col gap-4">
-      <div class="flex gap-4 justify-end">
-        <Button label="ნაშრომის წაშლა" severity="danger" outlined @click="$emit('close')" />
-        <Button @click="download" label="ნაშრომის შენახვა" />
-      </div>
+    <div class="flex gap-4 justify-end">
+      <Button label="ნაშრომის წაშლა" severity="danger" outlined @click="$emit('close')" />
+      <Button @click="download" label="ნაშრომის შენახვა" />
     </div>
   </Dialog>
 </template>

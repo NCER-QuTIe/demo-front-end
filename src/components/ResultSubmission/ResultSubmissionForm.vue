@@ -1,21 +1,28 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, defineModel, onMounted, watch } from "vue";
 import { getSavedTestResponseList, deleteTestResponse } from "@/scripts/responseCollector.ts";
 import Item from "./Item.vue";
 
 const list = ref([]);
-const fullName = ref("ერეკლე ბაგრატიონი");
-const teacherEmail = ref("emzar.papava@gmail.com");
+const fullName = ref();
+const teacherEmail = ref();
+
+const shouldRender = defineModel();
 
 onMounted(() => {
   list.value = getSavedTestResponseList();
-  console.log(list.value);
+  shouldRender.value = list.length > 0;
+  console.log(`setting render state to ${shouldRender.value}`)
 })
+
+watch(list, (newList) => {
+  shouldRender.value = newList.length > 0;
+  console.log(`setting render state to ${shouldRender.value}`)
+});
 
 function deleteItem(id: string) {
   deleteTestResponse(id);
   list.value = getSavedTestResponseList();
-  console.log("deleted", id)
 }
 </script>
 
@@ -30,14 +37,16 @@ function deleteItem(id: string) {
         </ol>
 
         <IftaLabel>
-          <InputText id="fullname" v-model="fullName" pt:root:class="text-center" variant="filled" />
           <label for="fullname">სახელი, გვარი</label>
+          <InputText id="fullname" v-model="fullName" variant="filled" />
         </IftaLabel>
 
-        <FloatLabel variant="on">
+        <!-- <FloatLabel variant="on"> -->
+        <IftaLabel>
           <label for="teacher-email">მასწავლებლის ელ. ფოსტა</label>
-          <InputText id="teacher-email" type="email" v-model="teacherEmail" />
-        </FloatLabel>
+          <InputText id="teacher-email" type="email" v-model="teacherEmail" variant="filled" />
+        </IftaLabel>
+        <!-- </FloatLabel> -->
 
         <Button label="გაგზავნა" iconPos="right" icon="pi pi-send" />
       </Panel>

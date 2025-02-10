@@ -4,7 +4,7 @@ import Ruler from "../components/Ruler.vue";
 
 import { ref, reactive, watch, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import Feedback from "../components/Feedback.vue";
+import FinishPopup from "../components/FinishPopup.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -135,13 +135,15 @@ async function handleEndAttemptCompleted(data) {
       const interactionResponses = {};
 
       for (const e of state.responseVariables.slice(2)) {
-        interactionResponses[e.identifier] = e.value;
+        if (!/^(\w|\d|_)*$/.test(e.value))
+          interactionResponses[e.identifier] = e.value;
       }
 
-      const obj: ItemResponses = {
+      const obj: ItemResponse = {
         durationSeconds: state.responseVariables[1].value,
         interactionResponses,
         itemNumber: i,
+        itemIdentifier: item.identifier,
         points: {
           received: results[i].score,
           maximal: results[i].max_score,
@@ -307,12 +309,16 @@ function toggleRuler(event) {
 
 // FEEDBACK
 
-function closeFeedback() {
+function closeFinishPopup() {
   show_feedback.value = false;
   router.back();
 }
 
 import ProgressBar from "../components/ProgressBar/Bar.vue";
+
+// TEST INSTRUCTION
+
+const showTestInstruction = ref(false);
 </script>
 
 <template>
@@ -327,14 +333,16 @@ import ProgressBar from "../components/ProgressBar/Bar.vue";
         <ProgressBar v-model="current_item" @click="(i) => navigateGotoItem(i)" :list="items.map((e, i) => i + 1)" />
       </span>
       <span class="flex gap-4 items-center">
+        <Button icon="pi pi-question-circle" text iconPos="right" @click="showTestInstruction = true"
+          severity="secondary" />
+
         <Button icon="pi pi-calculator" iconPos="right" @click="toggleCalculator" severity="secondary" />
 
         <Button label="სახაზავი" @click="toggleRuler" severity="secondary" />
 
         <Button label="შემდეგი" icon="pi pi-arrow-right" iconPos="right" @click="navigateNextItem()"
           v-if="current_item != items.length - 1" class="w-36" />
-        <Button label="დასრულება" severity="warn" @click="grade()" v-if="current_item == items.length - 1"
-          class="w-36" />
+        <Button label="დასრულება" severity="warn" @click="grade()" v-else class="w-36" />
       </span>
     </div>
 
@@ -352,7 +360,9 @@ import ProgressBar from "../components/ProgressBar/Bar.vue";
     </div>
   </div>
 
-  <Feedback :testResponse v-model:visible="show_feedback" @close="closeFeedback" />
+  <FinishPopup :testResponse v-model:visible="show_feedback" @close="closeFinishPopup" />
+
+  <TestInstruction v-model:visible="showTestInstruction" />
 </template>
 
 

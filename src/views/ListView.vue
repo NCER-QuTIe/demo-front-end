@@ -4,6 +4,7 @@ import FeedbackForm from "@/components/FeedbackForm.vue";
 import ListFilters from "@/components/ListFilters.vue";
 import TestList from "@/components/TestList.vue";
 import ResultSubmission from "@/components/ResultSubmission/ResultSubmissionForm.vue";
+import ResearchIndicator from "@/components/list/ResearchCard.vue";
 import {
   tagsListToObject,
   emptyTagsObject,
@@ -25,12 +26,9 @@ const toast = useToast();
 
 import { getTestList, deleteTestWithID } from '@/scripts/api.ts';
 
-const data = reactive([]);
+const data = ref([]);
 async function loadTests() {
-  data.splice(0);
-
-  let rawData = await getTestList();
-  data.push(...rawData);
+  data.value = await getTestList();
 }
 
 onMounted(loadTests);
@@ -77,7 +75,6 @@ async function updateStatus(id, new_status) {
   }
 }
 
-
 const filters = ref(emptyTagsObject());
 const searchTerm = ref("");
 
@@ -90,14 +87,14 @@ onMounted(() => {
     }
   }
   filters.value = new_tags;
-  console.log(filters.value);
 })
 
 const tag_options = ref(emptyTagsObject());
+
 watchEffect(() => {
   let res = emptyTagsObject();
   for (let category of tagCategories) {
-    for (let testTags of data.map((e) => e.tags)) {
+    for (let testTags of data.value.map((e) => e.tags || e.test.tags)) {
       for (let tag of testTags[category]) {
         if (!res[category].includes(tag)) {
           res[category].push(tag);
@@ -107,31 +104,51 @@ watchEffect(() => {
   }
   tag_options.value = res;
 });
+
+
+// RENDER STATE
+
+const renderState = ref(true);
+
+const filteredData = ref([]);
+
+watchEffect((newData) => {
+  filteredData.value = data.value.filter((test) => {
+    test = test || test.test;
+
+    return tagCategories.every(
+      (category) =>
+        filters.value[category].length == 0
+        || filters[category].some((tag) => test.tags[category].includes(tag))
+        && test.name.startsWith(searchTerm)
+    );
+  })
+});
 </script>
 
 <template>
-  <div class="grid grid-cols-[20rem_1fr] gap-4 h-full p-4">
-    <Fluid class="w-[20rem] justify-self-end flex flex-col gap-4">
-      <ResultSubmission />
+  <div class="grid grid-cols-[20rem_1fr_20rem] gap-4 h-full p-4">
+    <Fluid class="w-[20rem] overflow-x-hidden overflow-y-auto justify-self-end ">
+      <div class="flex flex-col gap-4">
+        <ResearchIndicator />
 
-      <ListFilters :tag_options="tag_options" v-model:filters="filters" v-model:search-term="searchTerm" />
+        <ListFilters :tag_options="tag_options" v-model:filters="filters" v-model:search-term="searchTerm" />
 
-      <FeedbackForm />
+        <!-- <FeedbackForm /> -->
 
-      <Button v-if="isAuthed" severity="secondary" label="ახალი ტესტის ატვირთვა"
-        @click="if (isAuthed) showUpload = true;" />
+        <GeneralInstructions />
+
+        <Button v-if="isAuthed" severity="secondary" label="ახალი ტესტის ატვირთვა"
+          @click="if (isAuthed) showUpload = true;" />
+      </div>
     </Fluid>
 
-    <TestList :data="data.filter((test) =>
-      tagCategories.every(
-        (category) =>
-          filters[category].length == 0 ||
-          filters[category].some((tag) =>
-            test.tags[category].includes(tag),
-          ),
-      ) && test.name.startsWith(searchTerm)
-    )
-      " @deleteTest="deleteTest" @updateStatus="updateStatus" @edit="editTest" />
+    <TestList :data="filteredData" :style="{ gridColumn: renderState ? '2 / span 1' : '2 / span 2' }"
+      @deleteTest="deleteTest" @updateStatus="updateStatus" @edit="editTest" />
+
+    <Fluid class="w-[20rem] justify-self-end flex flex-col gap-4">
+      <ResultSubmission v-model="renderState" />
+    </Fluid>
   </div>
   <FileUploadDialog v-model:visible="showUpload" :old_tag_options="tag_options" v-model:file="file" v-model:name="name"
     v-model:tags="tags" v-model:description="description" v-model:editingID="editingId" @close="loadTests()" />

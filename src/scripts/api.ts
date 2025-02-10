@@ -1,6 +1,6 @@
 // @ts-types="npm:vite/types/importMeta.d.ts";
 import { tagsListToObject, tagsObjectToList } from "./tags.ts";
-import { Tags, Test, TestWithPackage } from "./types.d.ts";
+import { Tags, Test, TestWithPackage, TestWithURL } from "./types.d.ts";
 
 export async function login(
   username: string,
@@ -97,26 +97,42 @@ export async function getFeedbackList(): Promise<Feedback[]> {
   return json as Feedback[];
 }
 
-export async function getTestList(): Promise<Test[]> {
+export async function getTestList(): Promise<(Test | TestWithURL)[]> {
   const data: Test[] = [];
 
   const auth = getAuth();
 
-  const url = auth
-    ? `${import.meta.env.VITE_API_ROUTE}/api/admin/qtiTests`
-    : `${import.meta.env.VITE_API_ROUTE}/api/qtiTests`;
-  const headers = auth ? { "Authorization": `Basic ${auth}` } : {};
+  for (const kind of ["qti", "external"]) {
+    const url = auth
+      ? `${import.meta.env.VITE_API_ROUTE}/api/admin/${kind}Tests`
+      : `${import.meta.env.VITE_API_ROUTE}/api/${kind}Tests`;
+    const headers = auth ? { "Authorization": `Basic ${auth}` } : {};
 
-  const res = await fetch(url, { headers: headers });
-  const json = await res.json();
+    const res = await fetch(url, { headers: headers });
+    const json = await res.json();
 
-  for (let i = 0; i < json.length; i++) {
-    data.push({
-      ...json[i],
-      tags: tagsListToObject(json[i].tags),
-      status: json[i].status === 0,
-    });
+    for (let i = 0; i < json.length; i++) {
+      const { name, description, tags, status, id } = json[i];
+      const test = {
+        name,
+        description,
+        id,
+        tags: tagsListToObject(tags),
+        status: status === 0,
+      };
+
+      if (kind === "qti") {
+        data.push(test);
+      } else {
+        data.push({
+          test,
+          url: json[i].url,
+        });
+      }
+    }
   }
+
+  console.log(data);
 
   return data;
 }
@@ -176,6 +192,7 @@ export async function getTestWithPackageWithID(
 
 export async function patchTestVisibilityStatusWithID(
   id: string,
+  kind: "qti" | "external",
   visibilityStatus: boolean,
 ): Promise<boolean> {
   const auth = getAuth();
@@ -191,7 +208,7 @@ export async function patchTestVisibilityStatusWithID(
   };
 
   const res = await fetch(
-    `${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest/${id}`,
+    `${import.meta.env.VITE_API_ROUTE}/api/admin/${kind}Test/${id}`,
     {
       method: "PATCH",
       body: JSON.stringify(
@@ -238,6 +255,37 @@ export async function putTestWithPackage(
   return res;
 }
 
+export async function putTestWithURL(
+  test: TestWithURL,
+): Promise<Response> {
+  const auth = getAuth();
+
+  if (!auth) {
+    throw new Error("Can't upload a test if the user is not authenticated.");
+  }
+
+  const obj = {
+    ...test.test,
+    tags: tagsObjectToList(test.test.tags),
+    status: Number(!test.test.status),
+    url: test.url,
+  };
+
+  const res = await fetch(
+    `${import.meta.env.VITE_API_ROUTE}/api/admin/externalTest`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Basic ${auth}`,
+      },
+      body: JSON.stringify(obj),
+    },
+  );
+
+  return res;
+}
+
 export type TestPatch = {
   name?: string;
   description?: string;
@@ -246,6 +294,7 @@ export type TestPatch = {
 };
 export async function patchTestWithID(
   id: string,
+  kind: "qti" | "external",
   test_patch: TestPatch,
 ): Promise<Response> {
   const auth = getAuth();
@@ -274,7 +323,7 @@ export async function patchTestWithID(
 
   console.log(obj);
   const res = await fetch(
-    `${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest/${id}`,
+    `${import.meta.env.VITE_API_ROUTE}/api/admin/${kind}Test/${id}`,
     {
       method: "PATCH",
       headers: {
@@ -288,7 +337,10 @@ export async function patchTestWithID(
   return res;
 }
 
-export async function deleteTestWithID(id: string): Promise<Response> {
+export async function deleteTestWithID(
+  id: string,
+  kind: "qti" | "external",
+): Promise<Response> {
   const auth = getAuth();
 
   if (!auth) {
@@ -296,7 +348,7 @@ export async function deleteTestWithID(id: string): Promise<Response> {
   }
 
   const res = await fetch(
-    `${import.meta.env.VITE_API_ROUTE}/api/admin/qtitest/${id}`,
+    `${import.meta.env.VITE_API_ROUTE}/api/admin/${kind}Test/${id}`,
     {
       method: "DELETE",
       headers: {

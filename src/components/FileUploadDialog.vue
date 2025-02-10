@@ -125,6 +125,37 @@ function add_new_tag(val) {
   }
   op.value.hide();
 }
+
+// ITEMS
+
+const numberOfItems = ref(null);
+
+const itemTags = ref([]);
+const itemTagCategories = [
+  "area",
+  "process",
+  "context",
+  "difficulty",
+];
+const itemTagLabels = {
+  process: "პროცესი",
+  difficulty: "სირთულე",
+  area: "სფერო",
+  context: "კონტექსტი"
+};
+const itemTagOptions = ref({
+  "process": [],
+  "context": [],
+  "difficulty": [],
+  "area": [],
+});
+
+watchEffect(numberOfItems, (n) => {
+  for (let i = itemTags.value.length; i < n; i++) {
+    itemTags.push([]);
+  }
+  itemTags.value.splice(n);
+});
 </script>
 
 <template>
@@ -141,7 +172,7 @@ function add_new_tag(val) {
         <label for="test-name-input">ტესტის სახელი</label>
       </FloatLabel>
 
-      <div class="flex flex-col gap-4 p-4 border-surface rounded border bg-white">
+      <Panel header="თაგები" pt:content:class="flex flex-col gap-4">
         <template v-for="(category, index) in tagCategories" :key="index">
           <UploadTagSelection v-model="tags[category]" :placeholder="tagLabels[category]"
             :options="tag_options[category]" :colors="tagColors[category]" @new-tag="
@@ -149,7 +180,25 @@ function add_new_tag(val) {
             op.toggle($event);
             " :extendible="true" />
         </template>
-      </div>
+      </Panel>
+
+      <Panel header="დავალებები" pt:content:class="flex flex-col gap-4">
+        <FloatLabel variant="on">
+          <InputNumber id="test-items-amount" v-model="numberOfItems" />
+          <label for="test-items-amount">დავალებების რაოდენობა</label>
+        </FloatLabel>
+
+        <template v-if="numberOfItems > 0">
+          <hr class="w-full h-px bg-gray-200 border-0" />
+
+          <Panel v-for="i in numberOfItems" :key="i" :header="`დავალება ${i}`" pt:content:class="flex flex-col gap-4">
+            <template v-for="(category, index) in itemTagCategories" :key="index">
+              <UploadTagSelection v-model="tags[category]" :placeholder="itemTagLabels[category]"
+                :options="itemTagOptions[category]" />
+            </template>
+          </Panel>
+        </template>
+      </Panel>
 
       <FloatLabel variant="on">
         <Textarea id="test-description-textarea" v-model="description" autoResize rows="5" cols="60" />
