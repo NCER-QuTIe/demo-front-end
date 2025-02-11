@@ -80,7 +80,7 @@ const shrunkenButtonDT = ref({ smPaddingX: '0.25rem', smPaddingY: '0.25rem', ico
 
       <hr v-if="isExpanded" class="w-full h-px bg-gray-200 border-0" />
 
-      <div v-if="isExpanded" class="p-4">
+      <div v-if="isExpanded" class="p-4" @click="handleClick">
         <div class="tags">
           <div class="category-list">
             <!-- TAGS GO HERE -->
