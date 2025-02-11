@@ -335,6 +335,8 @@ import TestInstruction from "@/components/test/TestInstructions.vue";
       <span class="flex gap-4 items-center">
         <TestInstruction />
 
+        <Mendeleev />
+
         <Button icon="pi pi-calculator" iconPos="right" @click="toggleCalculator" severity="secondary" />
 
         <Button label="სახაზავი" @click="toggleRuler" severity="secondary" />
