@@ -69,8 +69,9 @@ const shrunkenButtonDT = ref({ smPaddingX: '0.25rem', smPaddingY: '0.25rem', ico
           <Button v-if="isAuthed" @click.stop.prevent="$emit('updateStatus')"
             :icon="['pi', visibility ? 'pi-eye' : 'pi-eye-slash'].join(' ')"
             :severity="visibility ? 'secondary' : 'warn'" :dt="shrunkenButtonDT" text size="small" />
+          <span class="w-4" v-else></span>
           PISA — OECD — <span class="w-1"> </span>
-          <TestTitle :class="{ 'pl-4': !isAuthed }" :name="name" :id="'P' + id.substring(id.length - 6)" />
+          <TestTitle :name="name" :id="'P' + id.substring(id.length - 6)" />
         </span>
         <span class="controls flex p-1">
           <Button v-if="isAuthed" @click="openPopup($event)" icon="pi pi-trash" severity="danger" :dt="shrunkenButtonDT"

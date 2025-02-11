@@ -364,7 +364,6 @@ import TestInstruction from "@/components/test/TestInstructions.vue";
   <FinishPopup :testResponse v-model:visible="show_feedback" @close="closeFinishPopup" />
 </template>
 
-
 <style scoped>
 .test-view-area {
   display: border-box;
