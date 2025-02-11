@@ -26,18 +26,15 @@ const toast = useToast();
 
 const visible = defineModel<boolean>("visible");
 
-const url = defineModel<string>("url");
-const file = defineModel<any>("file");
-
 const editingID = defineModel<string | null>("editingID");
 
 const data = defineModel<{
-  file: any;
   name: string;
   tags: Tags;
   description: string;
   kind: "qti" | "external";
   url?: string;
+  file?: any;
 }>("data");
 
 function stopeditingID() {
@@ -45,6 +42,7 @@ function stopeditingID() {
   data.value.tags = emptyTagsObject();
   data.value.description = "";
   data.value.file = undefined;
+  data.value.url = undefined;
   data.value.kind = "qti";
 
   editingID.value = null;
@@ -66,6 +64,18 @@ async function edit() {
     description: data.value.description,
     tags: data.value.tags,
   };
+
+  if (data.value.kind === "qti") {
+    if (data.value.file) {
+      const myFile = data.value.file;
+      const packageBase64 = await blob2base64(myFile, myFile.type);
+      obj.data = packageBase64;
+    }
+  } else {
+    if (data.value.url) {
+      obj.data = data.value.url;
+    }
+  }
 
   console.log(editingID.value, obj);
   const res = await patchTestWithID(editingID.value, data.value.kind, obj);
@@ -112,7 +122,7 @@ async function upload() {
     res = await putTestWithPackage(testWithPackage);
   } else if (data.value.kind === "external") {
     res = await putTestWithURL({
-      test, url: url.value
+      test, url: data.value.url
     })
   }
 
@@ -196,7 +206,7 @@ watch(isExternal, (v) => {
     <Fluid class="flex flex-col gap-4 bg-surface">
       <h1 class="text-lg font-bold text-center">ტესტის ატვირთვა</h1>
 
-      <Panel header="შიგთავსი" v-if="!editingID" pt:content:class="flex flex-col gap-4">
+      <Panel header="შიგთავსი" pt:content:class="flex flex-col gap-4">
         <div class="flex gap-4 items-center justify-center">
           <span>QTI</span>
           <ToggleSwitch v-model="isExternal" :dt="{ checked: { backgorund: 'var(--p-surface-100)' } }" />
@@ -204,7 +214,7 @@ watch(isExternal, (v) => {
         </div>
 
         <FloatLabel v-if="data.kind == 'external'" variant="on">
-          <InputText id="test-name-input" v-model="url" />
+          <InputText id="test-name-input" v-model="data.url" />
           <label for="test-name-input">მისამართი</label>
         </FloatLabel>
 

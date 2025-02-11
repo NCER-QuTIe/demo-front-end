@@ -26,7 +26,7 @@ import Link from "@/components/home/Link.vue";
             სფეროებში:
           </p>
           <ul class="pl-8 list-disc">
-            <li> წიგნიერება</li>
+            <li>კითხვა</li>
             <li>მათემატიკა</li>
             <li>ბუნებისმეტყველება</li>
           </ul>

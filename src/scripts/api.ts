@@ -107,6 +107,7 @@ export async function getTestList(): Promise<Test[]> {
       ? `${import.meta.env.VITE_API_ROUTE}/api/admin/${kind}Tests`
       : `${import.meta.env.VITE_API_ROUTE}/api/${kind}Tests`;
     const options = { headers: { "Authorization": `Basic ${auth}` } };
+    console.log(url);
 
     const res = await fetch(url, auth ? options : undefined);
     const json = await res.json();
@@ -320,6 +321,7 @@ export type TestPatch = {
   description?: string;
   tags?: Tags;
   status?: boolean; // visibility status
+  data?: string;
 };
 export async function patchTestWithID(
   id: string,
@@ -348,6 +350,14 @@ export async function patchTestWithID(
 
   if (test_patch.status) {
     obj.status = Number(!test_patch.status);
+  }
+
+  if (test_patch.data) {
+    if (kind === "qti") {
+      obj.packageBase64 = test_patch.data;
+    } else {
+      obj.url = test_patch.data;
+    }
   }
 
   console.log(obj);

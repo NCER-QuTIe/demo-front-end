@@ -22,6 +22,7 @@ export const tagColors = {
   subject: {
     "მათემატიკა": "#117983",
     "ბუნებისმეტყველება": "#F9B621",
+    "კითხვა": "#e4423c",
   },
   content: {},
   cognitive: {},
