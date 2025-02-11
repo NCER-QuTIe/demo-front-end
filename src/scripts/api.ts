@@ -102,7 +102,7 @@ export async function getTestList(): Promise<Test[]> {
 
   const auth = getAuth();
 
-  for (const kind of ["qti", "external"] as const) {
+  for (const kind of ["external", "qti"] as const) {
     const url = auth
       ? `${import.meta.env.VITE_API_ROUTE}/api/admin/${kind}Tests`
       : `${import.meta.env.VITE_API_ROUTE}/api/${kind}Tests`;
