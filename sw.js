@@ -33,6 +33,8 @@ self.addEventListener("message", (event) => {
 });
 
 async function handleRequest(request, testID, fileName) {
+  fileName = decodeURI(fileName);
+
   if (files[testID] == undefined) {
     const testPackage = await getTestWithPackageWithID(testID, auth);
 
