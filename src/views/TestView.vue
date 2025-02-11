@@ -318,7 +318,7 @@ import ProgressBar from "../components/ProgressBar/Bar.vue";
 
 // TEST INSTRUCTION
 
-const showTestInstruction = ref(false);
+import TestInstruction from "@/components/test/TestInstructions.vue";
 </script>
 
 <template>
@@ -333,8 +333,7 @@ const showTestInstruction = ref(false);
         <ProgressBar v-model="current_item" @click="(i) => navigateGotoItem(i)" :list="items.map((e, i) => i + 1)" />
       </span>
       <span class="flex gap-4 items-center">
-        <Button icon="pi pi-question-circle" text iconPos="right" @click="showTestInstruction = true"
-          severity="secondary" />
+        <TestInstruction />
 
         <Button icon="pi pi-calculator" iconPos="right" @click="toggleCalculator" severity="secondary" />
 
@@ -361,8 +360,6 @@ const showTestInstruction = ref(false);
   </div>
 
   <FinishPopup :testResponse v-model:visible="show_feedback" @close="closeFinishPopup" />
-
-  <TestInstruction v-model:visible="showTestInstruction" />
 </template>
 
 

@@ -2,7 +2,7 @@
 const { old_tag_options } = defineProps(["old_tag_options"]);
 const emit = defineEmits(["close"]);
 
-import { ref, watchEffect, defineModel } from "vue";
+import { ref, watch, watchEffect, defineModel } from "vue";
 import { useToast } from "primevue/usetoast";
 import {
   emptyTagsObject,
@@ -16,6 +16,7 @@ import {
   deleteTestWithID,
   patchTestWithID,
   putTestWithPackage,
+  putTestWithURL,
   Test,
   TestPatch,
   TestWithPackage,
@@ -23,18 +24,29 @@ import {
 
 const toast = useToast();
 
-const file = defineModel<any>("file");
-const name = defineModel<string>("name");
-const tags = defineModel<Tags>("tags");
-const description = defineModel<string>("description");
-const editingID = defineModel<string | null>("editingID");
 const visible = defineModel<boolean>("visible");
 
+const url = defineModel<string>("url");
+const file = defineModel<any>("file");
+
+const editingID = defineModel<string | null>("editingID");
+
+const data = defineModel<{
+  file: any;
+  name: string;
+  tags: Tags;
+  description: string;
+  kind: "qti" | "external";
+  url?: string;
+}>("data");
+
 function stopeditingID() {
-  file.value = undefined;
-  name.value = "";
-  tags.value = emptyTagsObject();
-  description.value = "";
+  data.value.name = "";
+  data.value.tags = emptyTagsObject();
+  data.value.description = "";
+  data.value.file = undefined;
+  data.value.kind = "qti";
+
   editingID.value = null;
 
   visible.value = false;
@@ -50,12 +62,13 @@ async function edit() {
   }
 
   const obj: TestPatch = {
-    name: name.value,
-    description: description.value,
-    tags: tags.value,
+    name: data.value.name,
+    description: data.value.description,
+    tags: data.value.tags,
   };
 
-  const res = await patchTestWithID(editingID.value, obj);
+  console.log(editingID.value, obj);
+  const res = await patchTestWithID(editingID.value, data.value.kind, obj);
 
   if (res.ok) {
     visible.value = false;
@@ -72,28 +85,36 @@ async function edit() {
 }
 
 async function upload() {
-  const myFile = file.value;
-  console.log(myFile);
-  const packageBase64 = await blob2base64(myFile, myFile.type);
 
   if (editingID.value !== null) {
     throw new Error("invalid state. Trying to upload a test while editingID is not empty");
   }
 
-  console.log("attempting test upload...");
-
   const test: Test = {
-    name: name.value,
-    description: description.value,
+    name: data.value.name,
+    description: data.value.description,
+    tags: data.value.tags,
     status: true,
-    tags: tags.value,
+    kind: data.value.kind,
   };
-  const testWithPackage: TestWithPackage = {
-    test,
-    packageBase64,
-  };
-  console.log(testWithPackage);
-  const res = await putTestWithPackage(testWithPackage);
+
+  let res;
+  console.log("attempting test upload...");
+  if (data.value.kind === "qti") {
+    const myFile = data.value.file;
+    const packageBase64 = await blob2base64(myFile, myFile.type);
+
+
+    const testWithPackage: TestWithPackage = {
+      test,
+      packageBase64,
+    };
+    res = await putTestWithPackage(testWithPackage);
+  } else if (data.value.kind === "external") {
+    res = await putTestWithURL({
+      test, url: url.value
+    })
+  }
 
   if (res.ok) {
     console.log("done.");
@@ -153,28 +174,57 @@ const itemTagOptions = ref({
 watchEffect(numberOfItems, (n) => {
   for (let i = itemTags.value.length; i < n; i++) {
     itemTags.push([]);
+
+    for (const category of itemTagCategories) {
+      data.value.tags[`#${i}-${category}`] = [];
+    }
   }
   itemTags.value.splice(n);
 });
+
+const isExternal = ref(false);
+watch(isExternal, (v) => {
+  data.value.kind = v ? "external" : "qti";
+})
 </script>
 
 <template>
-  <Dialog class="w-[48em]" v-model:visible="visible" modal maximizable
-    :header="editingID ? 'რედაქტირება' : 'ახალი ტესტის ატვირთვა'" @hide="stopeditingID()">
+  <Button severity="secondary" label="ახალი ტესტის ატვირთვა" @click="visible = true" />
+
+  <Dialog class="w-[48em]" v-model:visible="visible" modal :header="editingID ? 'რედაქტირება' : 'ახალი ტესტის ატვირთვა'"
+    @hide="stopeditingID()">
     <Fluid class="flex flex-col gap-4 bg-surface">
       <h1 class="text-lg font-bold text-center">ტესტის ატვირთვა</h1>
 
-      <FileUpload v-if="!editingID" ref="fileupload" mode="basic" name="demo[]" customUpload :maxFileSize="2000000"
-        @select="file = $event.files[0]" chooseLabel="ფაილის არჩევა" />
+      <Panel header="შიგთავსი" v-if="!editingID" pt:content:class="flex flex-col gap-4">
+        <div class="flex gap-4 items-center justify-center">
+          <span>QTI</span>
+          <ToggleSwitch v-model="isExternal" :dt="{ checked: { backgorund: 'var(--p-surface-100)' } }" />
+          <span>ბმული</span>
+        </div>
+
+        <FloatLabel v-if="data.kind == 'external'" variant="on">
+          <InputText id="test-name-input" v-model="url" />
+          <label for="test-name-input">მისამართი</label>
+        </FloatLabel>
+
+        <FileUpload v-if="data.kind == 'qti'" ref="fileupload" mode="basic" customUpload :maxFileSize="2000000"
+          @select="data.file = $event.files[0]" chooseLabel="ფაილის არჩევა" />
+      </Panel>
 
       <FloatLabel variant="on">
-        <InputText id="test-name-input" v-model="name" />
+        <InputText id="test-name-input" v-model="data.name" />
         <label for="test-name-input">ტესტის სახელი</label>
+      </FloatLabel>
+
+      <FloatLabel variant="on">
+        <Textarea id="test-description-textarea" v-model="data.description" autoResize rows="5" cols="60" />
+        <label for="test-description-textarea">აღწერა</label>
       </FloatLabel>
 
       <Panel header="თაგები" pt:content:class="flex flex-col gap-4">
         <template v-for="(category, index) in tagCategories" :key="index">
-          <UploadTagSelection v-model="tags[category]" :placeholder="tagLabels[category]"
+          <UploadTagSelection v-model="data.tags[category]" :placeholder="tagLabels[category]"
             :options="tag_options[category]" :colors="tagColors[category]" @new-tag="
               new_tag_category = category;
             op.toggle($event);
@@ -193,22 +243,18 @@ watchEffect(numberOfItems, (n) => {
 
           <Panel v-for="i in numberOfItems" :key="i" :header="`დავალება ${i}`" pt:content:class="flex flex-col gap-4">
             <template v-for="(category, index) in itemTagCategories" :key="index">
-              <UploadTagSelection v-model="tags[category]" :placeholder="itemTagLabels[category]"
-                :options="itemTagOptions[category]" />
+              <UploadTagSelection v-model="data.tags[`#${i}-${category}`]" :placeholder="itemTagLabels[category]"
+                :options="itemTagOptions[category]" :extendible="true" />
             </template>
           </Panel>
         </template>
       </Panel>
 
-      <FloatLabel variant="on">
-        <Textarea id="test-description-textarea" v-model="description" autoResize rows="5" cols="60" />
-        <label for="test-description-textarea">აღწერა</label>
-      </FloatLabel>
 
       <div class="flex gap-4">
         <Button label="გაუქმება" severity="warn" @click="stopeditingID()" v-if="editingID !== null" />
 
-        <Button v-if="editingID" label="შენახვა" @click="edit()" />
+        <Button v-if="editingID" label="შენახვა" @click="edit" />
         <Button v-else label="ატვირთვა" @click="upload()" />
       </div>
     </Fluid>

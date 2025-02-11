@@ -97,18 +97,18 @@ export async function getFeedbackList(): Promise<Feedback[]> {
   return json as Feedback[];
 }
 
-export async function getTestList(): Promise<(Test | TestWithURL)[]> {
+export async function getTestList(): Promise<Test[]> {
   const data: Test[] = [];
 
   const auth = getAuth();
 
-  for (const kind of ["qti", "external"]) {
+  for (const kind of ["qti", "external"] as const) {
     const url = auth
       ? `${import.meta.env.VITE_API_ROUTE}/api/admin/${kind}Tests`
       : `${import.meta.env.VITE_API_ROUTE}/api/${kind}Tests`;
-    const headers = auth ? { "Authorization": `Basic ${auth}` } : {};
+    const options = { headers: { "Authorization": `Basic ${auth}` } };
 
-    const res = await fetch(url, { headers: headers });
+    const res = await fetch(url, auth ? options : undefined);
     const json = await res.json();
 
     for (let i = 0; i < json.length; i++) {
@@ -117,18 +117,12 @@ export async function getTestList(): Promise<(Test | TestWithURL)[]> {
         name,
         description,
         id,
+        kind,
         tags: tagsListToObject(tags),
         status: status === 0,
       };
 
-      if (kind === "qti") {
-        data.push(test);
-      } else {
-        data.push({
-          test,
-          url: json[i].url,
-        });
-      }
+      data.push(test);
     }
   }
 
@@ -157,6 +151,40 @@ export async function loadItemXML(
   return modified_xml;
 }
 
+export async function getTestWithURLWithID(
+  id: string,
+  default_auth?: string | null,
+): Promise<TestWithURL> {
+  const auth = default_auth === undefined ? getAuth() : default_auth;
+
+  const url = auth
+    ? `${import.meta.env.VITE_API_ROUTE}/api/admin/externalTest/${id}`
+    : `${import.meta.env.VITE_API_ROUTE}/api/externalTest/${id}`;
+
+  const headers = auth ? { "Authorization": `Basic ${auth}` } : {};
+  const res = await fetch(url, { headers: headers });
+
+  if (!res.ok) {
+    throw new Error("Can't fetch the test");
+  }
+
+  const json = await res.json();
+
+  const test: Test = {
+    name: json.name,
+    description: json.description,
+    status: json.status === 1,
+    id: json.id,
+    tags: tagsListToObject(json.tags),
+    kind: "external",
+  };
+
+  return {
+    test,
+    url: json.url,
+  };
+}
+
 export async function getTestWithPackageWithID(
   id: string,
   default_auth?: string | null,
@@ -182,6 +210,7 @@ export async function getTestWithPackageWithID(
     status: json.status === 1,
     id: json.id,
     tags: tagsListToObject(json.tags),
+    kind: "qti",
   };
 
   return {

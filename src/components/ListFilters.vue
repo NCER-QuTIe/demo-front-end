@@ -1,6 +1,7 @@
 <script setup>
 import { emptyTagsObject, tagCategories, tagLabels, tagColors } from "@/scripts/tags";
 import { ref, defineProps, watchEffect } from "vue";
+import UploadTagSelection from "@/components/list/upload/UploadTagSelection.vue";
 
 const props = defineProps(["tag_options"]);
 

@@ -24,6 +24,7 @@ export type Test = {
   tags: Tags;
   status: boolean; // visibility status
   id?: string;
+  kind: "qti" | "external";
 };
 
 export type TestWithURL = {
@@ -34,11 +35,6 @@ export type TestWithURL = {
 export type TestWithPackage = {
   test: Test;
   packageBase64: string;
-};
-
-export type TestWithItems = {
-  test: Test;
-  items: Item[];
 };
 
 export type ItemResponse = {

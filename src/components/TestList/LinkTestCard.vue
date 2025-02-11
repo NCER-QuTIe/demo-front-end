@@ -4,7 +4,7 @@ import { defineProps, defineEmits, ref, onMounted } from 'vue';
 import { type Tags, tagCategories, tagLabels, tagColors } from '@/scripts/tags';
 import TestTitle from "@/components/TestTitle.vue";
 
-import { getAuth } from '@/scripts/api';
+import { getAuth, getTestWithURLWithID } from '@/scripts/api';
 const isAuthed = ref<boolean>(false);
 onMounted(() => {
   const auth = getAuth();
@@ -26,12 +26,12 @@ const emit = defineEmits(["delete", "updateStatus", "edit"]);
 const isExpanded = ref(false);
 
 function handleClick(event) {
-  console.log(isExpanded.value)
   isExpanded.value = !isExpanded.value;
 }
 
-function handleStart(event) {
-  window.open(url, '_blank')
+async function handleStart(event) {
+  const testWithURL = await getTestWithURLWithID(id);
+  window.open(testWithURL.url, '_blank')
 }
 
 import { useConfirm } from "primevue/useconfirm";

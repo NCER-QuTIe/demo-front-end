@@ -1,8 +1,8 @@
 <script setup>
-import FileUploadDialog from "@/components/FileUploadDialog.vue";
+import FileUploadDialog from "@/components/list/upload/FileUploadDialog.vue";
 import FeedbackForm from "@/components/FeedbackForm.vue";
 import ListFilters from "@/components/ListFilters.vue";
-import TestList from "@/components/TestList.vue";
+import TestList from "@/components/TestList/TestList.vue";
 import ResultSubmission from "@/components/ResultSubmission/ResultSubmissionForm.vue";
 import ResearchIndicator from "@/components/list/ResearchCard.vue";
 import {
@@ -11,7 +11,7 @@ import {
   tagCategories,
 } from "@/scripts/tags.ts";
 import { getAuth, getTestWithPackageWithID, patchTestVisibilityStatusWithID } from '@/scripts/api.ts';
-import { reactive, ref, watchEffect, onMounted } from "vue";
+import { reactive, ref, watchEffect, watch, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useToast } from 'primevue/usetoast';
 import { b64toBlob } from "@/scripts/blob2base64";
@@ -33,40 +33,43 @@ async function loadTests() {
 
 onMounted(loadTests);
 
-async function deleteTest(id) {
+async function deleteTest(id, kind) {
   console.log("AEEEE");
-  let res = await deleteTestWithID(id);
-
-  await loadTests();
+  let res = await deleteTestWithID(id, kind);
 
   if (!res.ok) {
     toast.add({ severity: 'error', summary: 'შეცდომა', detail: 'ტესტის წაშლა ვერ მოხერხდა', life: 3000 });
-    console.log(res);
   } else {
     toast.add({ severity: 'success', detail: 'ტესტი წარმატებით წაიშალა', life: 3000 });
   }
+
+  await loadTests();
 }
 
-let file = ref();
-let name = ref("");
-let tags = ref(emptyTagsObject());
-let description = ref("");
-let editingId = ref(null);
+let editingID = ref(null);
+const fileUploadData = ref({
+  name: "",
+  tags: emptyTagsObject(),
+  description: "",
+  kind: "qti",
+})
 
 async function editTest(id) {
-  const { test, packageBase64 } = await getTestWithPackageWithID(id);
+  let test = data.value.find((e) => e.id === id || (e.test && e.test.id === id));
+  test = test.test || test;
+  console.log(test)
 
-  file.value = b64toBlob(packageBase64, "application/zip");
-  name.value = test.name;
-  description.value = test.description;
-  tags.value = test.tags;
+  fileUploadData.value.name = test.name;
+  fileUploadData.value.description = test.description;
+  fileUploadData.value.tags = test.tags;
+  fileUploadData.value.kind = test.kind;
 
-  editingId.value = test.id;
+  editingID.value = test.id;
   showUpload.value = true;
 }
 
-async function updateStatus(id, new_status) {
-  let res = await patchTestVisibilityStatusWithID(id, new_status);
+async function updateStatus(id, kind, new_status) {
+  let res = await patchTestVisibilityStatusWithID(id, kind, new_status);
 
   if (res) {
     loadTests();
@@ -91,7 +94,7 @@ onMounted(() => {
 
 const tag_options = ref(emptyTagsObject());
 
-watchEffect(() => {
+watch(data, () => {
   let res = emptyTagsObject();
   for (let category of tagCategories) {
     for (let testTags of data.value.map((e) => e.tags || e.test.tags)) {
@@ -126,6 +129,8 @@ watchEffect((newData) => {
 });
 </script>
 
+<!-- v-model:file="file" v-model:name="name" v-model:tags="tags" v-model:description="description" -->
+
 <template>
   <div class="grid grid-cols-[20rem_1fr_20rem] gap-4 h-full p-4">
     <Fluid class="w-[20rem] overflow-x-hidden overflow-y-auto justify-self-end ">
@@ -134,22 +139,19 @@ watchEffect((newData) => {
 
         <ListFilters :tag_options="tag_options" v-model:filters="filters" v-model:search-term="searchTerm" />
 
-        <!-- <FeedbackForm /> -->
-
         <GeneralInstructions />
 
-        <Button v-if="isAuthed" severity="secondary" label="ახალი ტესტის ატვირთვა"
-          @click="if (isAuthed) showUpload = true;" />
+        <FileUploadDialog v-if="isAuthed" v-model:visible="showUpload" :old_tag_options="tag_options"
+          v-model:data="fileUploadData" v-model:editingID="editingID" @close="loadTests()" />
       </div>
     </Fluid>
 
-    <TestList :data="filteredData" :style="{ gridColumn: renderState ? '2 / span 1' : '2 / span 2' }"
-      @deleteTest="deleteTest" @updateStatus="updateStatus" @edit="editTest" />
+    <TestList :data="filteredData" @deleteTest="deleteTest" @updateStatus="updateStatus" @editTest="editTest" />
 
     <Fluid class="w-[20rem] justify-self-end flex flex-col gap-4">
       <ResultSubmission v-model="renderState" />
+
+      <FeedbackForm />
     </Fluid>
   </div>
-  <FileUploadDialog v-model:visible="showUpload" :old_tag_options="tag_options" v-model:file="file" v-model:name="name"
-    v-model:tags="tags" v-model:description="description" v-model:editingID="editingId" @close="loadTests()" />
 </template>
