@@ -55,8 +55,7 @@ const fileUploadData = ref({
 })
 
 async function editTest(id) {
-  let test = data.value.find((e) => e.id === id || (e.test && e.test.id === id));
-  test = test.test || test;
+  let test = data.value.find((e) => e.id === id);
   console.log(test)
 
   fileUploadData.value.name = test.name;
@@ -116,16 +115,21 @@ const renderState = ref(true);
 const filteredData = ref([]);
 
 watchEffect((newData) => {
+  console.log(filters.value)
   filteredData.value = data.value.filter((test) => {
-    test = test || test.test;
-
     return tagCategories.every(
-      (category) =>
-        filters.value[category].length == 0
-        || filters[category].some((tag) => test.tags[category].includes(tag))
-        && test.name.startsWith(searchTerm)
+      (category) => {
+        const someTagMatches = filters.value[category].some((tag) => test.tags[category].includes(tag));
+        const matchesTags = filters.value[category].length == 0 || someTagMatches;
+        const matchesTerm = test.name.startsWith(searchTerm.value);
+        console.log(matchesTerm)
+
+        return matchesTags && matchesTerm;
+      }
     );
   })
+
+  console.log(filteredData.value)
 });
 </script>
 
