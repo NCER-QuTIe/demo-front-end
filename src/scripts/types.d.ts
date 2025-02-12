@@ -18,11 +18,14 @@ export type Item = {
   xml: string;
 };
 
+export type ItemInfo = { [itemNumber: number]: { [category: string]: string } };
+
 export type Test = {
   name: string;
   description: string;
   tags: Tags;
   status: boolean; // visibility status
+  itemInfo: ItemInfo;
   id?: string;
   kind: "qti" | "external";
 };

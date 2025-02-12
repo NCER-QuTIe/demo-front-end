@@ -1,4 +1,4 @@
-import { Tags } from "./types.d.ts";
+import { Item, ItemInfo, Tags } from "./types.d.ts";
 
 export const tagCategories = [
   "subject",
@@ -49,6 +49,29 @@ export function tagsListToObject(tags: string[]): Tags {
   }
 
   return res as Tags;
+}
+
+export function tagsListToItemInfo(tags: string[]): ItemInfo {
+  const itemInfo: ItemInfo = {};
+
+  for (const tag of tags) {
+    const found = tag.match(
+      /^#(?<itemIndex>\d+)-(?<category>\w+)-(?<value>.+)/,
+    );
+
+    console.log(found);
+    if (found && found.groups) {
+      const { itemIndex, category, value } = found.groups;
+      const index = Number(itemIndex);
+
+      if (!itemInfo[index]) {
+        itemInfo[index] = {};
+      }
+      itemInfo[index][category] = value;
+    }
+  }
+
+  return itemInfo;
 }
 
 export function tagsObjectToList(tags: Tags): string[] {

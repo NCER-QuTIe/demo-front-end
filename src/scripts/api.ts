@@ -1,5 +1,9 @@
 // @ts-types="npm:vite/types/importMeta.d.ts";
-import { tagsListToObject, tagsObjectToList } from "./tags.ts";
+import {
+  tagsListToItemInfo,
+  tagsListToObject,
+  tagsObjectToList,
+} from "./tags.ts";
 import { Tags, Test, TestWithPackage, TestWithURL } from "./types.d.ts";
 
 export async function login(
@@ -103,16 +107,11 @@ export async function getTestList(): Promise<Test[]> {
   const auth = getAuth();
 
   for (const kind of ["external", "qti"] as const) {
-    // const url = auth
-    //   ? `${import.meta.env.VITE_API_ROUTE}/api/admin/${kind}Tests`
-    //   : `${import.meta.env.VITE_API_ROUTE}/api/${kind}Tests`;
-    // const options = { headers: { "Authorization": `Basic ${auth}` } };
-    // const res = await fetch(url, auth ? options : undefined);
-    const url = `${import.meta.env.VITE_API_ROUTE}/api/admin/${kind}Tests`;
-    const options = {
-      headers: { "Authorization": "Basic QURNSU46e1EuYjBMdHdjRGNJZ0pbNg==" },
-    };
-    const res = await fetch(url, options);
+    const url = auth
+      ? `${import.meta.env.VITE_API_ROUTE}/api/admin/${kind}Tests`
+      : `${import.meta.env.VITE_API_ROUTE}/api/${kind}Tests`;
+    const options = { headers: { "Authorization": `Basic ${auth}` } };
+    const res = await fetch(url, auth ? options : undefined);
 
     const json = await res.json();
 
@@ -124,6 +123,7 @@ export async function getTestList(): Promise<Test[]> {
         id,
         kind,
         tags: tagsListToObject(tags),
+        itemInfo: tagsListToItemInfo(tags),
         status: status === 0,
       };
 
@@ -181,6 +181,7 @@ export async function getTestWithURLWithID(
     status: json.status === 1,
     id: json.id,
     tags: tagsListToObject(json.tags),
+    itemInfo: tagsListToItemInfo(json.tags),
     kind: "external",
   };
 
@@ -215,6 +216,7 @@ export async function getTestWithPackageWithID(
     status: json.status === 1,
     id: json.id,
     tags: tagsListToObject(json.tags),
+    itemInfo: tagsListToItemInfo(json.tags),
     kind: "qti",
   };
 
