@@ -68,6 +68,7 @@ async function handleTestPlayerReady(_qti3TestPlayer) {
 
   const res = await fetch(`/file/${route.params.id}/testItemInfo`)
   itemInfo.value = await res.json();
+  console.log(itemInfo.value)
 }
 
 function getItems(test) {
@@ -326,8 +327,6 @@ import TestInstruction from "@/components/test/TestInstructions.vue";
 </script>
 
 <template>
-  {{ itemInfo }}
-
   <Qti3Test ref="qti3TestPlayer" @notifyQti3TestPlayerReady="handleTestPlayerReady"
     @notifyQti3TestReady="handleTestReady" @notifyQti3TestEndAttemptCompleted="handleEndAttemptCompleted" />
   <Ruler v-if="rulerRef" />

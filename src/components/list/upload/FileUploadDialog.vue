@@ -33,6 +33,7 @@ const data = defineModel<{
   tags: Tags;
   description: string;
   kind: "qti" | "external";
+  itemInfo: ItemInfo;
   url?: string;
   file?: any;
 }>("data");
@@ -44,6 +45,7 @@ function stopeditingID() {
   data.value.file = undefined;
   data.value.url = undefined;
   data.value.kind = "qti";
+  data.value.itemInfo = {};
 
   editingID.value = null;
 
@@ -159,37 +161,11 @@ function add_new_tag(val) {
 
 // ITEMS
 
-const numberOfItems = ref(null);
-
-const itemTags = ref([]);
-const itemTagCategories = [
-  "area",
-  "process",
-  "context",
-  "difficulty",
-];
-const itemTagLabels = {
-  process: "პროცესი",
-  difficulty: "სირთულე",
-  area: "სფერო",
-  context: "კონტექსტი"
-};
 const itemTagOptions = ref({
   "process": [],
   "context": [],
   "difficulty": [],
   "area": [],
-});
-
-watchEffect(numberOfItems, (n) => {
-  for (let i = itemTags.value.length; i < n; i++) {
-    itemTags.push([]);
-
-    for (const category of itemTagCategories) {
-      data.value.tags[`#${i}-${category}`] = [];
-    }
-  }
-  itemTags.value.splice(n);
 });
 
 const isExternal = ref(false);
@@ -242,24 +218,7 @@ watch(isExternal, (v) => {
         </template>
       </Panel>
 
-      <Panel header="დავალებები" pt:content:class="flex flex-col gap-4">
-        <FloatLabel variant="on">
-          <InputNumber id="test-items-amount" v-model="numberOfItems" />
-          <label for="test-items-amount">დავალებების რაოდენობა</label>
-        </FloatLabel>
-
-        <template v-if="numberOfItems > 0">
-          <hr class="w-full h-px bg-gray-200 border-0" />
-
-          <Panel v-for="i in numberOfItems" :key="i" :header="`დავალება ${i}`" pt:content:class="flex flex-col gap-4">
-            <template v-for="(category, index) in itemTagCategories" :key="index">
-              <UploadTagSelection v-model="data.tags[`#${i}-${category}`]" :placeholder="itemTagLabels[category]"
-                :options="itemTagOptions[category]" :extendible="true" />
-            </template>
-          </Panel>
-        </template>
-      </Panel>
-
+      <ItemInfoInput v-if="data.kind == 'qti'" v-model:options="itemTagOptions" v-model:value="data.itemInfo" />
 
       <div class="flex gap-4">
         <Button label="გაუქმება" severity="warn" @click="stopeditingID()" v-if="editingID !== null" />
@@ -273,7 +232,7 @@ watch(isExternal, (v) => {
   <Popover ref="op">
     <div class="flex flex-col gap-4">
       <InputText v-model="new_tag" />
-      <Button label="confirm" @click="add_new_tag" />
+      <Button label="დადასტურება" @click="add_new_tag" />
     </div>
   </Popover>
 </template>

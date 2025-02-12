@@ -1,10 +1,17 @@
 // @ts-types="npm:vite/types/importMeta.d.ts";
+import { itemInfoLabels } from "./itemInfo.ts";
 import {
   tagsListToItemInfo,
   tagsListToObject,
   tagsObjectToList,
 } from "./tags.ts";
-import { Tags, Test, TestWithPackage, TestWithURL } from "./types.d.ts";
+import {
+  Tags,
+  Test,
+  TestResponseBundle,
+  TestWithPackage,
+  TestWithURL,
+} from "./types.d.ts";
 
 export async function login(
   username: string,
@@ -101,6 +108,25 @@ export async function getFeedbackList(): Promise<Feedback[]> {
   return json as Feedback[];
 }
 
+export async function putTestResponse(
+  emailAddress: string,
+  testResponseBundle: TestResponseBundle,
+): Promise<Response> {
+  const url = `${import.meta.env.VITE_API_ROUTE}/api/testResults/sendEmail`;
+
+  const obj = {
+    resoinseBundle: testResponseBundle,
+    emailToSend: emailAddress,
+  };
+
+  return await fetch(url, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(obj),
+  });
+}
+
 export async function getTestList(): Promise<Test[]> {
   const data: Test[] = [];
 
@@ -132,6 +158,23 @@ export async function getTestList(): Promise<Test[]> {
       data.push(test);
     }
   }
+
+  data.sort((a, b) => {
+    if (a.kind == "external") {
+      return -1;
+    }
+    if (b.kind == "external") {
+      return 1;
+    }
+
+    if (a.itemInfo["1"]) {
+      return -1;
+    }
+    if (b.itemInfo["1"]) {
+      return 1;
+    }
+    return 0;
+  });
 
   console.log(data);
 

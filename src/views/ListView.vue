@@ -51,7 +51,8 @@ const fileUploadData = ref({
   name: "",
   tags: emptyTagsObject(),
   description: "",
-  kind: null,
+  kind: 'qti',
+  itemInfo: {}
 })
 
 async function editTest(id) {
@@ -62,6 +63,7 @@ async function editTest(id) {
   fileUploadData.value.description = test.description;
   fileUploadData.value.tags = test.tags;
   fileUploadData.value.kind = test.kind;
+  fileUploadData.value.itemInfo = test.itemInfo;
 
   editingID.value = test.id;
   showUpload.value = true;

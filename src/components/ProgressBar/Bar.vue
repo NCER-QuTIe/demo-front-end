@@ -1,5 +1,6 @@
 <script setup>
 import { defineEmits, defineProps, defineModel, watch, ref } from "vue";
+import { itemInfoCategories, itemInfoLabels } from "@/scripts/itemInfo.ts"
 
 const { list, info } = defineProps(["list", "info"]);
 const current = defineModel();
@@ -27,9 +28,10 @@ function showInfo(event) {
       <button :class="{
         visited: visited.includes(index),
         active: current == index,
+        'has-info': info[current + 1],
       }" @click="$emit('click', index)">
         {{ item }}
-        <template v-if="current == index">
+        <template v-if="current == index && info[current + 1]">
           <button @click.stop="showInfo">
             ინფ.
           </button>
@@ -44,7 +46,14 @@ function showInfo(event) {
   </div>
 
   <Popover ref="op">
-    <DataTable :value="info[current + 1]" />
+    <table>
+      <tbody>
+        <tr v-for="k, v in Object.entries(info[current + 1])">
+          <td class="bg-surface-200 text-right">{{ itemInfoLabels[k[0]] }}</td>
+          <td>{{ k[1] }}</td>
+        </tr>
+      </tbody>
+    </table>
   </Popover>
 </template>
 
@@ -57,9 +66,9 @@ function showInfo(event) {
 }
 
 .progress-bar>button {
-  width: 2rem;
+  min-width: 2rem;
   height: 2rem;
-  padding: 0 0.6rem;
+  padding: 0 0.5rem;
   border-radius: 1rem;
   border: solid 1px var(--p-surface-200);
   color: var(--p-surface-200);
@@ -98,7 +107,9 @@ button.active {
   color: var(--p-surface-50);
   border-color: var(--p-surface-400);
   background-color: var(--p-surface-400);
-  width: fit-content;
+}
+
+button.active.has-info {
   padding-right: 0.25rem;
 }
 

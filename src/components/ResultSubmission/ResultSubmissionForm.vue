@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, defineModel, onMounted, watch } from "vue";
 import { getSavedTestResponseList, deleteTestResponse } from "@/scripts/responseCollector.ts";
+import { useToast } from 'primevue/usetoast';
 import Item from "./Item.vue";
 
 const list = ref([]);
@@ -23,6 +24,21 @@ watch(list, (newList) => {
 function deleteItem(id: string) {
   deleteTestResponse(id);
   list.value = getSavedTestResponseList();
+}
+
+const toast = useToast();
+
+async function submit() {
+  const res = await putTestResponse(teacherEmail.value, {
+    studentName: fullName.value,
+    testResponses: list.value
+  });
+
+  if (!res.ok) {
+    toast.add({ severity: 'error', summary: 'შეცდომა', detail: 'შედეგების ატვირთვა ვერ მოხერხდა', life: 3000 });
+  } else {
+    toast.add({ severity: 'success', detail: 'ტესტები წარმატებით აიტვირთა', life: 3000 });
+  }
 }
 </script>
 
