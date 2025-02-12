@@ -46,7 +46,7 @@ import Link from "@/components/home/Link.vue";
             სფეროში:
           </p>
           <ul class="pl-8 list-disc">
-            <li>წიგნიერება</li>
+            <li>კითხვა</li>
           </ul>
         </div>
       </div>

@@ -90,6 +90,7 @@ img {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
+    font-family: "Calibri";
 }
 /* .qti-item, */
 /* .qti-item body {
@@ -359,6 +360,7 @@ img {
 .qti-item select,
 .qti-item textarea {
     font-family: "Franklin Gothic", "Franklin Gothic Medium", sans-serif;
+    font-family: "Calibri";
     font-weight: normal;
     line-height: normal;
     text-transform: none;
@@ -544,6 +546,7 @@ img {
 }
 .qti-item .ui-widget {
     font-family: "Franklin Gothic", "Franklin Gothic Medium", sans-serif;
+    font-family: "Calibri";
     font-size: 1.4rem !important;
 }
 .qti-item .ui-widget .ui-widget {
@@ -554,6 +557,7 @@ img {
 .qti-item .ui-widget textarea,
 .qti-item .ui-widget button {
     font-family: "Franklin Gothic", "Franklin Gothic Medium", sans-serif;
+    font-family: "Calibri";
     font-size: 1.4rem !important;
 }
 .qti-item ul,

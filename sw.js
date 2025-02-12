@@ -48,6 +48,12 @@ async function handleRequest(request, testID, fileName) {
     console.log(`loaded the test with id: ${testID}`);
   }
 
+  if (fileName == "testItemInfo") {
+    return new Response(JSON.stringify(tests[testID].itemInfo), {
+      headers: { "content-type": "application/json" },
+    });
+  }
+
   if (fileName == "testName") {
     return new Response(tests[testID].name, {
       headers: { "content-type": "text/plain" },

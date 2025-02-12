@@ -11,6 +11,7 @@ const router = useRouter();
 
 let test_player = null;
 let test_url = null;
+let itemInfo = ref(null);
 
 async function getTestURL() {
   if (test_url === null) {
@@ -60,10 +61,13 @@ async function loadTestXML() {
   test_player.loadTestFromXml(xml, configuration);
 }
 
-function handleTestPlayerReady(_qti3TestPlayer) {
+async function handleTestPlayerReady(_qti3TestPlayer) {
   test_player = _qti3TestPlayer;
 
   loadTestXML();
+
+  const res = await fetch(`/file/${route.params.id}/testItemInfo`)
+  itemInfo.value = await res.json();
 }
 
 function getItems(test) {
@@ -322,6 +326,8 @@ import TestInstruction from "@/components/test/TestInstructions.vue";
 </script>
 
 <template>
+  {{ itemInfo }}
+
   <Qti3Test ref="qti3TestPlayer" @notifyQti3TestPlayerReady="handleTestPlayerReady"
     @notifyQti3TestReady="handleTestReady" @notifyQti3TestEndAttemptCompleted="handleEndAttemptCompleted" />
   <Ruler v-if="rulerRef" />
@@ -330,10 +336,13 @@ import TestInstruction from "@/components/test/TestInstructions.vue";
     <div class="w-full flex gap-4 justify-between">
       <span class="flex gap-4 items-center">
         <Button label="მთავარი გვერდი" outlined severity="secondary" icon="pi pi-home" @click="$router.back()" />
-        <ProgressBar v-model="current_item" @click="(i) => navigateGotoItem(i)" :list="items.map((e, i) => i + 1)" />
+        <ProgressBar v-model="current_item" @click="(i) => navigateGotoItem(i)" :list="items.map((e, i) => i + 1)"
+          :info="itemInfo" />
       </span>
       <span class="flex gap-4 items-center">
         <TestInstruction />
+
+        <Mendeleev />
 
         <Button icon="pi pi-calculator" iconPos="right" @click="toggleCalculator" severity="secondary" />
 
@@ -361,7 +370,6 @@ import TestInstruction from "@/components/test/TestInstructions.vue";
 
   <FinishPopup :testResponse v-model:visible="show_feedback" @close="closeFinishPopup" />
 </template>
-
 
 <style scoped>
 .test-view-area {

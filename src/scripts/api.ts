@@ -1,5 +1,9 @@
 // @ts-types="npm:vite/types/importMeta.d.ts";
-import { tagsListToObject, tagsObjectToList } from "./tags.ts";
+import {
+  tagsListToItemInfo,
+  tagsListToObject,
+  tagsObjectToList,
+} from "./tags.ts";
 import { Tags, Test, TestWithPackage, TestWithURL } from "./types.d.ts";
 
 export async function login(
@@ -110,6 +114,7 @@ export async function getTestList(): Promise<Test[]> {
     console.log(url);
 
     const res = await fetch(url, auth ? options : undefined);
+
     const json = await res.json();
 
     for (let i = 0; i < json.length; i++) {
@@ -120,6 +125,7 @@ export async function getTestList(): Promise<Test[]> {
         id,
         kind,
         tags: tagsListToObject(tags),
+        itemInfo: tagsListToItemInfo(tags),
         status: status === 0,
       };
 
@@ -177,6 +183,7 @@ export async function getTestWithURLWithID(
     status: json.status === 1,
     id: json.id,
     tags: tagsListToObject(json.tags),
+    itemInfo: tagsListToItemInfo(json.tags),
     kind: "external",
   };
 
@@ -211,6 +218,7 @@ export async function getTestWithPackageWithID(
     status: json.status === 1,
     id: json.id,
     tags: tagsListToObject(json.tags),
+    itemInfo: tagsListToItemInfo(json.tags),
     kind: "qti",
   };
 

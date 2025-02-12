@@ -65,7 +65,8 @@ const shrunkenButtonDT = ref({ smPaddingX: '0.25rem', smPaddingY: '0.25rem', ico
           <Button v-if="isAuthed" @click.stop.prevent="$emit('updateStatus')"
             :icon="['pi', visibility ? 'pi-eye' : 'pi-eye-slash'].join(' ')"
             :severity="visibility ? 'secondary' : 'warn'" :dt="shrunkenButtonDT" text size="small" />
-          <TestTitle :class="{ 'pl-4': !isAuthed }" :name="name" :id="'P' + id.substring(id.length - 6)" />
+          <span class="w-4" v-else></span>
+          <TestTitle :name="name" :id="'P' + id.substring(id.length - 6)" />
         </span>
 
         <span class="controls flex p-1">
@@ -80,7 +81,7 @@ const shrunkenButtonDT = ref({ smPaddingX: '0.25rem', smPaddingY: '0.25rem', ico
 
       <hr v-if="isExpanded" class="w-full h-px bg-gray-200 border-0" />
 
-      <div v-if="isExpanded" class="p-4">
+      <div v-if="isExpanded" class="p-4" @click="handleClick">
         <div class="tags">
           <div class="category-list">
             <!-- TAGS GO HERE -->
