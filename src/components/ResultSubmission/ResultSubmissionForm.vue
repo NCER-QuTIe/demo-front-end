@@ -52,7 +52,6 @@ async function submit() {
   <template v-if="list.length">
     <Fluid>
       <Panel header="შედეგები" pt:content:class="flex flex-col gap-4">
-        {{ list }}
         <ol class="list-disc pl-5 flex flex-col gap-2">
           <li v-for="(item, index) in list" :key="index">
             <Item :name="item.testName" :id="item.testID" :time="item.time" @delete="deleteItem(item.testID)" />

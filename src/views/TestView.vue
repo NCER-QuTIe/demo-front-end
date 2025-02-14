@@ -13,17 +13,22 @@ let test_player = null;
 let test_url = null;
 let itemInfo = ref(null);
 
-async function getTestURL() {
+async function getTestURL(depth = 1) {
   if (test_url === null) {
+
     try {
       const url = `/file/${route.params.id}/imsmanifest.xml`;
       await navigator.serviceWorker.ready;
       let manifest_res = await fetch(url);
+      console.log(manifest_res);
       let mainfest_xml = await manifest_res.text();
 
       console.log(url, mainfest_xml);
-      test_url = mainfest_xml.match(/href="(.*?test.*?)"/)[1];
+      const found = mainfest_xml.match(/href="(.*?test.*?)"/);
+      test_url = found[1];
     } catch (error) {
+      if (depth > 0)
+        getTestURL(depth - 1);
       // Handle the error here
       console.error("Error occurred:", error);
       // You can also throw a custom error or return a default value
@@ -150,8 +155,8 @@ async function handleEndAttemptCompleted(data) {
         itemNumber: i,
         itemIdentifier: item.identifier,
         points: {
-          received: results[i].score,
-          maximal: results[i].max_score,
+          received: results[i].score || 0,
+          maximal: results[i].max_score || 0,
         },
       };
 
@@ -167,8 +172,8 @@ async function handleEndAttemptCompleted(data) {
 
     const obj: TestResponse = {
       testID: route.params["id"],
-      startTime: testStartTime,
-      endTime: currentTime,
+      startTimeEpoch: testStartTime,
+      endTimeEpoch: currentTime,
       testName,
       itemResponses,
     };
@@ -367,7 +372,7 @@ import TestInstruction from "@/components/test/TestInstructions.vue";
     </div>
   </div>
 
-  <FinishPopup :testResponse v-model:visible="show_feedback" @close="closeFinishPopup" />
+  <FinishPopup :testResponse="testResponse" v-model:visible="show_feedback" @close="closeFinishPopup" />
 </template>
 
 <style scoped>
