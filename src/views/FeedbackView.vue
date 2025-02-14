@@ -15,9 +15,9 @@ async function deleteFeedback(id: string) {
   const res = await deleteFeedbackWithID(id);
 
   if (!res.ok) {
-    toast.add({ severity: 'error', summary: 'შეცდომა', detail: 'შედეგების ატვირთვა ვერ მოხერხდა', life: 3000 });
+    toast.add({ severity: 'error', summary: 'შეცდომა', detail: 'უკუკავშირის წაშლა ვერ მოხერხდა', life: 3000 });
   } else {
-    toast.add({ severity: 'success', detail: 'ტესტები წარმატებით აიტვირთა', life: 3000 });
+    toast.add({ severity: 'success', detail: 'უკუკავშირი წარმატებით წაიშალა', life: 3000 });
     data.value = await getFeedbackList()
   }
 }
