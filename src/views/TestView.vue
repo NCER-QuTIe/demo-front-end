@@ -145,8 +145,8 @@ async function handleEndAttemptCompleted(data) {
       const interactionResponses = {};
 
       for (const e of state.responseVariables.slice(2)) {
-        if (!/^(\w|\d|_)*$/.test(e.value))
-          interactionResponses[e.identifier] = e.value;
+        // if (!(/^\w*_\d*$/g).test(e.value))
+        interactionResponses[e.identifier] = e.value;
       }
 
       const obj: ItemResponse = {

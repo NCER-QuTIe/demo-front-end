@@ -1,12 +1,28 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { type Feedback, getFeedbackList } from '@/scripts/api';
+import { type Feedback, getFeedbackList, deleteFeedbackWithID } from '@/scripts/api';
+import { useToast } from 'primevue/usetoast';
+
+const toast = useToast();
 
 const data = ref([]);
 
 onMounted(async () => {
   data.value = await getFeedbackList()
 })
+
+async function deleteFeedback(id: string) {
+  const res = await deleteFeedbackWithID(id);
+
+  if (!res.ok) {
+    toast.add({ severity: 'error', summary: 'შეცდომა', detail: 'შედეგების ატვირთვა ვერ მოხერხდა', life: 3000 });
+  } else {
+    toast.add({ severity: 'success', detail: 'ტესტები წარმატებით აიტვირთა', life: 3000 });
+    data.value = await getFeedbackList()
+  }
+}
+
+const shrunkenButtonDT = ref({ smPaddingX: '0.25rem', smPaddingY: '0.25rem', iconOnlyWidth: '2rem' });
 </script>
 
 <template>
@@ -16,6 +32,8 @@ onMounted(async () => {
     <div class="content"> აღწერა </div>
   </div>
   <div class="feedback " v-for="f in data" :key="f.id">
+    <Button icon="pi pi-trash" severity="danger" text @click="deleteFeedback(f.id)" size="small"
+      :dt="shrunkenButtonDT" />
     <div class="date"> {{ f.uploaded }} </div>
     <div class="author"> {{ f.email }} </div>
     <div class="content"> {{ f.message }} </div>

@@ -28,6 +28,8 @@ watch(list, (newList) => {
   console.log(`setting render state to ${shouldRender.value}`)
 });
 
+const loading = ref(false);
+
 function deleteItem(id: string) {
   deleteTestResponse(id);
   list.value = getSavedTestResponseList();
@@ -38,6 +40,7 @@ const toast = useToast();
 async function submit() {
   const obj = getSavedTestResponseBundle(fullName.value);
 
+  loading.value = true;
   const res = await putTestResponse(teacherEmail.value, obj);
 
   if (!res.ok) {
@@ -45,6 +48,7 @@ async function submit() {
   } else {
     toast.add({ severity: 'success', detail: 'ტესტები წარმატებით აიტვირთა', life: 3000 });
   }
+  loading.value = false;
 }
 </script>
 
@@ -68,7 +72,7 @@ async function submit() {
           <InputText id="teacher-email" type="email" v-model="teacherEmail" variant="filled" />
         </IftaLabel>
 
-        <Button label="გაგზავნა" iconPos="right" icon="pi pi-send" @click="submit" />
+        <Button label="გაგზავნა" iconPos="right" icon="pi pi-send" @click="submit" :loading="loading" />
       </Panel>
     </Fluid>
   </template>

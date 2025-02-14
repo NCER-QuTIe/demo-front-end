@@ -3,6 +3,9 @@ import { ref, onMounted } from "vue";
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { z } from 'zod';
 import { putFeedback, getAuth } from '@/scripts/api.ts';
+import { useToast } from 'primevue/usetoast';
+
+const toast = useToast();
 
 const isAuthed = ref(false);
 
@@ -17,17 +20,30 @@ const resolver = zodResolver(
   })
 )
 
-const onFormSubmit = (a) => {
-  console.log(a)
+const loading = ref(false);
 
-  putFeedback(
+async function onFormSubmit(a) {
+  loading.value = true;
+
+  const res = await putFeedback(
     a.states.email.value,
     a.states.feedback.value,
   )
+
+  if (!res.ok) {
+    toast.add({ severity: 'error', summary: 'შეცდომა', detail: 'შედეგების ატვირთვა ვერ მოხერხდა', life: 3000 });
+  } else {
+    toast.add({ severity: 'success', detail: 'ტესტები წარმატებით აიტვირთა', life: 3000 });
+    localStorage.setItem("feedback-email", a.states.email.value);
+  }
+
+  loading.value = false;
+
+  a.reset();
 };
 
 const initialValues = ref({
-  email: '',
+  email: localStorage.getItem("feedback-email") || '',
   feedback: ''
 })
 
@@ -46,7 +62,7 @@ import { Form } from '@primevue/forms';
         <Textarea name="feedback" placeholder="ჩაწერეთ პრობლემა" />
         <Message v-if="$form.feedback?.invalid" severity="error">{{ $form.feedback.error?.message }}</Message>
 
-        <Button type="submit" severity="secondary" label="გაგზავნა" />
+        <Button type="submit" severity="secondary" icon="pi pi-send" label="გაგზავნა" :loading />
 
         <span v-if="isAuthed" class="text-center">
           <RouterLink to="/feedback/" class="text-blue-500 underline">უკუკავშირების სია</RouterLink>

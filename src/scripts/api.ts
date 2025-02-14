@@ -108,6 +108,28 @@ export async function getFeedbackList(): Promise<Feedback[]> {
   return json as Feedback[];
 }
 
+export async function deleteFeedbackWithID(id: string) {
+  const auth = getAuth();
+
+  if (!auth) {
+    throw new Error(
+      "to get the list of all feedbacks, the user needs to be authenticated",
+    );
+  }
+
+  const res = await fetch(
+    `${import.meta.env.VITE_API_ROUTE}/api/feedback/${id}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Basic ${auth}`,
+      },
+    },
+  );
+
+  return res;
+}
+
 export async function putTestResponse(
   emailAddress: string,
   testResponseBundle: TestResponseBundle,
