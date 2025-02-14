@@ -59,7 +59,7 @@ export function tagsListToItemInfo(tags: string[]): ItemInfo {
       /^#(?<itemIndex>\d+)-(?<category>\w+)-(?<value>.+)/,
     );
 
-    console.log(found);
+    // console.log(found);
     if (found && found.groups) {
       const { itemIndex, category, value } = found.groups;
       const index = Number(itemIndex);

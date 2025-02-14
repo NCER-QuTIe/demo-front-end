@@ -112,14 +112,15 @@ export async function putTestResponse(
   emailAddress: string,
   testResponseBundle: TestResponseBundle,
 ): Promise<Response> {
-  const url = `${import.meta.env.VITE_API_ROUTE}/api/testResults/sendEmail`;
+  const url = `${import.meta.env.VITE_API_ROUTE}/api/TestResult`;
 
   const obj = {
-    resoinseBundle: testResponseBundle,
+    responseBundle: testResponseBundle,
     emailToSend: emailAddress,
   };
 
   return await fetch(url, {
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },

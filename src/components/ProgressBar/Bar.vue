@@ -28,10 +28,10 @@ function showInfo(event) {
       <button :class="{
         visited: visited.includes(index),
         active: current == index,
-        'has-info': info[current + 1],
+        'has-info': info && info[current + 1],
       }" @click="$emit('click', index)">
         {{ item }}
-        <template v-if="current == index && info[current + 1]">
+        <template v-if="current == index && info && info[current + 1]">
           <button @click.stop="showInfo">
             ინფ.
           </button>

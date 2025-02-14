@@ -11,7 +11,7 @@ const emit = defineEmits(["close"]);
 
 const visible = defineModel('visible', { required: true });
 
-async function download() {
+async function save() {
   saveTestResponse(testResponse);
   emit("close");
 }
@@ -21,7 +21,7 @@ async function download() {
   <Dialog v-model:visible="visible" modal header="დასასრული">
     <div class="flex gap-4 justify-end">
       <Button label="ნაშრომის წაშლა" severity="danger" outlined @click="$emit('close')" />
-      <Button @click="download" label="ნაშრომის შენახვა" />
+      <Button @click="save" label="ნაშრომის შენახვა" />
     </div>
   </Dialog>
 </template>

@@ -1,5 +1,6 @@
 export const itemInfoLabels = {
   process: "პროცესი",
+  processCompetency: "პროცესი (კომპეტენცია)",
   difficulty: "სირთულე",
   area: "სფერო",
   context: "კონტექსტი",

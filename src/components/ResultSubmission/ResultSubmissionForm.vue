@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, defineModel, onMounted, watch } from "vue";
-import { getSavedTestResponseList, deleteTestResponse } from "@/scripts/responseCollector.ts";
+import { getSavedTestResponseBundle, getSavedTestResponseList, deleteTestResponse } from "@/scripts/responseCollector.ts";
+import { putTestResponse } from "@/scripts/api.ts";
 import { useToast } from 'primevue/usetoast';
 import Item from "./Item.vue";
 
@@ -14,7 +15,13 @@ onMounted(() => {
   list.value = getSavedTestResponseList();
   shouldRender.value = list.length > 0;
   console.log(`setting render state to ${shouldRender.value}`)
+
+  fullName.value = localStorage.getItem("student-full-name");
+  teacherEmail.value = localStorage.getItem("student-teacher-email");
 })
+
+watch(fullName, (v) => localStorage.setItem("student-full-name", v))
+watch(teacherEmail, (v) => localStorage.setItem("student-teacher-email", v))
 
 watch(list, (newList) => {
   shouldRender.value = newList.length > 0;
@@ -29,10 +36,9 @@ function deleteItem(id: string) {
 const toast = useToast();
 
 async function submit() {
-  const res = await putTestResponse(teacherEmail.value, {
-    studentName: fullName.value,
-    testResponses: list.value
-  });
+  const obj = getSavedTestResponseBundle(fullName.value);
+
+  const res = await putTestResponse(teacherEmail.value, obj);
 
   if (!res.ok) {
     toast.add({ severity: 'error', summary: 'შეცდომა', detail: 'შედეგების ატვირთვა ვერ მოხერხდა', life: 3000 });
@@ -46,6 +52,7 @@ async function submit() {
   <template v-if="list.length">
     <Fluid>
       <Panel header="შედეგები" pt:content:class="flex flex-col gap-4">
+        {{ list }}
         <ol class="list-disc pl-5 flex flex-col gap-2">
           <li v-for="(item, index) in list" :key="index">
             <Item :name="item.testName" :id="item.testID" :time="item.time" @delete="deleteItem(item.testID)" />
@@ -57,14 +64,12 @@ async function submit() {
           <InputText id="fullname" v-model="fullName" variant="filled" />
         </IftaLabel>
 
-        <!-- <FloatLabel variant="on"> -->
         <IftaLabel>
           <label for="teacher-email">მასწავლებლის ელ. ფოსტა</label>
           <InputText id="teacher-email" type="email" v-model="teacherEmail" variant="filled" />
         </IftaLabel>
-        <!-- </FloatLabel> -->
 
-        <Button label="გაგზავნა" iconPos="right" icon="pi pi-send" />
+        <Button label="გაგზავნა" iconPos="right" icon="pi pi-send" @click="submit" />
       </Panel>
     </Fluid>
   </template>
