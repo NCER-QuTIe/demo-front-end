@@ -16,8 +16,8 @@ onMounted(() => {
   shouldRender.value = list.length > 0;
   console.log(`setting render state to ${shouldRender.value}`)
 
-  fullName.value = localStorage.getItem("student-full-name");
-  teacherEmail.value = localStorage.getItem("student-teacher-email");
+  fullName.value = localStorage.getItem("student-full-name") || "";
+  teacherEmail.value = localStorage.getItem("student-teacher-email") || "";
 })
 
 watch(fullName, (v) => localStorage.setItem("student-full-name", v))
