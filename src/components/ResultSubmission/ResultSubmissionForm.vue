@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, defineModel, onMounted, watch } from "vue";
-import { getSavedTestResponseBundle, getSavedTestResponseList, deleteTestResponse } from "@/scripts/responseCollector.ts";
+import { getSavedTestResponseBundle, getSavedTestResponseList, deleteTestResponse, deleteAllTestResponses } from "@/scripts/responseCollector.ts";
 import { putTestResponse } from "@/scripts/api.ts";
 import { useToast } from 'primevue/usetoast';
 import Item from "./Item.vue";
@@ -47,6 +47,8 @@ async function submit() {
     toast.add({ severity: 'error', summary: 'შეცდომა', detail: 'შედეგების ატვირთვა ვერ მოხერხდა', life: 3000 });
   } else {
     toast.add({ severity: 'success', detail: 'ტესტები წარმატებით აიტვირთა', life: 3000 });
+    deleteAllTestResponses();
+    list.value = [];
   }
   loading.value = false;
 }

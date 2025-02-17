@@ -47,6 +47,10 @@ export function deleteTestResponse(id: string) {
   localStorage.setItem(localStorageKey, JSON.stringify(obj));
 }
 
+export function deleteAllTestResponses() {
+  localStorage.setItem(localStorageKey, "[]");
+}
+
 export function getSavedTestResponseBundle(
   studentName: string,
 ): TestResponseBundle {
