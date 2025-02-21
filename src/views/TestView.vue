@@ -15,26 +15,16 @@ let itemInfo = ref(null);
 
 async function getTestURL(depth = 1) {
   if (test_url === null) {
-
-    try {
+    await new Promise((resolve, reject) => setTimeout(async () => {
       const url = `/file/${route.params.id}/imsmanifest.xml`;
-      await navigator.serviceWorker.ready;
       let manifest_res = await fetch(url);
       console.log(manifest_res);
       let mainfest_xml = await manifest_res.text();
 
-      console.log(url, mainfest_xml);
       const found = mainfest_xml.match(/href="(.*?test.*?)"/);
       test_url = found[1];
-    } catch (error) {
-      if (depth > 0)
-        getTestURL(depth - 1);
-      // Handle the error here
-      console.error("Error occurred:", error);
-      // You can also throw a custom error or return a default value
-      throw new Error("Failed to get test URL");
-      // return '/default/test/url';
-    }
+      resolve();
+    }, 2000));
   }
   return `/file/${route.params.id}/${test_url}`;
 }

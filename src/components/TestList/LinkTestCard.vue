@@ -65,12 +65,14 @@ const shrunkenButtonDT = ref({ smPaddingX: '0.25rem', smPaddingY: '0.25rem', ico
     <div class="w-full" :style="{ borderColor: tagColors.subject[tags.subject[0]] }" k>
       <div class="flex justify-between items-center flex-grow gap-2">
         <span class="flex items-center flex-grow" @click="handleClick">
-          <span class="color-indicator" :style="{ backgroundColor: tagColors.subject[tags.subject[0]] }" />
+          <span class="color-indicator"
+            :style="{ color: tagColors.subject[tags.subject[0]], backgroundColor: tagColors.subject[tags.subject[0]] }">
+          </span>
+
           <Button v-if="isAuthed" @click.stop.prevent="$emit('updateStatus')"
             :icon="['pi', visibility ? 'pi-eye' : 'pi-eye-slash'].join(' ')"
             :severity="visibility ? 'secondary' : 'warn'" :dt="shrunkenButtonDT" text size="small" />
           <span class="w-4" v-else></span>
-          PISA — OECD — <span class="w-1"> </span>
           <TestTitle :name="name" :id="'P' + id.substring(id.length - 6)" />
         </span>
         <span class="controls flex p-1">
@@ -119,8 +121,31 @@ const shrunkenButtonDT = ref({ smPaddingX: '0.25rem', smPaddingY: '0.25rem', ico
 .color-indicator {
   content: " ";
   display: block;
-  width: 1rem;
+  width: 1.1rem;
   height: 2.5rem;
+  padding: 2px;
+  transition: 0.2s;
+
+  &::after {
+    display: block;
+    background-color: white;
+    width: 100%;
+    text-align: center;
+    height: 1.4rem;
+    border-radius: 2px 0 0 0;
+    font-size: 0.8em;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 0.4rem), 0 100%);
+    content: "ბ";
+    transition: 0.2;
+  }
+
+  &:hover {
+    width: 3.2rem;
+
+    &::after {
+      content: "ბმული";
+    }
+  }
 }
 
 .test-card {

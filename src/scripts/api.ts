@@ -182,22 +182,7 @@ export async function getTestList(): Promise<Test[]> {
     }
   }
 
-  data.sort((a, b) => {
-    if (a.kind == "external") {
-      return -1;
-    }
-    if (b.kind == "external") {
-      return 1;
-    }
-
-    if (a.itemInfo["1"]) {
-      return -1;
-    }
-    if (b.itemInfo["1"]) {
-      return 1;
-    }
-    return 0;
-  });
+  data.sort((a, b) => a.id.localeCompare(b.id));
 
   console.log(data);
 

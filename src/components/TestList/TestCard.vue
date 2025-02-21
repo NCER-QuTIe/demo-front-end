@@ -117,7 +117,7 @@ const shrunkenButtonDT = ref({ smPaddingX: '0.25rem', smPaddingY: '0.25rem', ico
 .color-indicator {
   content: " ";
   display: block;
-  width: 1rem;
+  width: 1.1rem;
   height: 2.5rem;
 }
 

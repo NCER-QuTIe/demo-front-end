@@ -17,7 +17,7 @@ self.addEventListener("fetch", (event) => {
   const validPrefix = self.registration.scope + "file/";
 
   if (request.url.startsWith(validPrefix)) {
-    // console.log("intercepting!", request.url);
+    console.log("intercepting!", request.url);
     const path = request.url.slice(validPrefix.length);
     const s = path.split("/");
 
