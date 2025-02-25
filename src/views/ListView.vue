@@ -133,6 +133,10 @@ watchEffect((newData) => {
 
   console.log(filteredData.value)
 });
+
+function handleVideoClick() {
+  window.open('https://www.ncer.gov.ge/video', '_blank')
+}
 </script>
 
 <!-- v-model:file="file" v-model:name="name" v-model:tags="tags" v-model:description="description" -->
@@ -145,7 +149,10 @@ watchEffect((newData) => {
 
         <ListFilters :tag_options="tag_options" v-model:filters="filters" v-model:search-term="searchTerm" />
 
-        <GeneralInstructions />
+        <div class="flex gap-4">
+          <GeneralInstructions />
+          <Button class="w-min" @click="handleVideoClick" label="ვიდეო" icon-pos="right" icon="pi pi-video" />
+        </div>
 
         <FileUploadDialog v-if="isAuthed" v-model:visible="showUpload" :old_tag_options="tag_options"
           v-model:data="fileUploadData" v-model:editingID="editingID" @close="loadTests()" />
