@@ -139,11 +139,13 @@ async function handleEndAttemptCompleted(data) {
         interactionResponses[e.identifier] = e.value;
       }
 
+      console.log(item)
+
       const obj: ItemResponse = {
         durationSeconds: state.responseVariables[1].value,
         interactionResponses,
         itemNumber: i,
-        itemIdentifier: item.identifier,
+        itemIdentifier: item.href.substring(12, 49),
         points: {
           received: results[i].score || 0,
           maximal: results[i].max_score || 0,
@@ -191,6 +193,7 @@ function handleSuspendAttemptCompleted(data) {
     items.value[current_item.value];
 
   states[old_guid] = data.state;
+  console.log({ old_guid, identifier })
   test_player.setTestStateItemState(
     partIdentifier,
     sectionIdentifier,
