@@ -136,7 +136,11 @@ async function handleEndAttemptCompleted(data) {
 
       for (const e of state.responseVariables.slice(2)) {
         // if (!(/^\w*_\d*$/g).test(e.value))
-        interactionResponses[e.identifier] = e.value;
+        let v = e.value;
+        if (!Array.isArray(v)) {
+          v = [v];
+        }
+        interactionResponses[e.identifier] = v;
       }
 
       console.log(item)
