@@ -149,10 +149,8 @@ function handleVideoClick() {
 
         <ListFilters :tag_options="tag_options" v-model:filters="filters" v-model:search-term="searchTerm" />
 
-        <div class="flex gap-4">
-          <GeneralInstructions />
-          <Button class="w-min" @click="handleVideoClick" label="ვიდეო" icon-pos="right" icon="pi pi-video" />
-        </div>
+        <GeneralInstructions />
+        <Button class="w-min" @click="handleVideoClick" label="ვიდეო ინსტრუქცია" icon-pos="right" icon="pi pi-video" />
 
         <FileUploadDialog v-if="isAuthed" v-model:visible="showUpload" :old_tag_options="tag_options"
           v-model:data="fileUploadData" v-model:editingID="editingID" @close="loadTests()" />
