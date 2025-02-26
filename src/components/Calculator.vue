@@ -8,6 +8,11 @@ type StackEl = {
 
 let buffer = ref("0");
 let stack: StackEl[] = [];
+let justOped = ref(false);
+function doOp() {
+  buffer.value = "";
+  justOped.value = true;
+}
 
 const setValue = (s: string) => {
   buffer.value = Number(s).toString();
@@ -32,13 +37,13 @@ let keys: {
         val: Number(buffer.value),
         op: "^",
       });
-      setValue("0");
+      doOp();
     },
   },
   C: {
     onclick() {
       stack = [];
-      setValue("0");
+      doOp();
     },
     colspan: 2,
   },
@@ -65,7 +70,7 @@ let keys: {
         val: Number(buffer.value),
         op: "÷",
       });
-      setValue("0");
+      doOp();
     },
   },
   "7": {
@@ -89,7 +94,7 @@ let keys: {
         val: Number(buffer.value),
         op: "*",
       });
-      setValue("0");
+      doOp();
     },
   },
   "4": {
@@ -113,7 +118,7 @@ let keys: {
         val: Number(buffer.value),
         op: "-",
       });
-      setValue("0");
+      doOp();
     },
   },
   "1": {
@@ -137,7 +142,7 @@ let keys: {
         val: Number(buffer.value),
         op: "+",
       });
-      setValue("0");
+      doOp();
     },
   },
   "0": {
@@ -201,8 +206,12 @@ let key = (
   severity?: "primary";
 } => {
   return {
-    key: k,
     ...keys[k],
+    key: k,
+    onclick() {
+      justOped.value = false;
+      keys[k].onclick();
+    },
   };
 };
 
@@ -225,18 +234,14 @@ let board = [
     <tbody>
       <tr>
         <td colspan="4">
-          <div class="rounded-border border border-surface text-right p-1">
-            {{ buffer }}
+          <div class="rounded-border border border-surface text-right p-1 h-9">
+            {{ !justOped ? buffer : " " }}
           </div>
         </td>
       </tr>
       <tr v-for="(row, i) in board" :key="i">
         <td v-for="elt in row" :colspan="elt.colspan" :key="elt.key">
-          <Button
-            @click="elt.onclick"
-            v-html="elt.key"
-            :severity="elt.severity || 'secondary'"
-          />
+          <Button @click="elt.onclick" v-html="elt.key" :severity="elt.severity || 'secondary'" />
         </td>
       </tr>
     </tbody>
