@@ -11,10 +11,10 @@ const { data } = defineProps<{
 
 const emit = defineEmits(["deleteTest", "updateStatus", "editTest"]);
 
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 
-const first = ref(0);
+const page = ref(0);
 const rows = ref(12);
 
 const openTab = ref(-1);
@@ -31,12 +31,16 @@ function updateStatus(data) {
   console.log(data.status)
   emit('updateStatus', data.id, data.kind, !data.status);
 }
+
+watch(() => data, () => {
+  page.value = 0;
+});
 </script>
 
 <template>
   <div class="overflow-y-auto overflow-x-hidden min-w-[38rem]">
     <div class="flex flex-col gap-4 w-full max-w-[180em] mx-auto justify-between">
-      <template v-for="(d, ind) in data.slice(first, first + rows)" :key="d.name + ind">
+      <template v-for="(d, ind) in data.slice(page, page + rows)" :key="d.name + ind">
         <LinkTestCard v-if="d.kind === 'external'" :index="ind" :name="d.name" :description="d.description"
           :tags="d.tags" :id="d.id" @edit="editTest(d)" :visibility="d.status" @delete="deleteTest(d)"
           @updateStatus="updateStatus(d)" />
@@ -47,7 +51,7 @@ function updateStatus(data) {
       </template>
     </div>
 
-    <Paginator v-if="data.length > 12" v-model:first="first" v-model:rows="rows" :totalRecords="data.length"
+    <Paginator v-if="data.length > 12" v-model:first="page" v-model:rows="rows" :totalRecords="data.length"
       :rowsPerPageOptions="[12, 24, 36]">
     </Paginator>
 
