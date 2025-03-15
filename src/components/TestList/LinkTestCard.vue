@@ -136,13 +136,15 @@ const shrunkenButtonDT = ref({ smPaddingX: '0.25rem', smPaddingY: '0.25rem', ico
     font-size: 0.8em;
     clip-path: polygon(0 0, 100% 0, 100% calc(100% - 0.4rem), 0 100%);
     content: "ბ";
-    transition: 0.2;
+    transition: 0.2s;
   }
 
   &:hover {
-    width: 3.2rem;
+    width: 3.4rem;
 
     &::after {
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+      // height: 1.6rem;
       content: "ბმული";
     }
   }
