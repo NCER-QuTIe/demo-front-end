@@ -15,7 +15,7 @@ onMounted(() => {
 
 const resolver = zodResolver(
   z.object({
-    email: z.string().email({ message: "გთხოვთ შეიყვანოთ სწორი ელ. ფოსტის მისამართი" }).or(z.literal('')),
+    email: z.string().email({ message: "გთხოვთ შეიყვანოთ სწორი ელ. ფოსტის მისამართი" }),
     feedback: z.string().min(10, { message: "გთხოვთ უფრო დეტალურად აღწეროთ პრობლემა" })
   })
 )
@@ -23,6 +23,11 @@ const resolver = zodResolver(
 const loading = ref(false);
 
 async function onFormSubmit(a) {
+  if (!a.valid) {
+    toast.add({ severity: 'error', summary: 'შეცდომა', detail: 'უკუკავშირის ასატვირთად შეყვანილი ინფორმაცია არასაკმარისია', life: 3000 });
+    return;
+  }
+
   loading.value = true;
 
   const res = await putFeedback(
