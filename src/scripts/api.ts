@@ -105,6 +105,15 @@ export async function getFeedbackList(): Promise<Feedback[]> {
 
   const json = await res.json();
 
+  json.sort((a: any, b: any): number => {
+    // Convert the string dates to Date objects for comparison
+    const dateA = new Date(a.uploaded);
+    const dateB = new Date(b.uploaded);
+
+    // Compare the dates (ascending order)
+    return dateA.getTime() - dateB.getTime();
+  });
+
   return json as Feedback[];
 }
 
