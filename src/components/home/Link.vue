@@ -9,8 +9,11 @@ const { url, imgSrc = "", disabled } = defineProps<{
 
 <template>
   <RouterLink :to="url"
-    class="p-8 w-full bg-surface-100 hover:bg-surface-200 rounded aspect-[4/3] flex flex-col justify-center"
-    style="{opacity: disabled ? 0.3 : 1.0}">
+    class="p-8 w-full bg-surface-100 hover:bg-surface-200 rounded aspect-square flex flex-col justify-center"
+    v-if="!disabled">
     <img :src="imgSrc" :alt="name" />
   </RouterLink>
+  <div v-else class="p-8 w-full bg-surface-100 rounded aspect-square flex flex-col justify-center">
+    <img :src="imgSrc" :alt="name" />
+  </div>
 </template>
