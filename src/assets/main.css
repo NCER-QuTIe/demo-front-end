@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+    font-family: Calibri, sans-serif;
+}
+
 html {
     height: 100vh;
 }
@@ -91,10 +95,6 @@ img {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     font-family: "Calibri";
-}
-
-* {
-    font-family: Calibri, sans-serif;
 }
 /* .qti-item, */
 /* .qti-item body {
