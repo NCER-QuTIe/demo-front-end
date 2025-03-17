@@ -13,7 +13,7 @@ import Link from "@/components/home/Link.vue";
     </h1>
     <div class="grid lg:grid-cols-[1fr_1fr_1fr_1fr] md:grid-cols-[1fr_1fr] gap-4">
       <div class="w-[16rem]">
-        <Link url="/list?research=PISA" img-src="PISA.jpeg" name="PISA" />
+        <Link url="/list?research=PISA" img-src="PISA.png" name="PISA" />
 
         <div class="mt-4">
           <i>მოსწავლეთა შეფასების საერთაშორისო პროგრამა.</i>

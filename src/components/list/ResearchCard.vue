@@ -4,7 +4,7 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 
 const urls = {
-  "PISA": "PISA.jpeg",
+  "PISA": "PISA.png",
   "TIMSS": "TIMSS.svg",
   "PIRLS": "PIRLS.svg",
   "computers": "computers.png"
