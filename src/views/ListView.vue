@@ -98,7 +98,7 @@ const tag_options = ref(emptyTagsObject());
 watch(data, () => {
   let res = emptyTagsObject();
   for (let category of tagCategories) {
-    for (let testTags of data.value.map((e) => e.tags || e.test.tags)) {
+    for (let testTags of data.value.filter((e) => e.tags.research.includes(route.query.research)).map((e) => e.tags)) {
       for (let tag of testTags[category]) {
         if (!res[category].includes(tag)) {
           res[category].push(tag);
@@ -108,7 +108,6 @@ watch(data, () => {
   }
   tag_options.value = res;
 });
-
 
 // RENDER STATE
 
