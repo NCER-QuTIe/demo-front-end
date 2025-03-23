@@ -3,24 +3,18 @@ import { emptyTagsObject, tagCategories, tagLabels, tagColors } from "@/scripts/
 import { ref, defineProps, watchEffect } from "vue";
 import UploadTagSelection from "@/components/list/upload/UploadTagSelection.vue";
 
-const props = defineProps(["tag_options"]);
+const { tagOptions, categories } = defineProps(["tagOptions", "categories"]);
 
 const filters = defineModel("filters");
 const searchTerm = defineModel("searchTerm");
-
-const tagFilterCategories = ref([
-  "subject",
-  "language",
-]);
 </script>
 
 <template>
   <Fluid>
     <Panel header="ძებნა" class="rounded-border border border-surface" pt:content:class="flex flex-col gap-4">
-      <template v-for="category in tagFilterCategories">
+      <template v-for="category in categories">
         <UploadTagSelection v-model="filters[category]" :colors="tagColors[category]" :placeholder="tagLabels[category]"
-          :options="tag_options[category]
-            " />
+          :options="tagOptions[category]" />
       </template>
 
       <FloatLabel variant="on">

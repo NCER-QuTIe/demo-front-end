@@ -137,6 +137,19 @@ watchEffect((newData) => {
 function handleVideoClick() {
   window.open('https://www.ncer.gov.ge/video', '_blank')
 }
+
+const filterCategories = {
+  "PISA": [
+    "subject",
+    "language",
+  ],
+  "TIMSS": [
+    "grade",
+    "content",
+    "subject",
+    "language",
+  ],
+}
 </script>
 
 <!-- v-model:file="file" v-model:name="name" v-model:tags="tags" v-model:description="description" -->
@@ -147,7 +160,8 @@ function handleVideoClick() {
       <div class="flex flex-col gap-4">
         <ResearchIndicator />
 
-        <ListFilters :tag_options="tag_options" v-model:filters="filters" v-model:search-term="searchTerm" />
+        <ListFilters :tag-options="tag_options" :categories="filterCategories[$route.query.research]"
+          v-model:filters="filters" v-model:search-term="searchTerm" />
 
         <GeneralInstructions />
         <Button class="w-min" @click="handleVideoClick" label="ვიდეო ინსტრუქცია" icon-pos="right" icon="pi pi-video" />
