@@ -5,6 +5,7 @@ import Ruler from "../components/Ruler.vue";
 import { ref, reactive, watch, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import FinishPopup from "../components/FinishPopup.vue";
+import { loadItemXML } from "@/scripts/api.ts";
 
 const route = useRoute();
 const router = useRouter();
@@ -207,22 +208,6 @@ function handleSuspendAttemptCompleted(data) {
   item_player.value.scoreAttempt(data.target);
 }
 
-async function loadItemXML(url) {
-  console.log("loading item xml");
-  let test_path = await getTestURL();
-  let path = `${test_path}/../${url}`;
-  let res = await fetch(path);
-  let xml = await res.text();
-  xml = xml.replaceAll('src="', `src=\"${path}/../`);
-  xml = xml.replaceAll(
-    "qti-inline-choice-interaction",
-    `qti-inline-choice-interaction dataPrompt="არჩევა..."`,
-  );
-  xml = xml.split("\n").slice(1).join("\n");
-
-  return xml;
-}
-
 let item_xmls = ref([]);
 watch([item_player, items], async (e) => {
   if (
@@ -230,8 +215,9 @@ watch([item_player, items], async (e) => {
     items.value.length != 0 &&
     item_xmls.value.length == 0
   ) {
+    let test_url = await getTestURL();
     for (let item of items.value) {
-      let item_xml = await loadItemXML(item.href);
+      let item_xml = await loadItemXML(test_url, item.href);
       item_xmls.value.push(item_xml);
     }
     item_player.value.loadItemFromXml(item_xmls.value[0], {

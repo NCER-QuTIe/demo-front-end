@@ -211,7 +211,7 @@ export async function loadItemXML(
     .replaceAll('src="', `src=\"${url}/../`)
     .replaceAll(
       "qti-inline-choice-interaction",
-      `qti-inline-choice-interaction dataPrompt="არჩევა..."`,
+      `qti-inline-choice-interaction dataPrompt=""`,
     )
     .split("\n").slice(1).join("\n");
 
