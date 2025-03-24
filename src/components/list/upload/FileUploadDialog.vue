@@ -129,9 +129,10 @@ async function upload() {
   }
 
   if (res.ok) {
-    console.log("done.");
+    toast.add({ severity: 'success', sumarry: 'წარმატება', detail: 'ტესტი წარმატებით აიტვირთა', life: 3000 });
+    emit("close");
+    return true;
   } else {
-    console.log("failed.");
     toast.add({
       severity: "error",
       summary: "შეცდომა",
@@ -140,9 +141,6 @@ async function upload() {
     });
     return false;
   }
-
-  emit("close");
-  return true;
 }
 
 const tag_options = ref(old_tag_options);

@@ -69,6 +69,11 @@ async function editTest(id) {
   showUpload.value = true;
 }
 
+async function closeFileUploadDialog() {
+  showUpload.value = false;
+  await loadTests();
+}
+
 async function updateStatus(id, kind, new_status) {
   let res = await patchTestVisibilityStatusWithID(id, kind, new_status);
 
@@ -166,7 +171,7 @@ const filterCategories = {
         <Button class="w-min" @click="handleVideoClick" label="ვიდეო ინსტრუქცია" icon-pos="right" icon="pi pi-video" />
 
         <FileUploadDialog v-if="isAuthed" v-model:visible="showUpload" :old_tag_options="tag_options"
-          v-model:data="fileUploadData" v-model:editingID="editingID" @close="loadTests()" />
+          v-model:data="fileUploadData" v-model:editingID="editingID" @close="closeFileUploadDialog()" />
       </div>
     </Fluid>
 
