@@ -25,6 +25,8 @@ import TestView from "./views/TestView.vue";
 import HomeView from "./views/HomeView.vue";
 import LoginView from "./views/LoginView.vue";
 
+import VueMathjax from "vue-mathjax";
+
 const router = createRouter({
   history: createWebHashHistory(),
   routes: [
@@ -58,6 +60,7 @@ app
   .use(Qti3Player)
   .use(Qti3Test)
   .use(router)
+  .use(VueMathjax)
   .use(PrimeVue, {
     theme: {
       preset: MyPreset,
