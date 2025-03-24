@@ -27,9 +27,13 @@ const shrunkenButtonDT = ref({ smPaddingX: '0.25rem', smPaddingY: '0.25rem', ico
 
 <template>
   <div class="feedback ">
-    <div class="date"> ატვირთვის თარიღი </div>
-    <div class="author"> ავტორი </div>
-    <div class="content"> აღწერა </div>
+    <span class="opacity-0">
+      <Button icon="pi pi-trash" severity="danger" text @click="deleteFeedback(f.id)" size="small"
+        :dt="shrunkenButtonDT" disabled />
+    </span>
+    <div class="date"> <b>ატვირთვის თარიღი</b> </div>
+    <div class="author"> <b>ავტორი</b> </div>
+    <div class="content"> <b>აღწერა</b> </div>
   </div>
   <div class="feedback " v-for="f in data" :key="f.id">
     <Button icon="pi pi-trash" severity="danger" text @click="deleteFeedback(f.id)" size="small"
@@ -45,6 +49,7 @@ const shrunkenButtonDT = ref({ smPaddingX: '0.25rem', smPaddingY: '0.25rem', ico
   display: flex;
   margin-bottom: 1rem;
   font-family: monospace;
+  align-items: start;
 
   .date {
     width: 16rem;
@@ -52,8 +57,12 @@ const shrunkenButtonDT = ref({ smPaddingX: '0.25rem', smPaddingY: '0.25rem', ico
   }
 
   .author {
-    width: 12rem;
+    width: 20rem;
     border-right: 1px solid var(--p-surface-100);
+  }
+
+  .content {
+    width: calc(100% - 44rem);
   }
 
   div {
