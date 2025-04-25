@@ -19,7 +19,7 @@ async function getTestURL(depth = 1) {
     await new Promise((resolve, reject) => setTimeout(async () => {
       const url = `/file/${route.params.id}/imsmanifest.xml`;
       let manifest_res = await fetch(url);
-      console.log(manifest_res);
+      // console.log(manifest_res);
       let mainfest_xml = await manifest_res.text();
 
       const found = mainfest_xml.match(/href="(.*?test.*?)"/);
@@ -53,7 +53,7 @@ async function loadTestXML() {
     },
   };
 
-  console.log(xml);
+  // console.log(xml);
   test_player.loadTestFromXml(xml, configuration);
 }
 
@@ -64,7 +64,7 @@ async function handleTestPlayerReady(_qti3TestPlayer) {
 
   const res = await fetch(`/file/${route.params.id}/testItemInfo`)
   itemInfo.value = await res.json();
-  console.log(itemInfo.value)
+  // console.log(itemInfo.value)
 }
 
 function getItems(test) {
@@ -144,13 +144,11 @@ async function handleEndAttemptCompleted(data) {
         interactionResponses[e.identifier] = v;
       }
 
-      console.log(item)
-
       const obj: ItemResponse = {
         durationSeconds: state.responseVariables[1].value,
         interactionResponses,
         itemNumber: i,
-        itemIdentifier: item.href.substring(12, 49),
+        itemIdentifier: item.href.split("/")[3],
         points: {
           received: results[i].score || 0,
           maximal: results[i].max_score || 0,
@@ -165,7 +163,7 @@ async function handleEndAttemptCompleted(data) {
     const testNameRes = await fetch(`/file/${route.params["id"]}/testName`);
     const testName = await testNameRes.text();
 
-    console.log({ testName })
+    // console.log({ testName })
 
     const obj: TestResponse = {
       testID: route.params["id"],
@@ -177,7 +175,7 @@ async function handleEndAttemptCompleted(data) {
 
     testResponse.value = obj;
     show_feedback.value = true;
-    console.log(obj);
+    // console.log(obj);
   }
 }
 
@@ -191,14 +189,14 @@ function handlePlayerReady(qti3ItemPlayer) {
 
 const states = {};
 function handleSuspendAttemptCompleted(data) {
-  console.log("suspend completed", data);
+  // console.log("suspend completed", data);
 
   const old_guid = items.value[current_item.value].guid;
   const { partIdentifier, sectionIdentifier, identifier } =
     items.value[current_item.value];
 
   states[old_guid] = data.state;
-  console.log({ old_guid, identifier })
+  // console.log({ old_guid, identifier })
   test_player.setTestStateItemState(
     partIdentifier,
     sectionIdentifier,
@@ -260,7 +258,7 @@ function handleScoreAttemptCompleted(data) {
   if (data.target.navigateItem !== undefined) {
     current_item.value = data.target.navigateItem;
 
-    console.log("OIIIIII", current_item.value);
+    // console.log("OIIIIII", current_item.value);
     const new_guid = items.value[current_item.value].guid;
 
     if (states[new_guid] !== undefined) {
